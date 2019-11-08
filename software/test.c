@@ -4,11 +4,9 @@
 #define false 0
 
 int main(){
-    int i = 0;
-    int done = false;
-    while(!done){
-        i++;
-        done = i > 100 ? true: false;
+    uint16_t i = 0x55aa;
+    printf("Decimal: \n%u\nBinary: \n0b", i);
+    for(uint8_t n = sizeof(i)*8; n > 0; n--){
+        printf("%u", (i>>(n-1))&1);
     }
-    printf("Result:\n%d\n", i);
 }
