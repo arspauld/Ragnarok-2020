@@ -21,22 +21,11 @@ with open('.pio/build/nucleo_l476rg/firmware.bin', 'rb') as file:
         upload_bytes.append(byte)
         byte = file.read(256)
 
-
-# for x in upload_bytes:
-#     checksum_bytes.append(~x)
-# pprint.pprint(upload_bytes)   
-
-
-
-# print(ser)
-# ls = [0xff, 0x00, 0x00, 0xff, 0xff]
-# for x in ls:
-#     ser.write(0b10000000000011)
-
 # Get Bootloader version
 print(bytes([0x00,0xff]))
 print(ser.write(bytes([0x00])))
 print(ser.write(bytes([0xff])))
+print(ser.out_waiting)
 
 # while not ser.in_waiting:
 #     time.sleep(.1)
