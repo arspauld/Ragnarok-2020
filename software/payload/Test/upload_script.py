@@ -24,6 +24,8 @@ def acknowledge(ack_text, nack_text, cmd=0x00, chk=0xff, ack=0x79, nack=0x1f):
         time.sleep(0.01)
     acknowledge = int.from_bytes(ser.read(1), byteorder='big')
     if acknowledge == ack and ack_text != '':
+        pass
+    elif acknowledge:
         print(ack_text)
     elif acknowledge == nack:
         print(nack_text)
@@ -35,23 +37,29 @@ def acknowledge(ack_text, nack_text, cmd=0x00, chk=0xff, ack=0x79, nack=0x1f):
 ######## Write
 def write(data, start_address=0x08000000):
     acknowledge(cmd=0x31, chk=0xCE, ack_text='', nack_text="ERROR: Command not found-- aborting")
-    addr = [start_address >> 6 & 0xFF, start_address >> 4 & 0xFF, start_address >> 2 & 0xFF, start_address & 0xFF]
+    addr = [start_address >> 24 & 0xFF, start_address >> 16 & 0xFF, start_address >> 8 & 0xFF, start_address & 0xFF]
     addr.append(checksum(addr))
+    data = [len(data)-1] + data
     data.append(checksum(data))
+    # print(data)
 
     # Send address and wait for ack
-    ser.write(addr)
+    # print(bytes(addr))
+    ser.write(bytes(addr))
     while not ser.in_waiting:
         time.sleep(0.01)
+        # print('sleeping')
     ack = int.from_bytes(ser.read(1), byteorder='big')
     if ack != 0x79:
         print('ERROR: Address invalid')
         exit(0)
     
     # Send number of bytes, data, and checksum
-    data = [len(data)-1] + data
-    data.append(checksum(data))
-    ser.write(data)
+    # print(len(data))
+    # print(data)
+    # Error is likely in this area, needs to be [0-255]
+    ser.write(bytes(data[0:256]))
+    ser.write(bytes(data[256:258]))
 
     # Await acknowledge at end of write
     while not ser.in_waiting:
@@ -61,7 +69,7 @@ def write(data, start_address=0x08000000):
         print('ERROR: Invalid write -- aborting')
         exit(0)
     else:
-        return start_address + len(data)
+        return start_address + len(data) - 2
 
     
 
@@ -74,7 +82,7 @@ def checksum(data):
 
 # Open and parse the binary file
 upload_bytes = []
-with open('.pio/build/nucleo_l476rg/firmware.bin', 'rb') as file:
+with open('.pio/build/nucleo_l476rg/firmware.elf', 'rb') as file:
     bytes_list = file.read(256)
     while bytes_list:
         x=[]
@@ -82,7 +90,6 @@ with open('.pio/build/nucleo_l476rg/firmware.bin', 'rb') as file:
             x.append(byte)
         upload_bytes.append(x)
         bytes_list = file.read(256)
-    print(upload_bytes)
 
 ### Initialize bootloader in USARTx
 ser.write(bytes([0x7f]))                                    # Send initialization byte
@@ -114,6 +121,16 @@ else:
     exit(0)
 
 ### Write new code to FLASH
+print('\nUploading binary\n--------------------------------\n')
+start_address = 0x08000000
+i=0
+for x in upload_bytes:#tqdm(upload_bytes, desc='Write', unit='Pages'):
+    # print(hex(start_address))
+    
+    start_address = write(data=x, start_address=start_address)
+    i+=1
+    print("\rProgress: %.2f%%, %d/%d writes\r" % (i/len(upload_bytes)*100, i, len(upload_bytes)), end="\r")
+    
 
 ### Jump to user code after upload
 acknowledge(cmd = 0x21, chk=0xDE, ack_text='Command recieved: Go', nack_text="Read protection enabled -- aborting")
@@ -129,9 +146,9 @@ while not ser.in_waiting:
     # print(ser.in_waiting)
 ack = int.from_bytes(ser.read(1), byteorder='big')
 if ack == 0x79:
-    print('Jumping to user code\n--------------------------------\n')
+    print('\nJumping to user code\n--------------------------------\n')
 elif ack == 0x1F:
-    print('ERROR: NACK recieved -- aborting')
+    print('\nERROR: NACK recieved -- aborting')
     exit(0)
 else:
     print('ERROR: Unknown -- aborting')
