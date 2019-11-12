@@ -83,7 +83,7 @@ def checksum(data):
 # Open and parse the binary file
 upload_bytes = []
 with open('.pio/build/nucleo_l476rg/firmware.bin', 'rb') as file:
-    file.read(65536)
+    file.read(0x00010000)
     bytes_list = file.read(256)
     while bytes_list:
         x=[]
