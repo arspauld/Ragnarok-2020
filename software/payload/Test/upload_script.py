@@ -36,7 +36,7 @@ def acknowledge(ack_text, nack_text, cmd=0x00, chk=0xff, ack=0x79, nack=0x1f):
 
 ######## Write
 def write(data, start_address=0x08000000):
-    acknowledge(cmd=0x31, chk=0xCE, ack_text='', nack_text="ERROR: Command not found-- aborting")
+    acknowledge(cmd=0x31, chk=0xCE, ack_text='', nack_text="ERROR: Command not found -- aborting")
     addr = [start_address >> 24 & 0xFF, start_address >> 16 & 0xFF, start_address >> 8 & 0xFF, start_address & 0xFF]
     addr.append(checksum(addr))
     data = [len(data)-1] + data
@@ -51,7 +51,7 @@ def write(data, start_address=0x08000000):
         # print('sleeping')
     ack = int.from_bytes(ser.read(1), byteorder='big')
     if ack != 0x79:
-        print('ERROR: Address invalid')
+        print('ERROR: Invalid address -- aborting')
         exit(0)
     
     # Send number of bytes, data, and checksum
@@ -70,6 +70,41 @@ def write(data, start_address=0x08000000):
         exit(0)
     else:
         return start_address + len(data) - 2
+        
+
+######## Read
+def read(start_address = 0x08000000):
+    # Recieve initial command ack
+    acknowledge(cmd=0x11, chk=0xEE, ack_text='', nack_text='ERROR: Command not found -- aborting')
+
+    # Parse the start address into four bytes
+    addr = [start_address >> 24 & 0xFF, start_address >> 16 & 0xFF, start_address >> 8 & 0xFF, start_address & 0xFF]
+    addr.append(checksum(addr))
+
+    # Write the desired address and await ack
+    ser.write(bytes(addr))
+    while not ser.in_waiting:
+        time.sleep(0.1)
+    ack = int.from_bytes(ser.read(1), byteorder='big')
+    if ack != 0x79:
+        print('ERROR: Invalid address -- aborting')
+        exit(0)
+    
+    # Write the number of bytes to recieve and await ack
+    ser.write(bytes([255, 0]))
+    while not ser.in_waiting:
+        time.sleep(0.1)
+    ack = int.from_bytes(ser.read(1), byteorder='big')
+    if ack != 0x79:
+        print('ERROR: Invalid number of bytes -- aborting')
+        exit(0)
+
+    # Read in the bytes as a list of ints and return
+    dat = []
+    for i in range(256):
+        dat.append(int.from_bytes(ser.read(1), byteorder='big'))
+    
+    return [dat, start_address+len(dat)-2]
 
     
 
@@ -83,7 +118,7 @@ def checksum(data):
 # Open and parse the binary file
 upload_bytes = []
 with open('.pio/build/nucleo_l476rg/firmware.bin', 'rb') as file:
-    file.read(0x00010000)
+    # file.read(0x00010000)
     bytes_list = file.read(256)
     while bytes_list:
         x=[]
@@ -121,17 +156,50 @@ else:
     print("Write command not found -- aborting")
     exit(0)
 
+### Erase previous memory
+# print('\nErasing flash\n--------------------------------\n')
+# acknowledge(cmd=0x43, chk=0xBC, ack_text='Command recieved: Erase', nack_text='ERROR: Command not recieved -- aborting')
+
+# # Send global erase
+# ser.write(bytes([0xff, 0x00]))
+# while not ser.in_waiting:
+#     time.sleep(0.1)
+# ack = int.from_bytes(ser.read(1), byteorder='big')
+# if ack == 0x79:
+#     print('\n\nFlash erased\n--------------------------------\n')
+# elif ack == 0x1F:
+#     print('\nERROR: NACK recieved -- aborting')
+#     exit(0)
+# else:
+#     print('ERROR: Unknown -- aborting')
+#     exit(0)
+
 ### Write new code to FLASH
 print('\nUploading binary\n--------------------------------\n')
 start_address = 0x08000000
 i=0
 for x in upload_bytes:#tqdm(upload_bytes, desc='Write', unit='Pages'):
     # print(hex(start_address))
-    
     start_address = write(data=x, start_address=start_address)
     i+=1
     print("\rProgress: %.2f%%, %d/%d writes\r" % (i/len(upload_bytes)*100, i, len(upload_bytes)), end="\r")
-    
+
+### Verify code on the FLASH
+print('\n\nVerifying upload\n--------------------------------\n')
+start_address = 0x08000000
+read_data = []
+for i in range(len(upload_bytes)):
+    temp = read(start_address)
+    read_data.append(temp[0])
+    start_address = temp[1]
+    print("\rProgress: %.2f%%, %d/%d reads\r" % ((i+1)/len(upload_bytes)*100, i+1, len(upload_bytes)), end="\r")
+
+if read_data != upload_bytes:
+    print('Fucked up')
+    print(read_data[1])
+    print(upload_bytes[1])
+else:
+    print('--Flash verified--')
 
 ### Jump to user code after upload
 acknowledge(cmd = 0x21, chk=0xDE, ack_text='Command recieved: Go', nack_text="Read protection enabled -- aborting")
@@ -147,7 +215,7 @@ while not ser.in_waiting:
     # print(ser.in_waiting)
 ack = int.from_bytes(ser.read(1), byteorder='big')
 if ack == 0x79:
-    print('\nJumping to user code\n--------------------------------\n')
+    print('\n\nJumping to user code\n--------------------------------\n')
 elif ack == 0x1F:
     print('\nERROR: NACK recieved -- aborting')
     exit(0)
