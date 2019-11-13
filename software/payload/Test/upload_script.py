@@ -157,25 +157,25 @@ else:
     exit(0)
 
 ### Erase previous memory
-# print('\nErasing flash\n--------------------------------\n')
-# acknowledge(cmd=0x43, chk=0xBC, ack_text='Command recieved: Erase', nack_text='ERROR: Command not recieved -- aborting')
+print('\nErasing flash\n--------------------------------')
+acknowledge(cmd=0x44, chk=0xBB, ack_text='Command recieved: Erase', nack_text='ERROR: Command not recieved -- aborting')
 
-# # Send global erase
-# ser.write(bytes([0xff, 0x00]))
-# while not ser.in_waiting:
-#     time.sleep(0.1)
-# ack = int.from_bytes(ser.read(1), byteorder='big')
-# if ack == 0x79:
-#     print('\n\nFlash erased\n--------------------------------\n')
-# elif ack == 0x1F:
-#     print('\nERROR: NACK recieved -- aborting')
-#     exit(0)
-# else:
-#     print('ERROR: Unknown -- aborting')
-#     exit(0)
+# Send global erase
+ser.write(bytes([0xff, 0xff, 0x00]))
+while not ser.in_waiting:
+    time.sleep(0.1)
+ack = int.from_bytes(ser.read(1), byteorder='big')
+if ack == 0x79:
+    print('\n\nFlash erased\n--------------------------------')
+elif ack == 0x1F:
+    print('\nERROR: NACK recieved -- aborting')
+    exit(0)
+else:
+    print('ERROR: Unknown -- aborting')
+    exit(0)
 
 ### Write new code to FLASH
-print('\nUploading binary\n--------------------------------\n')
+print('\nUploading binary\n--------------------------------')
 start_address = 0x08000000
 i=0
 for x in upload_bytes:#tqdm(upload_bytes, desc='Write', unit='Pages'):
@@ -185,7 +185,7 @@ for x in upload_bytes:#tqdm(upload_bytes, desc='Write', unit='Pages'):
     print("\rProgress: %.2f%%, %d/%d writes\r" % (i/len(upload_bytes)*100, i, len(upload_bytes)), end="\r")
 
 ### Verify code on the FLASH
-print('\n\nVerifying upload\n--------------------------------\n')
+print('\n\nVerifying upload\n--------------------------------')
 start_address = 0x08000000
 read_data = []
 for i in range(len(upload_bytes)):
@@ -215,7 +215,7 @@ while not ser.in_waiting:
     # print(ser.in_waiting)
 ack = int.from_bytes(ser.read(1), byteorder='big')
 if ack == 0x79:
-    print('\n\nJumping to user code\n--------------------------------\n')
+    print('\n\nJumping to user code\n--------------------------------')
 elif ack == 0x1F:
     print('\nERROR: NACK recieved -- aborting')
     exit(0)
