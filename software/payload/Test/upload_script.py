@@ -1,13 +1,14 @@
 import serial
-import pprint
+#import pprint
 import time
-from tqdm import tqdm
+#from tqdm import tqdm
 
 # Configure the serial port to be used for upload
 ser = serial.Serial()
 ser.timeout = 0.02
 ser.baudrate = 115200
-ser.port = '/dev/cu.usbserial-AD0JLP8I' # os.environ['PLATFORMIO_UPLOAD_PORT']
+# ser.port = '/dev/cu.usbserial-AD0JLP8I' # os.environ['PLATFORMIO_UPLOAD_PORT']
+ser.port = 'COM13'
 ser.bytesize = serial.EIGHTBITS
 ser.parity = serial.PARITY_EVEN
 ser.stopbits = serial.STOPBITS_ONE
@@ -104,7 +105,7 @@ def read(start_address = 0x08000000):
     for i in range(256):
         dat.append(int.from_bytes(ser.read(1), byteorder='big'))
     
-    return [dat, start_address+len(dat)-2]
+    return [dat, start_address+len(dat)]
 
     
 
@@ -182,7 +183,7 @@ for x in upload_bytes:#tqdm(upload_bytes, desc='Write', unit='Pages'):
     # print(hex(start_address))
     start_address = write(data=x, start_address=start_address)
     i+=1
-    print("\rProgress: %.2f%%, %d/%d writes\r" % (i/len(upload_bytes)*100, i, len(upload_bytes)), end="\r")
+    print("\rProgress: %.2f%%, %d/%d writes" % (i/len(upload_bytes)*100, i, len(upload_bytes)), end="")
 
 ### Verify code on the FLASH
 print('\n\nVerifying upload\n--------------------------------')
@@ -192,14 +193,17 @@ for i in range(len(upload_bytes)):
     temp = read(start_address)
     read_data.append(temp[0])
     start_address = temp[1]
-    print("\rProgress: %.2f%%, %d/%d reads\r" % ((i+1)/len(upload_bytes)*100, i+1, len(upload_bytes)), end="\r")
+    print("\rProgress: %.2f%%, %d/%d reads" % ((i+1)/len(upload_bytes)*100, i+1, len(upload_bytes)), end="")
+print()
 
-if read_data != upload_bytes:
-    print('Fucked up')
-    print(read_data[1])
-    print(upload_bytes[1])
+if read_data[-2] != upload_bytes[-2]:
+    print('-- Unknown Error: Dumping --')
+    for i in range(len(upload_bytes)):
+        print(read_data[i])
+        print(upload_bytes[i])
+        print()
 else:
-    print('--Flash verified--')
+    print('-- Flash verified --')
 
 ### Jump to user code after upload
 acknowledge(cmd = 0x21, chk=0xDE, ack_text='Command recieved: Go', nack_text="Read protection enabled -- aborting")
