@@ -1,39 +1,41 @@
 #include "stm32f410rx.h"
 
-#define GPIO_PIN_0                 ((uint16_t) 1U<<0 )  /* Pin 0  selected    */
-#define GPIO_PIN_1                 ((uint16_t) 1U<<1 )  /* Pin 1  selected    */
-#define GPIO_PIN_2                 ((uint16_t) 1U<<2 )  /* Pin 2  selected    */
-#define GPIO_PIN_3                 ((uint16_t) 1U<<3 )  /* Pin 3  selected    */
-#define GPIO_PIN_4                 ((uint16_t) 1U<<4 )  /* Pin 4  selected    */
 #define GPIO_PIN_5                 ((uint16_t) 1U<<5 )  /* Pin 5  selected    */
-#define GPIO_PIN_6                 ((uint16_t) 1U<<6 )  /* Pin 6  selected    */
-#define GPIO_PIN_7                 ((uint16_t) 1U<<7 )  /* Pin 7  selected    */
-#define GPIO_PIN_8                 ((uint16_t) 1U<<8 )  /* Pin 8  selected    */
-#define GPIO_PIN_9                 ((uint16_t) 1U<<9 )  /* Pin 9  selected    */
-#define GPIO_PIN_10                ((uint16_t) 1U<<10)  /* Pin 10 selected    */
-#define GPIO_PIN_11                ((uint16_t) 1U<<11)  /* Pin 11 selected    */
-#define GPIO_PIN_12                ((uint16_t) 1U<<12)  /* Pin 12 selected    */
-#define GPIO_PIN_13                ((uint16_t) 1U<<13)  /* Pin 13 selected    */
-#define GPIO_PIN_14                ((uint16_t) 1U<<14)  /* Pin 14 selected    */
-#define GPIO_PIN_15                ((uint16_t) 1U<<15)  /* Pin 15 selected    */
 
 void delay(volatile uint32_t s);
 
+void TIM6_DAC_IRQHandler(void)
+{
+    TIM6->SR &= (uint16_t)(~(1U << 0)); // Clears the Interrupt Flag first so the interrupts isn't called again
+    GPIOA->ODR ^= GPIO_PIN_5; // Toggles LED on A5
+}
 
 int main(void)
 {
-    RCC->AHB1ENR |= 1 << 0; // Sets Bit 0 of the Reset and Clock Control AHB1 Peripheral Clock Enable Register (RCC_AHB1ENR) to enable GPIOA
+    SystemInit();
+    RCC->AHB1ENR |= 1U << 0; // Sets Bit 0 of the Reset and Clock Control AHB1 Peripheral Clock Enable Register (RCC_AHB1ENR) to enable GPIOA
+    RCC->APB1ENR |= 1U << 4; // Sets Bit 4 of the Reset and Clock Control APB1 Peripheral Clock Enable Register (RCC_APB1ENR) to enable TIM6
 
     GPIOA->MODER &= ~(0b11 << 10); // Resets Pin 5 to Input
     GPIOA->MODER |=  (0b01 << 10); // Sets Pin 5 to Output
 
-    GPIOA->ODR |= GPIO_PIN_5;
+    GPIOA->ODR |= 0; // Turns on LED on A5
+
+    TIM6->PSC = 3999; // Prescaler that results in a 20 kHz timer clock
+    TIM6->ARR = 4000; // Automatic Reset value of timer
+    TIM6->DIER |= (1U << 0); // Enables the Interrupt flag for the timer
+    NVIC_EnableIRQ(TIM6_DAC_IRQn); // Enables global interrupts, (Built in to M4 header)
+    TIM6->CR1 |= (1U << 0); // Enables the timer clock
 
     while (1)
     {
-        delay(1000000);
+        /*
+        delay(50000);
         GPIOA->ODR ^= GPIO_PIN_5;
+        */
     }
+
+    return 0;
 }
 
 void delay(volatile uint32_t s)
@@ -42,6 +44,7 @@ void delay(volatile uint32_t s)
         // Do nothing
     }
 }
+
 /*
  * {
  *   HAL_Init();
