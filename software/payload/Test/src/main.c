@@ -12,17 +12,30 @@ void TIM6_DAC_IRQHandler(void)
 
 int main(void)
 {
-    SystemInit();
+    // Sets Latency? Will verifiy, but makes PLL work
+    FLASH->ACR =
+      FLASH->ACR & ~FLASH_ACR_LATENCY
+    | FLASH_ACR_LATENCY_5WS
+    | FLASH_ACR_ICEN
+    | FLASH_ACR_DCEN
+    | FLASH_ACR_PRFTEN;
+
+    // Sets PLL to 100 MHz
+    RCC->PLLCFGR |= (1 << 16) | (400 << 6) | 16; // Sets PLL to 100 MHz
+    RCC->CR |= 1U << 24; // Enables PLL
+    while(!(RCC->CR & (1U << 25))); // Waits Until PLL is ready
+    RCC->CFGR = 0x00001002; // Divides AHB clock and switches SYSCLK to a PLL source
+
     RCC->AHB1ENR |= 1U << 0; // Sets Bit 0 of the Reset and Clock Control AHB1 Peripheral Clock Enable Register (RCC_AHB1ENR) to enable GPIOA
     RCC->APB1ENR |= 1U << 4; // Sets Bit 4 of the Reset and Clock Control APB1 Peripheral Clock Enable Register (RCC_APB1ENR) to enable TIM6
 
     GPIOA->MODER &= ~(0b11 << 10); // Resets Pin 5 to Input
     GPIOA->MODER |=  (0b01 << 10); // Sets Pin 5 to Output
 
-    GPIOA->ODR |= 0; // Turns on LED on A5
+    GPIOA->ODR |= 1; // Turns on LED on A5
 
-    TIM6->PSC = 3999; // Prescaler that results in a 20 kHz timer clock
-    TIM6->ARR = 4000; // Automatic Reset value of timer
+    TIM6->PSC = 5999; // Prescaler that results in a 20 kHz timer clock
+    TIM6->ARR = 20000; // Automatic Reset value of timer
     TIM6->DIER |= (1U << 0); // Enables the Interrupt flag for the timer
     NVIC_EnableIRQ(TIM6_DAC_IRQn); // Enables global interrupts, (Built in to M4 header)
     TIM6->CR1 |= (1U << 0); // Enables the timer clock
