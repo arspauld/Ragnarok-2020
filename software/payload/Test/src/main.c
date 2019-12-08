@@ -2,53 +2,63 @@
 
 #define GPIO_PIN_5                 ((uint16_t) 1U<<5 )  /* Pin 5  selected    */
 
+void system_clock_init(void);
 void delay(volatile uint32_t s);
 
-void TIM6_DAC_IRQHandler(void)
+void TIM5_IRQHandler(void)
 {
-    TIM6->SR &= (uint16_t)(~(1U << 0)); // Clears the Interrupt Flag first so the interrupts isn't called again
+    TIM5->SR &= ~TIM_SR_UIF; // Clears the Interrupt Flag first so the interrupts isn't called again
     GPIOA->ODR ^= GPIO_PIN_5; // Toggles LED on A5
 }
 
 int main(void)
 {
-    // Sets Latency? Will verifiy, but makes PLL work
-    FLASH->ACR =
-      FLASH->ACR & ~FLASH_ACR_LATENCY
-    | FLASH_ACR_LATENCY_5WS
-    | FLASH_ACR_ICEN
-    | FLASH_ACR_DCEN
-    | FLASH_ACR_PRFTEN;
+    system_clock_init(); // 
+    //SystemCoreClockUpdate(); Redines Global Clock Frequency Variable
 
-    // Sets PLL to 100 MHz
-    RCC->PLLCFGR |= (1 << 16) | (400 << 6) | 16; // Sets PLL to 100 MHz
-    RCC->CR |= 1U << 24; // Enables PLL
-    while(!(RCC->CR & (1U << 25))); // Waits Until PLL is ready
-    RCC->CFGR = 0x00001002; // Divides AHB clock and switches SYSCLK to a PLL source
-
-    RCC->AHB1ENR |= 1U << 0; // Sets Bit 0 of the Reset and Clock Control AHB1 Peripheral Clock Enable Register (RCC_AHB1ENR) to enable GPIOA
-    RCC->APB1ENR |= 1U << 4; // Sets Bit 4 of the Reset and Clock Control APB1 Peripheral Clock Enable Register (RCC_APB1ENR) to enable TIM6
+    RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN; // Sets Bit 0 of the Reset and Clock Control AHB1 Peripheral Clock Enable Register (RCC_AHB1ENR) to enable GPIOA
+    RCC->APB1ENR |= RCC_APB1ENR_TIM5EN; // Sets Bit 4 of the Reset and Clock Control APB1 Peripheral Clock Enable Register (RCC_APB1ENR) to enable TIM6
 
     GPIOA->MODER &= ~(0b11 << 10); // Resets Pin 5 to Input
     GPIOA->MODER |=  (0b01 << 10); // Sets Pin 5 to Output
 
-    GPIOA->ODR |= 1; // Turns on LED on A5
+    GPIOA->ODR |= GPIO_PIN_5; // Turns on LED on A5
 
-    TIM6->PSC = 5999; // Prescaler that results in a 20 kHz timer clock
-    TIM6->ARR = 20000; // Automatic Reset value of timer
-    TIM6->DIER |= (1U << 0); // Enables the Interrupt flag for the timer
-    NVIC_EnableIRQ(TIM6_DAC_IRQn); // Enables global interrupts, (Built in to M4 header)
-    TIM6->CR1 |= (1U << 0); // Enables the timer clock
+    TIM5->PSC = 4999; // Prescaler that results in a 20 kHz timer clock
+    TIM5->ARR = 2000; // Automatic Reset value of timer
+    TIM5->DIER |= TIM_DIER_UIE; // Enables the Interrupt flag for the timer
+    NVIC_EnableIRQ(TIM5_IRQn); // Enables global interrupts, (Built in to M4 header)
+    TIM5->CR1 |= TIM_CR1_CEN; // Enables the timer clock
 
     while (1)
     {
-        /*
-        delay(50000);
-        GPIOA->ODR ^= GPIO_PIN_5;
-        */
+        // Do Stuff
     }
 
     return 0;
+}
+
+// PLL constant definitions
+#define P 2
+#define N 200
+#define M 16
+
+void system_clock_init(void)
+{
+    RCC->CR |= RCC_CR_HSION; // Verifies that the High Speed Internal Clock is on
+    while(!(RCC->CR & RCC_CR_HSIRDY)); // Waits until HSI is on
+
+    RCC->APB1ENR |= RCC_APB1ENR_PWREN;
+    PWR->CR |= PWR_CR_VOS_1 | PWR_CR_VOS_0; // Scales the Power 
+
+    FLASH->ACR = FLASH_ACR_LATENCY_3WS | FLASH_ACR_ICEN | FLASH_ACR_DCEN | FLASH_ACR_PRFTEN; // Sets Latency to account for new clock speed
+
+    // Sets PLL to 100 MHz
+    RCC->PLLCFGR |= RCC_PLLCFGR_PLLSRC_HSI | (((P / 2) - 1) << RCC_PLLCFGR_PLLP_Pos) | (N << RCC_PLLCFGR_PLLN_Pos) | (M << RCC_PLLCFGR_PLLM_Pos); // Sets PLL frequency using P, N, M
+    RCC->CR |= RCC_CR_PLLON; // Enables PLL
+    RCC->CFGR = RCC_CFGR_PPRE1_DIV2 | RCC_CFGR_SW_PLL; // Divides AHB clock and switches SYSCLK to a PLL source
+
+    while(!(RCC->CFGR & RCC_CFGR_SWS_PLL)); // Waits until the PLL is the System Clock
 }
 
 void delay(volatile uint32_t s)
