@@ -38,28 +38,41 @@ int main(void)
     TIM5->CR1 |= TIM_CR1_CEN; // Enables the timer clock
     */
 
-    RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
-    RCC->APB1ENR |= RCC_APB1ENR_TIM5EN;
+    RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN; // Enables GPIO Port A
+    RCC->APB1ENR |= RCC_APB1ENR_TIM5EN; // Enables Timer Counter 5
 
-    GPIOA->MODER &= ~(0b11 << 10); // Resets Pin 5 to Input
+    GPIOA->MODER &= ~(0b11 << 10); // Resets Pin 5 to Input (User LED)
     GPIOA->MODER |=  (0b01 << 10); // Sets Pin 5 to Output
 
-    GPIOA->MODER &= ~(0b11 << 0); // Resets Pin 0 to Input
+    GPIOA->MODER &= ~(0b11 << 0); // Resets Pin 0 to Input (PWM)
     GPIOA->MODER |=  (0b10 << 0); // Sets Pin 0 to Alternate Function
 
-    GPIOA->AFR[0] |= (2 << 0);
+    GPIOA->AFR[0] |= (2 << 0); // Sets Pin 0 to alternative function mode
 
     TIM5->PSC = 4999; // Prescaler that results in a 20 kHz timer clock
     TIM5->ARR = 20000; // Automatic Reset value of timer, set to change at 2 Hz
-    TIM5->CCR1 = (TIM5->ARR * duty) / 100;
+    TIM5->CCR1 = (TIM5->ARR * duty) / 100; // Sets the capture point
 
-    TIM5->CCMR1 |= (0b110 << 4);
-    TIM5->CCMR1 |= TIM_CCMR1_OC1PE;
-    TIM5->CCER |= TIM_CCER_CC1E;
+    TIM5->CCMR1 |= (0b110 << 4); // Sets the Timer to PWM mode
+    TIM5->CCER |= TIM_CCER_CC1E; // Enable Compare and Capture 1
 
-    TIM5->DIER |= TIM_DIER_UIE;
-    NVIC_EnableIRQ(TIM5_IRQn);
+    TIM5->DIER |= TIM_DIER_UIE; // Sets Timer update flag
+    NVIC_EnableIRQ(TIM5_IRQn); // Attaches interrupt
     TIM5->CR1 |= TIM_CR1_CEN; // Enables the timer clock
+
+    /*
+    // USART
+    GPIOA->MODER &= ~((0b11 << 8) | (0b11 << 6) | (0b11 << 4)); // Resets Pins 2, 3, and 4 to Input
+    GPIOA->MODER |=  (0b10 << 8) | (0b10 << 6) | (0b10 << 4); // Sets Pins 2,  3, and 4 to Alternate Function
+
+    GPIOA->AFR[0] |= (7 << 16) | (7 << 12) | (7 << 8); // Enabls USART2 Alternate Function for pins 2, 3, and 4
+    GPIOA->OSPEEDR |= (0b10 << 8) | (0b10 << 6) | (0b10 << 4); // Sets pins 2, 3, and 4 to high speed
+
+    RCC->APB1ENR |= RCC_APB1ENR_USART2EN; // Enables USART2 peripheral
+
+    USART2->BRR = (651 << USART_BRR_DIV_Mantissa_Pos); // Sets a baud rate divider of 651 (9600 baud)
+    USART2->CR1 |= USART_CR1_RE | USART_CR1_TE | USART_CR1_RXNEIE | USART_CR1_UE; // Enables RX, TX, RX Interrupt, and USART
+    */
 
     while (1)
     {
