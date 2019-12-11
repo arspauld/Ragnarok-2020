@@ -1,5 +1,6 @@
 #include "stm32f410rx.h"
 #include <string.h>
+#include <stdio.h>
 
 // PLL constant definitions
 #define PLL_P 2
@@ -7,11 +8,15 @@
 #define PLL_M 16
 
 #define GPIO_PIN_5                 ((uint16_t) 1U<<5 )  /* Pin 5  selected    */
+#define GPIO_PIN_13                ((uint16_t) 1U<<13)  /* Pin 5  selected    */
+
+volatile uint8_t write_flag = 0;
 
 void system_clock_init(void);
 void serial_uart_init(uint32_t baud);
 void pwm_init(uint8_t duty);
 void delay(volatile uint32_t s);
+void uart_write(char* str);
 
 void TIM5_IRQHandler(void)
 {
@@ -19,13 +24,24 @@ void TIM5_IRQHandler(void)
     GPIOA->ODR ^= GPIO_PIN_5; // Toggles LED on A5
 }
 
+void EXTI15_10_IRQHandler(void)
+{
+    if(EXTI->PR & EXTI_PR_PR13) // Checks if the intterrupt is for Channel 13
+    {
+        EXTI->PR |= EXTI_PR_PR13; // Clear Interrupt bit
+        write_flag = 1; // Enables the write flag for the bit
+        GPIOA->ODR ^= GPIO_PIN_5; // Toggles LED
+    }
+}
+
 int main(void)
 {
     system_clock_init();
 
-    RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN; // Enables GPIO Port A
-    serial_uart_init(9600);
-    pwm_init(25);
+    RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN | RCC_AHB1ENR_GPIOBEN | RCC_AHB1ENR_GPIOCEN; // Enables GPIO Ports A, B, and C
+    RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN | RCC_APB2ENR_EXTITEN; // Enables the System Configuration Capability and the External Interrupt/Event Controller
+    serial_uart_init(57600); // Initializes USART2
+    pwm_init(25); // Outputs a PWM on A0
 
     /* Interrupt Driven LED Flash
     RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN; // Sets Bit 0 of the Reset and Clock Control AHB1 Peripheral Clock Enable Register (RCC_AHB1ENR) to enable GPIOA
@@ -43,17 +59,24 @@ int main(void)
     TIM5->CR1 |= TIM_CR1_CEN; // Enables the timer clock
     */
 
-    char mess[] = "Pat Rocks\n";
-    while(1)
-    {
-        // Do Stuff
-        for(uint8_t i = 0; i < strlen(mess); i++)
-        {
-            USART2->DR = mess[i];
-            while(!(USART2->SR & USART_SR_TC));
-        }
+    // Enables An interrupt that is connected to the USer Button (Blue)
+    SYSCFG->EXTICR[3] |= SYSCFG_EXTICR4_EXTI13_PC; // Connects the 13th channel of EXTI to Port C (Port C, Pin 13)
+    EXTI->IMR |= EXTI_IMR_MR13; // Enables the Interrupt of Channel 13
+    EXTI->FTSR |= EXTI_FTSR_TR13; // Enables Falling Edge Detection on Channel 13
+    NVIC_EnableIRQ(EXTI15_10_IRQn); // Enables the EXTI Interrupt for Channels 10 through 15
 
-        delay(1000000);
+    char mess[20];
+    uint8_t count = 0;
+    while(1)
+    {        
+        // Do Stuff
+        if(write_flag)
+        {
+            count++;
+            write_flag = 0;
+            sprintf(mess, " %u\n", count);
+            uart_write(mess); // Writes the message buffer
+        }
     }
 
     return 0;
@@ -117,7 +140,7 @@ void pwm_init(uint8_t duty)
     TIM5->CCER |= TIM_CCER_CC1E; // Enable Compare and Capture 1
 
     TIM5->DIER |= TIM_DIER_UIE; // Sets Timer update flag
-    NVIC_EnableIRQ(TIM5_IRQn); // Attaches interrupt
+    //NVIC_EnableIRQ(TIM5_IRQn); // Attaches interrupt
     TIM5->CR1 |= TIM_CR1_CEN; // Enables the timer clock
 }
 
@@ -125,6 +148,16 @@ void delay(volatile uint32_t s)
 {
     for(s; s>0; s--){
         // Do nothing
+    }
+}
+
+void uart_write(char* str)
+{
+    // Loops through the input character string and transmits it via USART
+    for(uint8_t i = 0; i < strlen(str); i++)
+    {
+        USART2->DR = str[i];
+        while(!(USART2->SR & USART_SR_TC));
     }
 }
 
