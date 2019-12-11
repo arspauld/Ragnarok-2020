@@ -129,6 +129,22 @@ void serial_uart_init(uint32_t baud)
     while(!(USART2->SR & USART_SR_TC)); // Clear TC Flag
 }
 
+void spi_init()
+{
+    /**
+     * PA5 -- SPI1_SCK
+     * PA6 -- SPI1_MISO
+     * PA7 -- SPI1_MOSI
+    */
+
+    // Initializes SPI1 pins
+    GPIOA -> MODER &= ~((0b11 << 14) | (0b11 << 12) | (0b11 << 10)); // Resets Pins PA5, PA6, PA7
+    GPIOA -> MODER |= (0b10 << 14) | (0b10 << 12) | (0b10 << 10); // Sets pins PA5, PA6, PA7 as Alternate Function
+    GPIOA -> AFR[0] |= (0b0101 << 28) | (0b0101 << 24) | (0b0101 << 20); // Specifies that pins PA5, PA6, PA7 should be Alternate Function 5
+
+    
+}
+
 void pwm_init(uint8_t duty)
 {
     // Enables a PWM waveform on pin A0
