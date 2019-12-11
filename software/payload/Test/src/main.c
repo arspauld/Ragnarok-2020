@@ -11,11 +11,14 @@
 #define GPIO_PIN_13                ((uint16_t) 1U<<13)  /* Pin 5  selected    */
 
 volatile uint8_t write_flag = 0;
+volatile char buff[50];
+volatile uint8_t buffpos = 0;
 
 void system_clock_init(void);
 void serial_uart_init(uint32_t baud);
 void pwm_init(uint8_t duty);
 void user_button_init(void);
+void i2c_init(void);
 void delay(volatile uint32_t s);
 void uart_write(char* str);
 
@@ -32,6 +35,18 @@ void EXTI15_10_IRQHandler(void)
         EXTI->PR |= EXTI_PR_PR13; // Clear Interrupt bit
         write_flag ^= 1; // Enables the write flag for the bit
         GPIOA->ODR ^= GPIO_PIN_5; // Toggles LED
+    }
+}
+
+void USART2_IRQHandler(void)
+{
+    if(USART2->SR & USART_SR_RXNE)
+    {
+        USART2->SR &= ~USART_SR_RXNE;
+        buff[buffpos] = USART2->DR;
+        buffpos++;
+        buffpos %= sizeof(buff);
+        //while(!(USART2->SR & USART_SR_TC));
     }
 }
 
@@ -85,6 +100,15 @@ int main(void)
             sprintf(mess, "%u\n", count);
             uart_write(mess); // Writes the message buffer
         }
+        if(buffpos != 0)
+        {
+            for(uint8_t i = 0; i < buffpos; i++)
+            {
+                USART2->DR = buff[i];
+                while(!(USART2->SR & USART_SR_TC)); // Breaks if the message is too frequent
+            }
+            buffpos = 0;
+        }
     }
 
     return 0;
@@ -123,8 +147,10 @@ void serial_uart_init(uint32_t baud)
 
     USART2->BRR |= (SystemCoreClock / 2 / (16 * baud) << USART_BRR_DIV_Mantissa_Pos) | (SystemCoreClock / 2 / baud) % 16; // Sets a baud rate divider of 325.5 (9600 baud)
     
-    USART2->CR1 |= USART_CR1_RE | USART_CR1_TE | USART_CR1_UE; // Enables RX, TX, RX Interrupt, and USART
+    USART2->CR1 |= USART_CR1_RE | USART_CR1_TE | USART_CR1_RXNEIE |  USART_CR1_UE; // Enables RX, TX, RX Interrupt, and USART
     //USART2->CR2 |= USART_CR2_CLKEN; // Enables the clock signal
+
+    NVIC_EnableIRQ(USART2_IRQn);
 
     while(!(USART2->SR & USART_SR_TC)); // Clear TC Flag
 }
@@ -161,6 +187,11 @@ void user_button_init(void)
     EXTI->IMR |= EXTI_IMR_MR13; // Enables the Interrupt of Channel 13
     EXTI->FTSR |= EXTI_FTSR_TR13; // Enables Falling Edge Detection on Channel 13
     NVIC_EnableIRQ(EXTI15_10_IRQn); // Enables the EXTI Interrupt for Channels 10 through 15
+}
+
+void i2c_init(void)
+{
+
 }
 
 void delay(volatile uint32_t s)
