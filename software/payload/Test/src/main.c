@@ -15,6 +15,7 @@ volatile uint8_t write_flag = 0;
 void system_clock_init(void);
 void serial_uart_init(uint32_t baud);
 void pwm_init(uint8_t duty);
+void user_button_init(void);
 void delay(volatile uint32_t s);
 void uart_write(char* str);
 
@@ -29,7 +30,7 @@ void EXTI15_10_IRQHandler(void)
     if(EXTI->PR & EXTI_PR_PR13) // Checks if the intterrupt is for Channel 13
     {
         EXTI->PR |= EXTI_PR_PR13; // Clear Interrupt bit
-        write_flag = 1; // Enables the write flag for the bit
+        write_flag ^= 1; // Enables the write flag for the bit
         GPIOA->ODR ^= GPIO_PIN_5; // Toggles LED
     }
 }
@@ -40,30 +41,37 @@ int main(void)
 
     RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN | RCC_AHB1ENR_GPIOBEN | RCC_AHB1ENR_GPIOCEN; // Enables GPIO Ports A, B, and C
     RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN | RCC_APB2ENR_EXTITEN; // Enables the System Configuration Capability and the External Interrupt/Event Controller
-    serial_uart_init(57600); // Initializes USART2
-    pwm_init(25); // Outputs a PWM on A0
+    serial_uart_init(115200); // Initializes USART2
+    pwm_init(10); // Outputs a PWM on A0
+    user_button_init();
 
     /* Interrupt Driven LED Flash
-    RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN; // Sets Bit 0 of the Reset and Clock Control AHB1 Peripheral Clock Enable Register (RCC_AHB1ENR) to enable GPIOA
-    RCC->APB1ENR |= RCC_APB1ENR_TIM5EN; // Sets Bit 4 of the Reset and Clock Control APB1 Peripheral Clock Enable Register (RCC_APB1ENR) to enable TIM5
+     * RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN; // Sets Bit 0 of the Reset and Clock Control AHB1 Peripheral Clock Enable Register (RCC_AHB1ENR) to enable GPIOA
+     * RCC->APB1ENR |= RCC_APB1ENR_TIM5EN; // Sets Bit 4 of the Reset and Clock Control APB1 Peripheral Clock Enable Register (RCC_APB1ENR) to enable TIM5
+     * 
+     * GPIOA->MODER &= ~(0b11 << 10); // Resets Pin 5 to Input
+     * GPIOA->MODER |=  (0b01 << 10); // Sets Pin 5 to Output
+     * 
+     * GPIOA->ODR |= GPIO_PIN_5; // Turns on LED on A5
+     * 
+     * TIM5->PSC = 4999; // Prescaler that results in a 20 kHz timer clock
+     * TIM5->ARR = 2000; // Automatic Reset value of timer, set to change at 10 Hz
+     * TIM5->DIER |= TIM_DIER_UIE; // Enables the Interrupt flag for the timer
+     * NVIC_EnableIRQ(TIM5_IRQn); // Enables global interrupts, (Built in to M4 header)
+     * TIM5->CR1 |= TIM_CR1_CEN; // Enables the timer clock
+     */
 
-    GPIOA->MODER &= ~(0b11 << 10); // Resets Pin 5 to Input
-    GPIOA->MODER |=  (0b01 << 10); // Sets Pin 5 to Output
+    /*The following is the required sequence in master mode.
+     * • Program the peripheral input clock in I2C_CR2 Register in order to generate correct
+     * timings
+     * • Configure the clock control registers
+     * • Configure the rise time register
+     * • Program the I2C_CR1 register to enable the peripheral
+     * • Set the START bit in the I2C_CR1 register to generate a Start condition
+     */
 
-    GPIOA->ODR |= GPIO_PIN_5; // Turns on LED on A5
+    
 
-    TIM5->PSC = 4999; // Prescaler that results in a 20 kHz timer clock
-    TIM5->ARR = 2000; // Automatic Reset value of timer, set to change at 10 Hz
-    TIM5->DIER |= TIM_DIER_UIE; // Enables the Interrupt flag for the timer
-    NVIC_EnableIRQ(TIM5_IRQn); // Enables global interrupts, (Built in to M4 header)
-    TIM5->CR1 |= TIM_CR1_CEN; // Enables the timer clock
-    */
-
-    // Enables An interrupt that is connected to the USer Button (Blue)
-    SYSCFG->EXTICR[3] |= SYSCFG_EXTICR4_EXTI13_PC; // Connects the 13th channel of EXTI to Port C (Port C, Pin 13)
-    EXTI->IMR |= EXTI_IMR_MR13; // Enables the Interrupt of Channel 13
-    EXTI->FTSR |= EXTI_FTSR_TR13; // Enables Falling Edge Detection on Channel 13
-    NVIC_EnableIRQ(EXTI15_10_IRQn); // Enables the EXTI Interrupt for Channels 10 through 15
 
     char mess[20];
     uint8_t count = 0;
@@ -74,7 +82,7 @@ int main(void)
         {
             count++;
             write_flag = 0;
-            sprintf(mess, " %u\n", count);
+            sprintf(mess, "%u\n", count);
             uart_write(mess); // Writes the message buffer
         }
     }
@@ -116,7 +124,9 @@ void serial_uart_init(uint32_t baud)
     USART2->BRR |= (SystemCoreClock / 2 / (16 * baud) << USART_BRR_DIV_Mantissa_Pos) | (SystemCoreClock / 2 / baud) % 16; // Sets a baud rate divider of 325.5 (9600 baud)
     
     USART2->CR1 |= USART_CR1_RE | USART_CR1_TE | USART_CR1_UE; // Enables RX, TX, RX Interrupt, and USART
-    USART2->CR2 |= USART_CR2_CLKEN; // Enables the clock signal
+    //USART2->CR2 |= USART_CR2_CLKEN; // Enables the clock signal
+
+    while(!(USART2->SR & USART_SR_TC)); // Clear TC Flag
 }
 
 void pwm_init(uint8_t duty)
@@ -132,8 +142,8 @@ void pwm_init(uint8_t duty)
 
     GPIOA->AFR[0] |= (2 << 0); // Sets Pin 0 to alternative function mode
 
-    TIM5->PSC = 4999; // Prescaler that results in a 20 kHz timer clock
-    TIM5->ARR = 20000; // Automatic Reset value of timer, set to change at 2 Hz
+    TIM5->PSC = 199; // Prescaler that results in a 40 kHz timer clock
+    TIM5->ARR = 10000; // Automatic Reset value of timer, set to change at 2 Hz
     TIM5->CCR1 = (TIM5->ARR * duty) / 100; // Sets the capture point
 
     TIM5->CCMR1 |= (0b110 << 4); // Sets the Timer to PWM mode
@@ -142,6 +152,15 @@ void pwm_init(uint8_t duty)
     TIM5->DIER |= TIM_DIER_UIE; // Sets Timer update flag
     //NVIC_EnableIRQ(TIM5_IRQn); // Attaches interrupt
     TIM5->CR1 |= TIM_CR1_CEN; // Enables the timer clock
+}
+
+void user_button_init(void)
+{
+    // Enables An interrupt that is connected to the USer Button (Blue)
+    SYSCFG->EXTICR[3] |= SYSCFG_EXTICR4_EXTI13_PC; // Connects the 13th channel of EXTI to Port C (Port C, Pin 13)
+    EXTI->IMR |= EXTI_IMR_MR13; // Enables the Interrupt of Channel 13
+    EXTI->FTSR |= EXTI_FTSR_TR13; // Enables Falling Edge Detection on Channel 13
+    NVIC_EnableIRQ(EXTI15_10_IRQn); // Enables the EXTI Interrupt for Channels 10 through 15
 }
 
 void delay(volatile uint32_t s)
