@@ -43,9 +43,11 @@ void USART2_IRQHandler(void)
     if(USART2->SR & USART_SR_RXNE)
     {
         USART2->SR &= ~USART_SR_RXNE;
-        buff[buffpos] = USART2->DR;
-        buffpos++;
-        buffpos %= sizeof(buff);
+        //buff[buffpos] = USART2->DR;
+        //buffpos++;
+        //buffpos %= sizeof(buff);
+        //while(!(USART2->SR & USART_SR_TC));
+        USART2->DR = USART2->DR;
         //while(!(USART2->SR & USART_SR_TC));
     }
 }
@@ -75,18 +77,6 @@ int main(void)
      * NVIC_EnableIRQ(TIM5_IRQn); // Enables global interrupts, (Built in to M4 header)
      * TIM5->CR1 |= TIM_CR1_CEN; // Enables the timer clock
      */
-
-    /*The following is the required sequence in master mode.
-     * • Program the peripheral input clock in I2C_CR2 Register in order to generate correct
-     * timings
-     * • Configure the clock control registers
-     * • Configure the rise time register
-     * • Program the I2C_CR1 register to enable the peripheral
-     * • Set the START bit in the I2C_CR1 register to generate a Start condition
-     */
-
-    
-
 
     char mess[20];
     uint8_t count = 0;
@@ -191,6 +181,18 @@ void user_button_init(void)
 
 void i2c_init(void)
 {
+    /*The following is the required sequence in master mode.
+     * • Program the peripheral input clock in I2C_CR2 Register in order to generate correct
+     * timings
+     * • Configure the clock control registers
+     * • Configure the rise time register
+     * • Program the I2C_CR1 register to enable the peripheral
+     * • Set the START bit in the I2C_CR1 register to generate a Start condition
+     */
+
+    
+    RCC->APB1ENR |= RCC_APB1ENR_I2C1EN; // Enables the I2C1 periphery (pins B6 and B7)
+    I2C1->CR2 |= (50) << I2C_CR2_FREQ_Pos;
 
 }
 
