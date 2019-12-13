@@ -192,8 +192,26 @@ void i2c_init(void)
 
     
     RCC->APB1ENR |= RCC_APB1ENR_I2C1EN; // Enables the I2C1 periphery (pins B6 and B7)
-    I2C1->CR2 |= (50) << I2C_CR2_FREQ_Pos;
+    I2C1->CR2 |= (50) << I2C_CR2_FREQ_Pos; // Sets the frequeny to 50 MHz
+    I2C1->CCR |= I2C_CCR_FS | I2C_CCR_DUTY | (25) << I2C_CCR_CCR_Pos; // Sets the clock control such that fast mode is enabled with DUTY set to 1 and the time prescaler set to 25
+    I2C1->TRISE |= (16) << I2C_TRISE_Pos; // Programs a factor of 16 to relate the maximum rise time in Fast mode to the input clock
+    I2C1->CR1 |= I2C_CR1_PE; // Enables I2C bus
 
+    /* Transmission
+     * Set Start bit
+     * Set ADDR
+     * Set DR
+     * Use TxE bit to continuously communicate
+     * Set Stop bit to end
+     */
+
+    /* Recieving
+     * Set Start bit
+     * Set ADDR
+     * Set DR
+     * Use RxNE bit to continuously recieve
+     * Set Stop bit
+     */
 }
 
 void delay(volatile uint32_t s)
