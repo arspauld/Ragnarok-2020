@@ -11,8 +11,6 @@
 #define GPIO_PIN_13                ((uint16_t) 1U<<13)  /* Pin 5  selected    */
 
 volatile uint8_t write_flag = 0;
-volatile char buff[50];
-volatile uint8_t buffpos = 0;
 
 void system_clock_init(void);
 void serial_uart_init(uint32_t baud);
@@ -21,6 +19,7 @@ void user_button_init(void);
 void i2c_init(void);
 void delay(volatile uint32_t s);
 void uart_write(char* str);
+void i2c_write(uint8_t addr, uint8_t* data);
 
 void TIM5_IRQHandler(void)
 {
@@ -33,7 +32,7 @@ void EXTI15_10_IRQHandler(void)
     if(EXTI->PR & EXTI_PR_PR13) // Checks if the intterrupt is for Channel 13
     {
         EXTI->PR |= EXTI_PR_PR13; // Clear Interrupt bit
-        write_flag ^= 1; // Enables the write flag for the bit
+        write_flag = 1; // Enables the write flag for the bit
         GPIOA->ODR ^= GPIO_PIN_5; // Toggles LED
     }
 }
@@ -89,15 +88,6 @@ int main(void)
             write_flag = 0;
             sprintf(mess, "%u\n", count);
             uart_write(mess); // Writes the message buffer
-        }
-        if(buffpos != 0)
-        {
-            for(uint8_t i = 0; i < buffpos; i++)
-            {
-                USART2->DR = buff[i];
-                while(!(USART2->SR & USART_SR_TC)); // Breaks if the message is too frequent
-            }
-            buffpos = 0;
         }
     }
 
@@ -197,14 +187,6 @@ void i2c_init(void)
     I2C1->TRISE |= (16) << I2C_TRISE_Pos; // Programs a factor of 16 to relate the maximum rise time in Fast mode to the input clock
     I2C1->CR1 |= I2C_CR1_PE; // Enables I2C bus
 
-    /* Transmission
-     * Set Start bit
-     * Set ADDR
-     * Set DR
-     * Use TxE bit to continuously communicate
-     * Set Stop bit to end
-     */
-
     /* Recieving
      * Set Start bit
      * Set ADDR
@@ -228,6 +210,39 @@ void uart_write(char* str)
     {
         USART2->DR = str[i];
         while(!(USART2->SR & USART_SR_TC));
+    }
+}
+
+void i2c_write(uint8_t addr, uint8_t* data)
+{
+    /* Transmission
+     * Set Start bit
+     * Set ADDR
+     * Set DR
+     * Use TxE bit to continuously communicate
+     * Set Stop bit to end
+     */
+
+    uint8_t read = 0;
+    I2C1->CR1 |= I2C_CR1_START; // Sends the start condition
+    if(I2C1->SR1 & I2C_SR1_SB)
+    {
+        I2C1->DR = addr | read; // Places the address into the data register to send
+        if(I2C1->SR1 & I2C_SR1_ADDR)
+        {
+            if(I2C1->SR2 & I2C_SR1_TRA)
+            {
+                for(uint8_t i = 0; i < sizeof(data); i++)
+                {
+                    I2C1->DR = data[i]; // Places each byte of data
+                    if(i == sizeof(data) - 1)
+                    {
+                        I2C1->CR1 |= I2C_CR1_STOP; // Creates stop condition after last byte is transmitted
+                    }
+                    while(!(I2C1->SR1 & I2C_SR1_TXE)); // Waits until the data was sent
+                }
+            }
+        }
     }
 }
 
