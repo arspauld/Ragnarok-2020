@@ -59,6 +59,7 @@ int main(void)
     RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN | RCC_APB2ENR_EXTITEN; // Enables the System Configuration Capability and the External Interrupt/Event Controller
     serial_uart_init(115200); // Initializes USART2
     pwm_init(10); // Outputs a PWM on A0
+    i2c_init();
     user_button_init();
 
     /* Interrupt Driven LED Flash
@@ -77,7 +78,7 @@ int main(void)
      * TIM5->CR1 |= TIM_CR1_CEN; // Enables the timer clock
      */
 
-    char mess[20];
+    uint8_t mess[] = {0, 1, 2, 3, 4};
     uint8_t count = 0;
     while(1)
     {        
@@ -86,8 +87,9 @@ int main(void)
         {
             count++;
             write_flag = 0;
-            sprintf(mess, "%u\n", count);
-            uart_write(mess); // Writes the message buffer
+            //sprintf(mess, "%u\n", count);
+            //uart_write(mess); // Writes the message buffer
+            i2c_write(0x00,mess);
         }
     }
 
@@ -184,7 +186,7 @@ void i2c_init(void)
     RCC->APB1ENR |= RCC_APB1ENR_I2C1EN; // Enables the I2C1 periphery (pins B6 and B7)
     I2C1->CR2 |= (50) << I2C_CR2_FREQ_Pos; // Sets the frequeny to 50 MHz
     I2C1->CCR |= I2C_CCR_FS | I2C_CCR_DUTY | (25) << I2C_CCR_CCR_Pos; // Sets the clock control such that fast mode is enabled with DUTY set to 1 and the time prescaler set to 25
-    I2C1->TRISE |= (16) << I2C_TRISE_Pos; // Programs a factor of 16 to relate the maximum rise time in Fast mode to the input clock
+    I2C1->TRISE |= (16) << I2C_TRISE_TRISE_Pos; // Programs a factor of 16 to relate the maximum rise time in Fast mode to the input clock
     I2C1->CR1 |= I2C_CR1_PE; // Enables I2C bus
 
     /* Recieving
@@ -230,7 +232,7 @@ void i2c_write(uint8_t addr, uint8_t* data)
         I2C1->DR = addr | read; // Places the address into the data register to send
         if(I2C1->SR1 & I2C_SR1_ADDR)
         {
-            if(I2C1->SR2 & I2C_SR1_TRA)
+            if(I2C1->SR2 & I2C_SR2_TRA)
             {
                 for(uint8_t i = 0; i < sizeof(data); i++)
                 {
