@@ -11,6 +11,7 @@
 #define GPIO_PIN_13                ((uint16_t) 1U<<13)  /* Pin 5  selected    */
 
 volatile uint8_t write_flag = 0;
+volatile uint8_t adc_ready = 0;
 volatile uint16_t adc_reading = 0;
 
 void system_clock_init(void);
@@ -23,6 +24,7 @@ void delay(volatile uint32_t s);
 void uart_write(char* str);
 void i2c_write(uint8_t addr, uint8_t* data);
 void i2c_read(uint8_t addr, uint8_t* buf, uint8_t numbytes);
+uint16_t adc_read(void);
 
 void TIM5_IRQHandler(void)
 {
@@ -55,10 +57,11 @@ void USART2_IRQHandler(void)
 }
 
 void ADC_IRQHandler(void)
-{
+{    
     if(ADC1->SR & ADC_SR_EOC)
     {
-        adc_reading = ADC1->DR;
+        ADC1->SR &= ~ADC_SR_EOC; // Drops flag
+        adc_ready = 1; // Sets Software flag
     }
 }
 
@@ -69,8 +72,9 @@ int main(void)
     RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN | RCC_AHB1ENR_GPIOBEN | RCC_AHB1ENR_GPIOCEN; // Enables GPIO Ports A, B, and C
     RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN | RCC_APB2ENR_EXTITEN; // Enables the System Configuration Capability and the External Interrupt/Event Controller
     serial_uart_init(115200); // Initializes USART2
-    pwm_init(10); // Outputs a PWM on A0
-    i2c_init();
+    //pwm_init(10); // Outputs a PWM on A0
+    //i2c_init();
+    adc_init();
     user_button_init();
 
     /* Interrupt Driven LED Flash
@@ -89,7 +93,7 @@ int main(void)
      * TIM5->CR1 |= TIM_CR1_CEN; // Enables the timer clock
      */
 
-    uint8_t mess[] = {0, 1, 2, 3, 4};
+    char mess[20];
     uint8_t count = 0;
     while(1)
     {        
@@ -98,11 +102,11 @@ int main(void)
         {
             count++;
             write_flag = 0;
-            //sprintf(mess, "%u\n", count);
-            //uart_write(mess); // Writes the message buffer
-            i2c_write(0x00,mess);
+            //i2c_write(0x00,mess);
         }
-        
+        if(adc_ready) sprintf(mess, "%u\n", adc_read());
+        uart_write(mess); // Writes the message buffer
+        delay(1000000);
     }
 
     return 0;
@@ -205,12 +209,16 @@ void i2c_init(void)
 void adc_init(void)
 {
     RCC->APB2ENR |= RCC_APB2ENR_ADC1EN; // Enables ADC (voltage range of 0 - 1.7 V)
-    ADC1->SMPR2 |= (ADC_SMPR2_SMP0 & 0b111); // Sets the sampling of ADC1 channel 0 to 480 cycles
-    ADC1->SQR3 |= (ADC_SQR3_SQ1 & 0); // Sets the first ADC sequence to channel 0
+
+    GPIOA->MODER &= ~(0b11 << (2*1)); // Resets Pin 1 to Input (User LED)
+    GPIOA->MODER |=  (0b11 << (2*1)); // Sets Pin 1 to Analog
+
+    ADC1->SMPR2 |= (ADC_SMPR2_SMP1 & 0b111); // Sets the sampling of ADC1 channel 0 to 480 cycles
+    ADC1->SQR3 |= (ADC_SQR3_SQ1 & 1); // Sets the first ADC sequence to channel 0
     ADC1->SQR1 |= ((1 - 1) & ADC_SQR1_L); // Sets the number of sequences to 1
     ADC->CCR |= (ADC_CCR_ADCPRE & ((8/2)-1)); // Sets the ADC clock to have a prescaler of 8
     ADC1->CR1 |= ADC_CR1_EOCIE; // Enables an End of Conversion Interrupt
-    ADC1->CR2 |= ADC_CR2_CONT | ADC_CR2_ADON; // Turns on a continuous ADC
+    ADC1->CR2 |= ADC_CR2_ADON; // Turns on ADC
     ADC1->CR2 |= ADC_CR2_SWSTART; // Starts ADC Conversions
 
     NVIC_EnableIRQ(ADC_IRQn); // Starts the ADC Interrupt
@@ -298,6 +306,13 @@ void i2c_read(uint8_t addr, uint8_t* buf, uint8_t numbytes)
             }
         }
     }
+}
+
+uint16_t adc_read(void)
+{
+    // Reads ADC Data Register and restarts conversion
+    ADC1->CR2 |= ADC_CR2_SWSTART;
+    return (uint16_t) ADC1->DR;
 }
 
 /*

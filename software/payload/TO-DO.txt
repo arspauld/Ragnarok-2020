@@ -14,6 +14,7 @@ Clock - Changing Clock Sources and Frequencies
 Timer - Timed Interrupts and PWM
 GPIO - External Interrupts and General Interactions
 UART/USART - Blocking and Non-Blocking Reading and Writing with Interrupts
+ADC - Background conversions using read flags and interrupts
 
 
 TO-DO:
@@ -22,4 +23,3 @@ SPI - Develop
 I2C - Test
 Self-Reset - Investigate
 Non-Volatile Memory - Investigate
-ADC - Investigate
