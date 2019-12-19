@@ -71,7 +71,7 @@ int main(void)
 
     RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN | RCC_AHB1ENR_GPIOBEN | RCC_AHB1ENR_GPIOCEN; // Enables GPIO Ports A, B, and C
     RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN | RCC_APB2ENR_EXTITEN; // Enables the System Configuration Capability and the External Interrupt/Event Controller
-    serial_uart_init(115200); // Initializes USART2
+    serial_uart_init(9600); // Initializes USART2
     pwm_init(10); // Outputs a PWM on A0
     //i2c_init();
     adc_init();
