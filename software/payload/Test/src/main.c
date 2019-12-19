@@ -139,10 +139,11 @@ void spi_init()
 
     // Initializes SPI1 pins
     GPIOA -> MODER &= ~((0b11 << 14) | (0b11 << 12) | (0b11 << 10)); // Resets Pins PA5, PA6, PA7
-    GPIOA -> MODER |= (0b10 << 14) | (0b10 << 12) | (0b10 << 10); // Sets pins PA5, PA6, PA7 as Alternate Function
+    GPIOA -> MODER |=  (0b10 << 14) | (0b10 << 12) | (0b10 << 10); // Sets pins PA5, PA6, PA7 as Alternate Function
     GPIOA -> AFR[0] |= (0b0101 << 28) | (0b0101 << 24) | (0b0101 << 20); // Specifies that pins PA5, PA6, PA7 should be Alternate Function 5
 
-    
+    // Setup SPI1 Control Registers
+    SPI1 -> CR1 |= SPI_CR1_DFF | SPI_CR1_CPOL | SPI_CR1_CPHA | SPI_CR1_MSTR;
 }
 
 void pwm_init(uint8_t duty)
