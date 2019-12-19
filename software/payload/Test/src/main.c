@@ -25,6 +25,7 @@ void uart_write(char* str);
 void i2c_write(uint8_t addr, uint8_t* data);
 void i2c_read(uint8_t addr, uint8_t* buf, uint8_t numbytes);
 uint16_t adc_read(void);
+void reset(void);
 
 void TIM5_IRQHandler(void)
 {
@@ -72,7 +73,7 @@ int main(void)
     RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN | RCC_AHB1ENR_GPIOBEN | RCC_AHB1ENR_GPIOCEN; // Enables GPIO Ports A, B, and C
     RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN | RCC_APB2ENR_EXTITEN; // Enables the System Configuration Capability and the External Interrupt/Event Controller
     serial_uart_init(115200); // Initializes USART2
-    //pwm_init(10); // Outputs a PWM on A0
+    pwm_init(10); // Outputs a PWM on A0
     //i2c_init();
     adc_init();
     user_button_init();
@@ -102,6 +103,8 @@ int main(void)
         {
             count++;
             write_flag = 0;
+            //uart_write("RESET\n");
+            reset();
             //i2c_write(0x00,mess);
         }
         if(adc_ready) sprintf(mess, "%u\n", adc_read());
@@ -313,6 +316,11 @@ uint16_t adc_read(void)
     // Reads ADC Data Register and restarts conversion
     ADC1->CR2 |= ADC_CR2_SWSTART;
     return (uint16_t) ADC1->DR;
+}
+
+void reset(void)
+{
+    NVIC_SystemReset(); // Built in function that performs a software reset to the system
 }
 
 /*
