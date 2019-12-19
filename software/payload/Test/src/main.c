@@ -12,7 +12,6 @@
 
 volatile uint8_t write_flag = 0;
 volatile uint8_t adc_ready = 0;
-volatile uint16_t adc_reading = 0;
 
 void system_clock_init(void);
 void serial_uart_init(uint32_t baud);
