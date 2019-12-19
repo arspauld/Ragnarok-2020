@@ -20,6 +20,6 @@ ADC - Background conversions using read flags and interrupts
 TO-DO:
 -------------------------------------------------------------------
 SPI - Develop
-I2C - Test
+I2C - Test and Verify
 Self-Reset - Investigate
 Non-Volatile Memory - Investigate
