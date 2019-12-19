@@ -11,12 +11,14 @@
 #define GPIO_PIN_13                ((uint16_t) 1U<<13)  /* Pin 5  selected    */
 
 volatile uint8_t write_flag = 0;
+volatile uint16_t adc_reading = 0;
 
 void system_clock_init(void);
 void serial_uart_init(uint32_t baud);
 void pwm_init(uint8_t duty);
 void user_button_init(void);
 void i2c_init(void);
+void adc_init(void);
 void delay(volatile uint32_t s);
 void uart_write(char* str);
 void i2c_write(uint8_t addr, uint8_t* data);
@@ -49,6 +51,14 @@ void USART2_IRQHandler(void)
         //while(!(USART2->SR & USART_SR_TC));
         USART2->DR = USART2->DR;
         //while(!(USART2->SR & USART_SR_TC));
+    }
+}
+
+void ADC_IRQHandler(void)
+{
+    if(ADC1->SR & ADC_SR_EOC)
+    {
+        adc_reading = ADC1->DR;
     }
 }
 
@@ -92,6 +102,7 @@ int main(void)
             //uart_write(mess); // Writes the message buffer
             i2c_write(0x00,mess);
         }
+        
     }
 
     return 0;
@@ -189,6 +200,20 @@ void i2c_init(void)
     I2C1->CCR |= I2C_CCR_FS | I2C_CCR_DUTY | (25) << I2C_CCR_CCR_Pos; // Sets the clock control such that fast mode is enabled with DUTY set to 1 and the time prescaler set to 25
     I2C1->TRISE |= (16) << I2C_TRISE_TRISE_Pos; // Programs a factor of 16 to relate the maximum rise time in Fast mode to the input clock
     I2C1->CR1 |= I2C_CR1_PE; // Enables I2C bus
+}
+
+void adc_init(void)
+{
+    RCC->APB2ENR |= RCC_APB2ENR_ADC1EN; // Enables ADC (voltage range of 0 - 1.7 V)
+    ADC1->SMPR2 |= (ADC_SMPR2_SMP0 & 0b111); // Sets the sampling of ADC1 channel 0 to 480 cycles
+    ADC1->SQR3 |= (ADC_SQR3_SQ1 & 0); // Sets the first ADC sequence to channel 0
+    ADC1->SQR1 |= ((1 - 1) & ADC_SQR1_L); // Sets the number of sequences to 1
+    ADC->CCR |= (ADC_CCR_ADCPRE & ((8/2)-1)); // Sets the ADC clock to have a prescaler of 8
+    ADC1->CR1 |= ADC_CR1_EOCIE; // Enables an End of Conversion Interrupt
+    ADC1->CR2 |= ADC_CR2_CONT | ADC_CR2_ADON; // Turns on a continuous ADC
+    ADC1->CR2 |= ADC_CR2_SWSTART; // Starts ADC Conversions
+
+    NVIC_EnableIRQ(ADC_IRQn); // Starts the ADC Interrupt
 }
 
 void delay(volatile uint32_t s)
