@@ -1,0 +1,25 @@
+Basic STM32 interactions:
+-------------------------------------------------------------------
+Timer
+Communications: UART/USART, I2C, and SPI
+Interface: GPIO and ADC
+Non-Volatile Memory
+Self-Reset
+Clock
+
+
+Completed:
+-------------------------------------------------------------------
+Clock - Changing Clock Sources and Frequencies
+Timer - Timed Interrupts and PWM
+GPIO - External Interrupts and General Interactions
+UART/USART - Blocking and Non-Blocking Reading and Writing with Interrupts
+
+
+TO-DO:
+-------------------------------------------------------------------
+SPI - Develop
+I2C - Test
+Self-Reset - Investigate
+Non-Volatile Memory - Investigate
+ADC - Investigate
