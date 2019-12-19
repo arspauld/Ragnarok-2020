@@ -16,8 +16,11 @@ void system_clock_init(void);
 void serial_uart_init(uint32_t baud);
 void pwm_init(uint8_t duty);
 void user_button_init(void);
+void i2c_init(void);
 void delay(volatile uint32_t s);
 void uart_write(char* str);
+void i2c_write(uint8_t addr, uint8_t* data);
+void i2c_read(uint8_t addr, uint8_t* buf, uint8_t numbytes);
 
 void TIM5_IRQHandler(void)
 {
@@ -30,8 +33,22 @@ void EXTI15_10_IRQHandler(void)
     if(EXTI->PR & EXTI_PR_PR13) // Checks if the intterrupt is for Channel 13
     {
         EXTI->PR |= EXTI_PR_PR13; // Clear Interrupt bit
-        write_flag ^= 1; // Enables the write flag for the bit
+        write_flag = 1; // Enables the write flag for the bit
         GPIOA->ODR ^= GPIO_PIN_5; // Toggles LED
+    }
+}
+
+void USART2_IRQHandler(void)
+{
+    if(USART2->SR & USART_SR_RXNE)
+    {
+        USART2->SR &= ~USART_SR_RXNE;
+        //buff[buffpos] = USART2->DR;
+        //buffpos++;
+        //buffpos %= sizeof(buff);
+        //while(!(USART2->SR & USART_SR_TC));
+        USART2->DR = USART2->DR;
+        //while(!(USART2->SR & USART_SR_TC));
     }
 }
 
@@ -43,6 +60,7 @@ int main(void)
     RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN | RCC_APB2ENR_EXTITEN; // Enables the System Configuration Capability and the External Interrupt/Event Controller
     serial_uart_init(115200); // Initializes USART2
     pwm_init(10); // Outputs a PWM on A0
+    i2c_init();
     user_button_init();
 
     /* Interrupt Driven LED Flash
@@ -61,19 +79,7 @@ int main(void)
      * TIM5->CR1 |= TIM_CR1_CEN; // Enables the timer clock
      */
 
-    /*The following is the required sequence in master mode.
-     * • Program the peripheral input clock in I2C_CR2 Register in order to generate correct
-     * timings
-     * • Configure the clock control registers
-     * • Configure the rise time register
-     * • Program the I2C_CR1 register to enable the peripheral
-     * • Set the START bit in the I2C_CR1 register to generate a Start condition
-     */
-
-    
-
-
-    char mess[20];
+    uint8_t mess[] = {0, 1, 2, 3, 4};
     uint8_t count = 0;
     while(1)
     {        
@@ -82,8 +88,9 @@ int main(void)
         {
             count++;
             write_flag = 0;
-            sprintf(mess, "%u\n", count);
-            uart_write(mess); // Writes the message buffer
+            //sprintf(mess, "%u\n", count);
+            //uart_write(mess); // Writes the message buffer
+            i2c_write(0x00,mess);
         }
     }
 
@@ -123,8 +130,10 @@ void serial_uart_init(uint32_t baud)
 
     USART2->BRR |= (SystemCoreClock / 2 / (16 * baud) << USART_BRR_DIV_Mantissa_Pos) | (SystemCoreClock / 2 / baud) % 16; // Sets a baud rate divider of 325.5 (9600 baud)
     
-    USART2->CR1 |= USART_CR1_RE | USART_CR1_TE | USART_CR1_UE; // Enables RX, TX, RX Interrupt, and USART
+    USART2->CR1 |= USART_CR1_RE | USART_CR1_TE | USART_CR1_RXNEIE |  USART_CR1_UE; // Enables RX, TX, RX Interrupt, and USART
     //USART2->CR2 |= USART_CR2_CLKEN; // Enables the clock signal
+
+    NVIC_EnableIRQ(USART2_IRQn);
 
     while(!(USART2->SR & USART_SR_TC)); // Clear TC Flag
 }
@@ -180,6 +189,25 @@ void user_button_init(void)
     NVIC_EnableIRQ(EXTI15_10_IRQn); // Enables the EXTI Interrupt for Channels 10 through 15
 }
 
+void i2c_init(void)
+{
+    /*The following is the required sequence in master mode.
+     * • Program the peripheral input clock in I2C_CR2 Register in order to generate correct
+     * timings
+     * • Configure the clock control registers
+     * • Configure the rise time register
+     * • Program the I2C_CR1 register to enable the peripheral
+     * • Set the START bit in the I2C_CR1 register to generate a Start condition
+     */
+
+    
+    RCC->APB1ENR |= RCC_APB1ENR_I2C1EN; // Enables the I2C1 periphery (pins B6 and B7)
+    I2C1->CR2 |= (50) << I2C_CR2_FREQ_Pos; // Sets the frequeny to 50 MHz
+    I2C1->CCR |= I2C_CCR_FS | I2C_CCR_DUTY | (25) << I2C_CCR_CCR_Pos; // Sets the clock control such that fast mode is enabled with DUTY set to 1 and the time prescaler set to 25
+    I2C1->TRISE |= (16) << I2C_TRISE_TRISE_Pos; // Programs a factor of 16 to relate the maximum rise time in Fast mode to the input clock
+    I2C1->CR1 |= I2C_CR1_PE; // Enables I2C bus
+}
+
 void delay(volatile uint32_t s)
 {
     for(s; s>0; s--){
@@ -193,7 +221,74 @@ void uart_write(char* str)
     for(uint8_t i = 0; i < strlen(str); i++)
     {
         USART2->DR = str[i];
-        while(!(USART2->SR & USART_SR_TC));
+        while(!(USART2->SR & USART_SR_TC)); // Waits until data byte is transmitted
+    }
+}
+
+void i2c_write(uint8_t addr, uint8_t* data)
+{
+    /* Recieving
+     * Set Start bit
+     * Set ADDR
+     * Set DR
+     * Use RxNE bit to continuously recieve
+     * Set Stop bit
+     */
+
+    uint8_t read = 0;
+    I2C1->CR1 |= I2C_CR1_START; // Sends the start condition
+    if(I2C1->SR1 & I2C_SR1_SB)
+    {
+        I2C1->DR = addr | read; // Places the address into the data register to send
+        if(I2C1->SR1 & I2C_SR1_ADDR) // Checks SR1 register
+        {
+            if(I2C1->SR2 & I2C_SR2_TRA) // Checks SR2 register
+            {
+                for(uint8_t i = 0; i < sizeof(data); i++)
+                {
+                    I2C1->DR = data[i]; // Places each byte of data
+                    if(i == sizeof(data) - 1) // Conducts process 
+                    {
+                        I2C1->CR1 |= I2C_CR1_STOP; // Creates stop condition after last byte is transmitted
+                    }
+                    while(!(I2C1->SR1 & I2C_SR1_TXE)); // Waits until the data was sent
+                }
+            }
+        }
+    }
+}
+
+void i2c_read(uint8_t addr, uint8_t* buf, uint8_t numbytes)
+{
+    /* Transmission
+     * Set Start bit
+     * Set ADDR
+     * Set DR
+     * Use TxE bit to continuously communicate
+     * Set Stop bit to end
+     */
+
+    uint8_t read = 1;
+    I2C1->CR1 |= I2C_CR1_START | I2C_CR1_ACK; // Sends the start condition and enables acknowledge return
+    if(I2C1->SR1 & I2C_SR1_SB)
+    {
+        I2C1->DR = addr | read; // Places the address into the data register to send
+        if(I2C1->SR1 & I2C_SR1_ADDR) // Checks SR1 register
+        {
+            if(!(I2C1->SR2 & I2C_SR2_TRA)) // Checks SR2 register
+            {
+                for(uint8_t i = 0; i < numbytes; i++)
+                {
+                    while(!(I2C1->SR1 & I2C_SR1_RXNE)); // Waits until the data was recieved
+                    buf[i] = I2C1->DR; // Places each byte of data
+                    if(i == numbytes - 2) // Conducts the below process after reading the second to last byte
+                    {
+                        I2C1->CR1 &= ~I2C_CR1_ACK; // Clears ACK bit
+                        I2C1->CR1 |= I2C_CR1_STOP; // Creates stop condition after last byte is transmitted
+                    }
+                }
+            }
+        }
     }
 }
 
