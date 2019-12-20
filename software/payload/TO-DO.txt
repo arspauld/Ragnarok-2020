@@ -22,4 +22,4 @@ TO-DO:
 -------------------------------------------------------------------
 SPI - Develop
 I2C - Test and Verify
-Non-Volatile Memory - Investigate
+Non-Volatile Memory - Make Less Sketchy

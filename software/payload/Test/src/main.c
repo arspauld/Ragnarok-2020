@@ -12,7 +12,7 @@
 
 volatile uint8_t write_flag = 0;
 volatile uint8_t adc_ready = 0;
-volatile uint8_t* val = (volatile uint8_t*) 0x0801F000;
+volatile uint32_t* val = (volatile uint32_t*) 0x0801F000;
 
 void system_clock_init(void);
 void serial_uart_init(uint32_t baud);
@@ -98,9 +98,9 @@ int main(void)
     char mess[20];
     uint8_t count = 0;
 
-    sprintf(mess, "%u\n", *val);
+    sprintf(mess, "%lu\n", *val);
     uart_write(mess);
-    uint8_t temp = *val;
+    uint32_t temp = *val;
     if(temp) // temp != 0
     {
         while(FLASH->SR & FLASH_SR_BSY); // Waits until Flash is finished
@@ -252,6 +252,9 @@ void flash_init(void)
     // Unlocks Flash
     FLASH->KEYR = 0x45670123;
     FLASH->KEYR = 0xCDEF89AB;
+
+    while(FLASH->SR & FLASH_SR_BSY); // Waits until Flash is finished
+    FLASH->CR |= FLASH_CR_PSIZE_1;
 }
 
 void delay(volatile uint32_t s)
