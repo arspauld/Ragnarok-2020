@@ -12,6 +12,7 @@
 
 volatile uint8_t write_flag = 0;
 volatile uint8_t adc_ready = 0;
+volatile uint8_t* val = (volatile uint8_t*) 0x0801F000;
 
 void system_clock_init(void);
 void serial_uart_init(uint32_t baud);
@@ -19,6 +20,7 @@ void pwm_init(uint8_t duty);
 void user_button_init(void);
 void i2c_init(void);
 void adc_init(void);
+void flash_init(void);
 void delay(volatile uint32_t s);
 void uart_write(char* str);
 void i2c_write(uint8_t addr, uint8_t* data);
@@ -68,10 +70,10 @@ void ADC_IRQHandler(void)
 int main(void)
 {
     system_clock_init();
-
+    flash_init();
     RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN | RCC_AHB1ENR_GPIOBEN | RCC_AHB1ENR_GPIOCEN; // Enables GPIO Ports A, B, and C
     RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN | RCC_APB2ENR_EXTITEN; // Enables the System Configuration Capability and the External Interrupt/Event Controller
-    serial_uart_init(9600); // Initializes USART2
+    serial_uart_init(115200); // Initializes USART2
     pwm_init(10); // Outputs a PWM on A0
     //i2c_init();
     adc_init();
@@ -95,6 +97,25 @@ int main(void)
 
     char mess[20];
     uint8_t count = 0;
+
+    sprintf(mess, "%u\n", *val);
+    uart_write(mess);
+    uint8_t temp = *val;
+    if(temp) // temp != 0
+    {
+        while(FLASH->SR & FLASH_SR_BSY); // Waits until Flash is finished
+        FLASH->CR |= FLASH_CR_PG; // Enables Programming
+        *val = temp - 1; // Programs value (only bits from 1->0 is program only)
+        while(FLASH->SR & FLASH_SR_BSY);
+    }
+    else
+    {
+        while(FLASH->SR & FLASH_SR_BSY); // Waits until Flash is finished
+        FLASH->CR |= (4 << FLASH_CR_SNB_Pos) | FLASH_CR_SER; // Enable Sector 4 erase and the Sector Erase Bit
+        FLASH->CR |= FLASH_CR_STRT; // Starts the erase
+        while(FLASH->SR & FLASH_SR_BSY);
+    }
+
     while(1)
     {        
         // Do Stuff
@@ -107,7 +128,7 @@ int main(void)
             //i2c_write(0x00,mess);
         }
         if(adc_ready) sprintf(mess, "%u\n", adc_read());
-        uart_write(mess); // Writes the message buffer
+        //uart_write(mess); // Writes the message buffer
         delay(1000000);
     }
 
@@ -224,6 +245,13 @@ void adc_init(void)
     ADC1->CR2 |= ADC_CR2_SWSTART; // Starts ADC Conversions
 
     NVIC_EnableIRQ(ADC_IRQn); // Starts the ADC Interrupt
+}
+
+void flash_init(void)
+{
+    // Unlocks Flash
+    FLASH->KEYR = 0x45670123;
+    FLASH->KEYR = 0xCDEF89AB;
 }
 
 void delay(volatile uint32_t s)
