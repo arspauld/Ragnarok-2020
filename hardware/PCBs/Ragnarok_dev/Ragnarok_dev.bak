@@ -1,0 +1,38 @@
+EESchema Schematic File Version 4
+EELAYER 26 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title "Ragnarok Development Board"
+Date "2019-12-18"
+Rev "v0.1"
+Comp "UAH Space Hardware Club"
+Comment1 "Alex Spaulding"
+Comment2 "Shelby Westrich"
+Comment3 "Brennan Haralson"
+Comment4 "Shelby Tull"
+$EndDescr
+$Comp
+L MCU_ST_STM32F4:STM32F427VITx U?
+U 1 1 5DFAFDA0
+P 5500 4000
+F 0 "U?" H 5500 1114 50  0000 C CNN
+F 1 "STM32F427VITx" H 5500 1023 50  0000 C CNN
+F 2 "Package_QFP:LQFP-100_14x14mm_P0.5mm" H 4800 1400 50  0001 R CNN
+F 3 "http://www.st.com/st-web-ui/static/active/en/resource/technical/document/datasheet/DM00071990.pdf" H 5500 4000 50  0001 C CNN
+	1    5500 4000
+	1    0    0    -1  
+$EndComp
+$Comp
+L Interface_USB:FT232RL U?
+U 1 1 5DFAFF77
+P 2500 2350
+F 0 "U?" H 2500 3528 50  0000 C CNN
+F 1 "FT232RL" H 2500 3437 50  0000 C CNN
+F 2 "Package_SO:SSOP-28_5.3x10.2mm_P0.65mm" H 2500 2350 50  0001 C CNN
+F 3 "http://www.ftdichip.com/Products/ICs/FT232RL.htm" H 2500 2350 50  0001 C CNN
+	1    2500 2350
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC
