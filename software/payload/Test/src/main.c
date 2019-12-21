@@ -12,7 +12,7 @@
 
 volatile uint8_t write_flag = 0;
 volatile uint8_t adc_ready = 0;
-volatile uint32_t* val = (volatile uint32_t*) 0x0801F000;
+volatile uint32_t* const val = (volatile uint32_t*) 0x0800C000; // Sets address of variable to a a spot in the Flash
 
 void system_clock_init(void);
 void serial_uart_init(uint32_t baud);
@@ -27,6 +27,11 @@ void i2c_write(uint8_t addr, uint8_t* data);
 void i2c_read(uint8_t addr, uint8_t* buf, uint8_t numbytes);
 uint16_t adc_read(void);
 void reset(void);
+void flash_write8(volatile uint8_t* addr, uint8_t val);
+void flash_write16(volatile uint16_t* addr, uint16_t val);
+void flash_write32(volatile uint32_t* addr, uint32_t val);
+void flash_erase(uint8_t sector);
+void flash_overwrite(volatile uint32_t* addresses[], uint32_t values[], uint8_t sector);
 
 void TIM5_IRQHandler(void)
 {
@@ -98,23 +103,11 @@ int main(void)
     char mess[20];
     uint8_t count = 0;
 
-    sprintf(mess, "%lu\n", *val);
-    uart_write(mess);
     uint32_t temp = *val;
-    if(temp) // temp != 0
-    {
-        while(FLASH->SR & FLASH_SR_BSY); // Waits until Flash is finished
-        FLASH->CR |= FLASH_CR_PG; // Enables Programming
-        *val = temp - 1; // Programs value (only bits from 1->0 is program only)
-        while(FLASH->SR & FLASH_SR_BSY);
-    }
-    else
-    {
-        while(FLASH->SR & FLASH_SR_BSY); // Waits until Flash is finished
-        FLASH->CR |= (4 << FLASH_CR_SNB_Pos) | FLASH_CR_SER; // Enable Sector 4 erase and the Sector Erase Bit
-        FLASH->CR |= FLASH_CR_STRT; // Starts the erase
-        while(FLASH->SR & FLASH_SR_BSY);
-    }
+    if(temp) flash_write32(val,temp/2);
+    else flash_erase(3);
+    sprintf(mess, "%lu -> %lu\n", temp, *val);
+    uart_write(mess);
 
     while(1)
     {        
@@ -127,9 +120,9 @@ int main(void)
             reset();
             //i2c_write(0x00,mess);
         }
-        if(adc_ready) sprintf(mess, "%u\n", adc_read());
+        if(adc_ready) sprintf(mess, "%lu -> %lu\n", temp, *val);//"%lu\n", adc_read());
         //uart_write(mess); // Writes the message buffer
-        delay(1000000);
+        delay(10000000);
     }
 
     return 0;
@@ -254,14 +247,12 @@ void flash_init(void)
     FLASH->KEYR = 0xCDEF89AB;
 
     while(FLASH->SR & FLASH_SR_BSY); // Waits until Flash is finished
-    FLASH->CR |= FLASH_CR_PSIZE_1;
+    FLASH->CR |= FLASH_CR_PSIZE_1; // Sets 32 bit parallelism (writes 32 bytes at a time)
 }
 
 void delay(volatile uint32_t s)
 {
-    for(s; s>0; s--){
-        // Do nothing
-    }
+    for(s; s>0; s--);
 }
 
 void uart_write(char* str)
@@ -350,7 +341,69 @@ uint16_t adc_read(void)
 
 void reset(void)
 {
+    flash_erase(3);
+    //flash_erase(4);
     NVIC_SystemReset(); // Built in function that performs a software reset to the system
+}
+
+void flash_write8(volatile uint8_t* addr, uint8_t val) 
+{
+    // Writes value to Flash without checking memory and for 8 bit parallelism
+    while(FLASH->SR & FLASH_SR_BSY); // Waits until Flash is finished
+    FLASH->CR |= FLASH_CR_PG; // Enables Programming
+    *addr = val; // Programs value (only bits from 1->0 is program only)
+    while(FLASH->SR & FLASH_SR_BSY);
+    FLASH->CR &= ~FLASH_CR_PG; // Disables programming
+}
+
+void flash_write16(volatile uint16_t* addr, uint16_t val)
+{
+    // Writes value to Flash without checking memory and for 16 bit parallelism
+    while(FLASH->SR & FLASH_SR_BSY); // Waits until Flash is finished
+    FLASH->CR |= FLASH_CR_PG; // Enables Programming
+    *addr = val; // Programs value (only bits from 1->0 is program only)
+    while(FLASH->SR & FLASH_SR_BSY);
+    FLASH->CR &= ~FLASH_CR_PG; // Disables programming
+}
+
+void flash_write32(volatile uint32_t* addr, uint32_t val)
+{
+    // Writes value to Flash without checking memory and for 32 bit parallelism
+    // Will most likely always be used with our voltage input
+    while(FLASH->SR & FLASH_SR_BSY); // Waits until Flash is finished
+    FLASH->CR |= FLASH_CR_PG; // Enables Programming
+    *addr = val; // Programs value (only bits from 1->0 is program only)
+    while(FLASH->SR & FLASH_SR_BSY);
+    FLASH->CR &= ~FLASH_CR_PG; // Disables programming
+}
+
+void flash_erase(uint8_t sector)
+{
+    while(FLASH->SR & FLASH_SR_BSY); // Waits until Flash is finished
+    FLASH->CR &= ~FLASH_CR_SNB; // Clears Previous Sector Selection
+    FLASH->CR |= ((sector & 0xF) << FLASH_CR_SNB_Pos) | FLASH_CR_SER; // Sector erase and the Sector Erase Bit (Sector address is limited to 4 bits)
+    FLASH->CR |= FLASH_CR_STRT; // Starts the erase
+    while(FLASH->SR & FLASH_SR_BSY);
+}
+
+
+void flash_overwrite(volatile uint32_t* addresses[], uint32_t values[], uint8_t sector) // Not tested
+{
+    // Erase
+    while(FLASH->SR & FLASH_SR_BSY); // Waits until Flash is finished
+    FLASH->CR &= ~FLASH_CR_SNB; // Clears Previous Sector Selection
+    FLASH->CR |= ((sector & 0xF) << FLASH_CR_SNB_Pos) | FLASH_CR_SER; // Sector erase and the Sector Erase Bit (Sector address is limited to 4 bits)
+    FLASH->CR |= FLASH_CR_STRT; // Starts the erase
+    while(FLASH->SR & FLASH_SR_BSY);
+
+    // Program
+    FLASH->CR |= FLASH_CR_PG; // Enables Programming
+    for(uint8_t i = 0, i < (sizeof(values) / 4); i++)
+    {
+        *(addresses[i]) = values[i];
+    }
+    while(FLASH->SR & FLASH_SR_BSY);
+    FLASH->CR &= ~FLASH_CR_PG; // Disables programming
 }
 
 /*
