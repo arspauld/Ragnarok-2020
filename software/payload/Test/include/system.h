@@ -53,4 +53,14 @@
 #define AF14                        14U /* Alternate Function 14 */
 #define AF15                        15U /* Alternate Function 15 */
 
+#define min(x,y) ({ \
+    __typeof__ (x) _x = (x);     \
+    __typeof__ (y) _y = (y);     \
+    _x < _y ? _x : _y; })
+
+#define max(x,y) ({ \
+    __typeof__ (x) _x = (x);     \
+    __typeof__ (y) _y = (y);     \
+    _x > _y ? _x : _y; })
+
 #endif /* SYSTEM_H_ */

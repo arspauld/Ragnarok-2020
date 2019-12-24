@@ -16,7 +16,6 @@
 //If head == tail, the buffer is empty
 //If head == tail + 1 (or (tail = array_length - 1 and head == 0)), there is one character in the buffer, located at tail
 
-
 //--------For unsigned 8 bit integers--------
 typedef struct RingBufferu8
 {
