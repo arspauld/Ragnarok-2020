@@ -16,10 +16,10 @@ GPIO - External Interrupts and General Interactions
 UART/USART - Blocking and Non-Blocking Reading and Writing with Interrupts
 ADC - Background conversions using read flags and interrupts
 Self-Reset - Built-in function
+Non-Volatile Memory - Made a function to erase sectors and write values, Can make better
 
 
 TO-DO:
 -------------------------------------------------------------------
 SPI - Develop
 I2C - Test and Verify
-Non-Volatile Memory - Make Less Sketchy

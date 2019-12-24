@@ -1,4 +1,6 @@
-#include "stm32f410rx.h"
+#include "system.h"
+#include "USART.h"
+#include "RingBuffer.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -6,9 +8,6 @@
 #define PLL_P 2
 #define PLL_N 200
 #define PLL_M 16
-
-#define GPIO_PIN_5                 ((uint16_t) 1U<<5 )  /* Pin 5  selected    */
-#define GPIO_PIN_13                ((uint16_t) 1U<<13)  /* Pin 5  selected    */
 
 volatile uint8_t write_flag = 0;
 volatile uint8_t adc_ready = 0;
@@ -31,7 +30,7 @@ void flash_write8(volatile uint8_t* addr, uint8_t val);
 void flash_write16(volatile uint16_t* addr, uint16_t val);
 void flash_write32(volatile uint32_t* addr, uint32_t val);
 void flash_erase(uint8_t sector);
-void flash_overwrite(volatile uint32_t* addresses[], uint32_t values[], uint8_t sector);
+void flash_overwrite(volatile uint32_t* addresses[], uint32_t values[], uint16_t length, uint8_t sector);
 
 void TIM5_IRQHandler(void)
 {
@@ -155,7 +154,7 @@ void serial_uart_init(uint32_t baud)
     GPIOA->MODER |= (0b10 << 8) | (0b10 << 6) | (0b10 << 4); // Sets Pins 2,  3, and 4 to Alternate Function
 
     GPIOA->OSPEEDR |= (0b11 << 8) | (0b11 << 6) | (0b11 << 4); // Sets pins 2, 3, and 4 to high speed
-    GPIOA->AFR[0] |= (7 << 16) | (7 << 12) | (7 << 8); // Enabls USART2 Alternate Function for pins 2, 3, and 4
+    GPIOA->AFR[0] |= (7 << 16) | (7 << 12) | (7 << 8); // Enables USART2 Alternate Function for pins 2, 3, and 4
     
     RCC->APB1ENR |= RCC_APB1ENR_USART2EN; // Enables USART2 peripheral
 
@@ -387,7 +386,7 @@ void flash_erase(uint8_t sector)
 }
 
 
-void flash_overwrite(volatile uint32_t* addresses[], uint32_t values[], uint8_t sector) // Not tested
+void flash_overwrite(volatile uint32_t* addresses[], uint32_t values[], uint16_t length, uint8_t sector) // Not tested
 {
     // Erase
     while(FLASH->SR & FLASH_SR_BSY); // Waits until Flash is finished
@@ -398,7 +397,7 @@ void flash_overwrite(volatile uint32_t* addresses[], uint32_t values[], uint8_t 
 
     // Program
     FLASH->CR |= FLASH_CR_PG; // Enables Programming
-    for(uint8_t i = 0, i < (sizeof(values) / 4); i++)
+    for(uint8_t i = 0; i < length; i++)
     {
         *(addresses[i]) = values[i];
     }
