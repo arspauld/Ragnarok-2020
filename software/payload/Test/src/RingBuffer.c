@@ -5,7 +5,6 @@
  *  Author: dcorey
  */ 
 #include "RingBuffer.h"
-//#include <asf.h>
 
 
 void rbu8_print(RingBufferu8_t* buffer, const char* data)

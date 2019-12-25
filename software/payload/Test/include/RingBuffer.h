@@ -9,7 +9,12 @@
 #ifndef RINGBUFFER_H_
 #define RINGBUFFER_H_
 
-#include <inttypes.h>
+#include <stdint.h>
+
+#define min(x,y) ({ \
+    __typeof__ (x) _x = (x);     \
+    __typeof__ (y) _y = (y);     \
+    _x < _y ? _x : _y; })
 
 
 // These are circular buffers.

@@ -1,5 +1,8 @@
 #include "system.h"
+#include "ADC.h"
+#include "EXTI.h"
 #include "USART.h"
+#include "I2C.h"
 #include "RingBuffer.h"
 #include "flash.h"
 #include <string.h>
@@ -12,19 +15,11 @@
 
 volatile uint8_t write_flag = 0;
 volatile uint8_t adc_ready = 0;
-volatile uint32_t* const val = (volatile uint32_t*) 0x0800C000; // Sets address of variable to a a spot in the Flash
+//volatile uint32_t* const val = (volatile uint32_t*) 0x0800C000; // Sets address of variable to a a spot in the Flash
 
-void system_clock_init(void);
 void serial_uart_init(uint32_t baud);
 void pwm_init(uint8_t duty);
-void user_button_init(void);
-void i2c_init(void);
-void adc_init(void);
 void delay(volatile uint32_t s);
-void uart_write(char* str);
-void i2c_write(uint8_t addr, uint8_t* data);
-void i2c_read(uint8_t addr, uint8_t* buf, uint8_t numbytes);
-uint16_t adc_read(void);
 void reset(void);
 
 void TIM5_IRQHandler(void)
@@ -97,11 +92,11 @@ int main(void)
     char mess[20];
     uint8_t count = 0;
 
-    uint32_t temp = *val;
-    if(temp) flash_write32(val,temp/2);
-    else flash_erase(3);
-    sprintf(mess, "%lu -> %lu\n", temp, *val);
-    uart_write(mess);
+    //uint32_t temp = *val;
+    //if(temp) flash_write32(val,temp/2);
+    //else flash_erase(3);
+    //sprintf(mess, "%lu -> %lu\n", temp, *val);
+    //uart_write(mess);
 
     while(1)
     {        
@@ -114,53 +109,42 @@ int main(void)
             reset();
             //i2c_write(0x00,mess);
         }
-        if(adc_ready) sprintf(mess, "%lu -> %lu\n", temp, *val);//"%lu\n", adc_read());
-        //uart_write(mess); // Writes the message buffer
-        delay(10000000);
+        if(adc_ready) sprintf(mess, "Reading : %4u\n", adc_read());
+        usart_write_string(USART2, mess); // Writes the message buffer
+        delay(1000000);
     }
 
     return 0;
 }
 
-void system_clock_init(void)
-{
-    RCC->CR |= RCC_CR_HSION; // Verifies that the High Speed Internal Clock is on
-    while(!(RCC->CR & RCC_CR_HSIRDY)); // Waits until HSI is on
-
-    RCC->APB1ENR |= RCC_APB1ENR_PWREN;
-    PWR->CR |= PWR_CR_VOS_1 | PWR_CR_VOS_0; // Scales the Power 
-
-    FLASH->ACR = FLASH_ACR_LATENCY_3WS | FLASH_ACR_ICEN | FLASH_ACR_DCEN | FLASH_ACR_PRFTEN; // Sets Latency to account for new clock speed
-
-    // Sets PLL to 100 MHz
-    RCC->PLLCFGR |= RCC_PLLCFGR_PLLSRC_HSI | (((PLL_P / 2) - 1) << RCC_PLLCFGR_PLLP_Pos) | (PLL_N << RCC_PLLCFGR_PLLN_Pos) | (PLL_M << RCC_PLLCFGR_PLLM_Pos); // Sets PLL frequency using P, N, M
-    RCC->CR |= RCC_CR_PLLON; // Enables PLL
-    RCC->CFGR = RCC_CFGR_PPRE1_DIV2 | RCC_CFGR_SW_PLL; // Divides AHB clock and switches SYSCLK to a PLL source
-
-    while(!(RCC->CFGR & RCC_CFGR_SWS_PLL)); // Waits until the PLL is the System Clock
-
-    SystemCoreClockUpdate();
-}
-
 void serial_uart_init(uint32_t baud)
 {
-    // Initializes USART2
-    GPIOA->MODER &= ~((0b11 << 8) | (0b11 << 6) | (0b11 << 4)); // Resets Pins 2, 3, and 4 to Input
-    GPIOA->MODER |= (0b10 << 8) | (0b10 << 6) | (0b10 << 4); // Sets Pins 2,  3, and 4 to Alternate Function
-
-    GPIOA->OSPEEDR |= (0b11 << 8) | (0b11 << 6) | (0b11 << 4); // Sets pins 2, 3, and 4 to high speed
-    GPIOA->AFR[0] |= (7 << 16) | (7 << 12) | (7 << 8); // Enables USART2 Alternate Function for pins 2, 3, and 4
-    
-    RCC->APB1ENR |= RCC_APB1ENR_USART2EN; // Enables USART2 peripheral
-
-    USART2->BRR |= (SystemCoreClock / 2 / (16 * baud) << USART_BRR_DIV_Mantissa_Pos) | (SystemCoreClock / 2 / baud) % 16; // Sets a baud rate divider of 325.5 (9600 baud)
-    
-    USART2->CR1 |= USART_CR1_RE | USART_CR1_TE | USART_CR1_RXNEIE |  USART_CR1_UE; // Enables RX, TX, RX Interrupt, and USART
-    //USART2->CR2 |= USART_CR2_CLKEN; // Enables the clock signal
-
-    NVIC_EnableIRQ(USART2_IRQn);
-
-    while(!(USART2->SR & USART_SR_TC)); // Clear TC Flag
+    USART_options_t USART_serial = {
+		.port       =   USART2,
+        .baud	    =	baud,
+		.clock      =   0,
+		.interrupts =	0
+	};
+    usart_init(&USART_serial);
+    /*
+     * // Initializes USART2
+     * GPIOA->MODER &= ~((0b11 << 8) | (0b11 << 6) | (0b11 << 4)); // Resets Pins 2, 3, and 4 to Input
+     * GPIOA->MODER |= (0b10 << 8) | (0b10 << 6) | (0b10 << 4); // Sets Pins 2,  3, and 4 to Alternate Function
+     *
+     * GPIOA->OSPEEDR |= (0b11 << 8) | (0b11 << 6) | (0b11 << 4); // Sets pins 2, 3, and 4 to high speed
+     * GPIOA->AFR[0] |= (7 << 16) | (7 << 12) | (7 << 8); // Enables USART2 Alternate Function for pins 2, 3, and 4
+     *
+     * RCC->APB1ENR |= RCC_APB1ENR_USART2EN; // Enables USART2 peripheral
+     * 
+     * USART2->BRR |= (SystemCoreClock / 2 / (16 * baud) << USART_BRR_DIV_Mantissa_Pos) | (SystemCoreClock / 2 / baud) % 16; // Sets a baud rate divider of 325.5 (9600 baud)
+     *    
+     * USART2->CR1 |= USART_CR1_RE | USART_CR1_TE | USART_CR1_RXNEIE |  USART_CR1_UE; // Enables RX, TX, RX Interrupt, and USART
+     * //USART2->CR2 |= USART_CR2_CLKEN; // Enables the clock signal
+     * 
+     * NVIC_EnableIRQ(USART2_IRQn);
+     * 
+     * while(!(USART2->SR & USART_SR_TC)); // Clear TC Flag
+     */
 }
 
 void pwm_init(uint8_t duty)
@@ -176,8 +160,8 @@ void pwm_init(uint8_t duty)
 
     GPIOA->AFR[0] |= (2 << 0); // Sets Pin 0 to alternative function mode
 
-    TIM5->PSC = 199; // Prescaler that results in a 40 kHz timer clock
-    TIM5->ARR = 10000; // Automatic Reset value of timer, set to change at 2 Hz
+    TIM5->PSC = 199; // Prescaler that results in a 500 kHz timer clock
+    TIM5->ARR = 10000; // Automatic Reset value of timer, set to change at 50 Hz (a typical servo pwm frequency)
     TIM5->CCR1 = (TIM5->ARR * duty) / 100; // Sets the capture point
 
     TIM5->CCMR1 |= (0b110 << 4); // Sets the Timer to PWM mode
@@ -188,144 +172,14 @@ void pwm_init(uint8_t duty)
     TIM5->CR1 |= TIM_CR1_CEN; // Enables the timer clock
 }
 
-void user_button_init(void)
-{
-    // Enables An interrupt that is connected to the USer Button (Blue)
-    SYSCFG->EXTICR[3] |= SYSCFG_EXTICR4_EXTI13_PC; // Connects the 13th channel of EXTI to Port C (Port C, Pin 13)
-    EXTI->IMR |= EXTI_IMR_MR13; // Enables the Interrupt of Channel 13
-    EXTI->FTSR |= EXTI_FTSR_TR13; // Enables Falling Edge Detection on Channel 13
-    NVIC_EnableIRQ(EXTI15_10_IRQn); // Enables the EXTI Interrupt for Channels 10 through 15
-}
-
-void i2c_init(void)
-{
-    /*The following is the required sequence in master mode.
-     * • Program the peripheral input clock in I2C_CR2 Register in order to generate correct
-     * timings
-     * • Configure the clock control registers
-     * • Configure the rise time register
-     * • Program the I2C_CR1 register to enable the peripheral
-     * • Set the START bit in the I2C_CR1 register to generate a Start condition
-     */
-
-    
-    RCC->APB1ENR |= RCC_APB1ENR_I2C1EN; // Enables the I2C1 periphery (pins B6 and B7)
-    I2C1->CR2 |= (50) << I2C_CR2_FREQ_Pos; // Sets the frequeny to 50 MHz
-    I2C1->CCR |= I2C_CCR_FS | I2C_CCR_DUTY | (25) << I2C_CCR_CCR_Pos; // Sets the clock control such that fast mode is enabled with DUTY set to 1 and the time prescaler set to 25
-    I2C1->TRISE |= (16) << I2C_TRISE_TRISE_Pos; // Programs a factor of 16 to relate the maximum rise time in Fast mode to the input clock
-    I2C1->CR1 |= I2C_CR1_PE; // Enables I2C bus
-}
-
-void adc_init(void)
-{
-    RCC->APB2ENR |= RCC_APB2ENR_ADC1EN; // Enables ADC (voltage range of 0 - 1.7 V)
-
-    GPIOA->MODER &= ~(0b11 << (2*1)); // Resets Pin 1 to Input (User LED)
-    GPIOA->MODER |=  (0b11 << (2*1)); // Sets Pin 1 to Analog
-
-    ADC1->SMPR2 |= (ADC_SMPR2_SMP1 & 0b111); // Sets the sampling of ADC1 channel 0 to 480 cycles
-    ADC1->SQR3 |= (ADC_SQR3_SQ1 & 1); // Sets the first ADC sequence to channel 0
-    ADC1->SQR1 |= ((1 - 1) & ADC_SQR1_L); // Sets the number of sequences to 1
-    ADC->CCR |= (ADC_CCR_ADCPRE & ((8/2)-1)); // Sets the ADC clock to have a prescaler of 8
-    ADC1->CR1 |= ADC_CR1_EOCIE; // Enables an End of Conversion Interrupt
-    ADC1->CR2 |= ADC_CR2_ADON; // Turns on ADC
-    ADC1->CR2 |= ADC_CR2_SWSTART; // Starts ADC Conversions
-
-    NVIC_EnableIRQ(ADC_IRQn); // Starts the ADC Interrupt
-}
-
 void delay(volatile uint32_t s)
 {
     for(s; s>0; s--);
 }
 
-void uart_write(char* str)
-{
-    // Loops through the input character string and transmits it via USART
-    for(uint8_t i = 0; i < strlen(str); i++)
-    {
-        USART2->DR = str[i];
-        while(!(USART2->SR & USART_SR_TC)); // Waits until data byte is transmitted
-    }
-}
-
-void i2c_write(uint8_t addr, uint8_t* data)
-{
-    /* Recieving
-     * Set Start bit
-     * Set ADDR
-     * Set DR
-     * Use RxNE bit to continuously recieve
-     * Set Stop bit
-     */
-
-    uint8_t read = 0;
-    I2C1->CR1 |= I2C_CR1_START; // Sends the start condition
-    if(I2C1->SR1 & I2C_SR1_SB)
-    {
-        I2C1->DR = addr | read; // Places the address into the data register to send
-        if(I2C1->SR1 & I2C_SR1_ADDR) // Checks SR1 register
-        {
-            if(I2C1->SR2 & I2C_SR2_TRA) // Checks SR2 register
-            {
-                for(uint8_t i = 0; i < sizeof(data); i++)
-                {
-                    I2C1->DR = data[i]; // Places each byte of data
-                    if(i == sizeof(data) - 1) // Conducts process 
-                    {
-                        I2C1->CR1 |= I2C_CR1_STOP; // Creates stop condition after last byte is transmitted
-                    }
-                    while(!(I2C1->SR1 & I2C_SR1_TXE)); // Waits until the data was sent
-                }
-            }
-        }
-    }
-}
-
-void i2c_read(uint8_t addr, uint8_t* buf, uint8_t numbytes)
-{
-    /* Transmission
-     * Set Start bit
-     * Set ADDR
-     * Set DR
-     * Use TxE bit to continuously communicate
-     * Set Stop bit to end
-     */
-
-    uint8_t read = 1;
-    I2C1->CR1 |= I2C_CR1_START | I2C_CR1_ACK; // Sends the start condition and enables acknowledge return
-    if(I2C1->SR1 & I2C_SR1_SB)
-    {
-        I2C1->DR = addr | read; // Places the address into the data register to send
-        if(I2C1->SR1 & I2C_SR1_ADDR) // Checks SR1 register
-        {
-            if(!(I2C1->SR2 & I2C_SR2_TRA)) // Checks SR2 register
-            {
-                for(uint8_t i = 0; i < numbytes; i++)
-                {
-                    while(!(I2C1->SR1 & I2C_SR1_RXNE)); // Waits until the data was recieved
-                    buf[i] = I2C1->DR; // Places each byte of data
-                    if(i == numbytes - 2) // Conducts the below process after reading the second to last byte
-                    {
-                        I2C1->CR1 &= ~I2C_CR1_ACK; // Clears ACK bit
-                        I2C1->CR1 |= I2C_CR1_STOP; // Creates stop condition after last byte is transmitted
-                    }
-                }
-            }
-        }
-    }
-}
-
-uint16_t adc_read(void)
-{
-    // Reads ADC Data Register and restarts conversion
-    ADC1->CR2 |= ADC_CR2_SWSTART;
-    return (uint16_t) ADC1->DR;
-}
-
 void reset(void)
 {
-    flash_erase(3);
+    //flash_erase(3);
     //flash_erase(4);
     NVIC_SystemReset(); // Built in function that performs a software reset to the system
 }

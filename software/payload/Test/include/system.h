@@ -3,6 +3,13 @@
 
 #include "stm32f410rx.h" // Declares which stm32 board is in use
 
+// PLL constant definitions
+#define PLL_P 2
+#define PLL_N 200
+#define PLL_M 16
+
+void system_clock_init(void);
+
 #define GPIO_PIN_0_Pos              (0U)
 #define GPIO_PIN_0                  (1U << GPIO_PIN_0_Pos )  /* Pin 0  selected    */
 #define GPIO_PIN_1_Pos              (1U)
@@ -53,14 +60,7 @@
 #define AF14                        14U /* Alternate Function 14 */
 #define AF15                        15U /* Alternate Function 15 */
 
-#define min(x,y) ({ \
-    __typeof__ (x) _x = (x);     \
-    __typeof__ (y) _y = (y);     \
-    _x < _y ? _x : _y; })
 
-#define max(x,y) ({ \
-    __typeof__ (x) _x = (x);     \
-    __typeof__ (y) _y = (y);     \
-    _x > _y ? _x : _y; })
+
 
 #endif /* SYSTEM_H_ */

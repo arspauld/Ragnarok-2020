@@ -16,7 +16,7 @@ void usart_init(USART_options_t* options)
 
         USART2->BRR |= (SystemCoreClock / 2 / (16 * options->baud) << USART_BRR_DIV_Mantissa_Pos) | (SystemCoreClock / 2 / options->baud) % 16; // Sets a baud rate divider of 325.5 (9600 baud)
     
-        USART2->CR1 |= USART_CR1_RE | USART_CR1_TE | USART_CR1_RXNEIE |  USART_CR1_UE; // Enables RX, TX, RX Interrupt, and USART
+        USART2->CR1 |= USART_CR1_RE | USART_CR1_TE | USART_CR1_RXNEIE | USART_CR1_UE; // Enables RX, TX, RX Interrupt, and USART
         //USART2->CR2 |= USART_CR2_CLKEN; // Enables the clock signal
 
         NVIC_EnableIRQ(USART2_IRQn); // Enables interrupts
