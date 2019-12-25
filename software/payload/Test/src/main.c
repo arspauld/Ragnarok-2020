@@ -42,13 +42,13 @@ void USART2_IRQHandler(void)
 {
     if(USART2->SR & USART_SR_RXNE)
     {
-        USART2->SR &= ~USART_SR_RXNE;
-        //buff[buffpos] = USART2->DR;
-        //buffpos++;
-        //buffpos %= sizeof(buff);
-        //while(!(USART2->SR & USART_SR_TC));
+        //USART2->SR &= ~USART_SR_RXNE;
         USART2->DR = USART2->DR;
-        //while(!(USART2->SR & USART_SR_TC));
+        while(!(USART2->SR & USART_SR_TXE)); // Protects from overloading the Data Register
+    }
+    if(USART2->SR & USART_SR_TC)
+    {
+        USART2->SR &= ~USART_SR_TC;
     }
 }
 
@@ -120,31 +120,12 @@ int main(void)
 void serial_uart_init(uint32_t baud)
 {
     USART_options_t USART_serial = {
-		.port       =   USART2,
-        .baud	    =	baud,
-		.clock      =   0,
-		.interrupts =	0
+		.port       =   USART2, // declares the port
+        .baud	    =	baud, // passes along the baud rate
+		.clock      =   FALSE, // No clock signal
+		.interrupts =	RXNE_IF // Enables  an interrupt for Received Bytes
 	};
     usart_init(&USART_serial);
-    /*
-     * // Initializes USART2
-     * GPIOA->MODER &= ~((0b11 << 8) | (0b11 << 6) | (0b11 << 4)); // Resets Pins 2, 3, and 4 to Input
-     * GPIOA->MODER |= (0b10 << 8) | (0b10 << 6) | (0b10 << 4); // Sets Pins 2,  3, and 4 to Alternate Function
-     *
-     * GPIOA->OSPEEDR |= (0b11 << 8) | (0b11 << 6) | (0b11 << 4); // Sets pins 2, 3, and 4 to high speed
-     * GPIOA->AFR[0] |= (7 << 16) | (7 << 12) | (7 << 8); // Enables USART2 Alternate Function for pins 2, 3, and 4
-     *
-     * RCC->APB1ENR |= RCC_APB1ENR_USART2EN; // Enables USART2 peripheral
-     * 
-     * USART2->BRR |= (SystemCoreClock / 2 / (16 * baud) << USART_BRR_DIV_Mantissa_Pos) | (SystemCoreClock / 2 / baud) % 16; // Sets a baud rate divider of 325.5 (9600 baud)
-     *    
-     * USART2->CR1 |= USART_CR1_RE | USART_CR1_TE | USART_CR1_RXNEIE |  USART_CR1_UE; // Enables RX, TX, RX Interrupt, and USART
-     * //USART2->CR2 |= USART_CR2_CLKEN; // Enables the clock signal
-     * 
-     * NVIC_EnableIRQ(USART2_IRQn);
-     * 
-     * while(!(USART2->SR & USART_SR_TC)); // Clear TC Flag
-     */
 }
 
 void pwm_init(uint8_t duty)

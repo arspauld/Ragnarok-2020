@@ -3,10 +3,13 @@
 
 #include "stm32f410rx.h" // Declares which stm32 board is in use
 
+#define TRUE        1
+#define FALSE       0
+
 // PLL constant definitions
-#define PLL_P 2
-#define PLL_N 200
-#define PLL_M 16
+#define PLL_P       2
+#define PLL_N       200
+#define PLL_M       16
 
 void system_clock_init(void);
 
