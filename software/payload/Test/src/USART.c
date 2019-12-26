@@ -3,47 +3,62 @@
 
 void usart_init(USART_options_t* options)
 {
-    USART_TypeDef* port = options->port; // USART port name
-    uint32_t baud = options->baud; // USART baud rate value
-    uint8_t clock = options->clock; // Boolean of if the clock is to be on (USARt vs. UART)
-    uint8_t ints = options->interrupts; // Interrupt options
+    USART_TypeDef*  USARTx  =   options->port; // USART port name
+    uint32_t        baud    =   options->baud; // USART baud rate value
+    uint8_t         clock   =   options->clock; // Boolean of if the clock is to be on (USARt vs. UART)
+    uint8_t         ints    =   options->interrupts; // Interrupt options
+    uint8_t         dir     =   options->direction; // Direction Options
+    uint8_t         data_w  =   options->data_width; // Data Width Options
+    uint8_t         s_bits  =   options->stop_bits; // Stop Bit Options
+    uint8_t         parity  =   options->parity; // Parity Control
+    uint8_t         ovrsmp  =   options->oversampling; // Oversampling Selection
 
-    if(port == USART2)
+    if(IS_UART_INSTANCE(USARTx))
     {
-        RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN; // Enables the clock clock to the GPIOA peripheral to enable it
-        GPIOA->MODER &= ~((0b11 << (GPIO_PIN_3_Pos * 2)) | (0b11 << (GPIO_PIN_2_Pos * 2))); // Resets Pins 2 and 3 to Input
-        GPIOA->MODER |= (0b10 << (GPIO_PIN_3_Pos * 2)) | (0b10 << (GPIO_PIN_2_Pos * 2)); // Sets Pins 2 and 3 to Alternate Function
-
-        GPIOA->OSPEEDR |= (0b11 << (GPIO_PIN_3_Pos * 2)) | (0b11 << (GPIO_PIN_2_Pos * 2)); // Sets pins 2 and 3 to high speed
-        GPIOA->AFR[0] |= (AF7 << (GPIO_PIN_3_Pos * 4)) | (AF7 << (GPIO_PIN_2_Pos * 4)); // Enables USART2 Alternate Function for pins 2 and 3
-
-        RCC->APB1ENR |= RCC_APB1ENR_USART2EN; // Enables USART2
-
-        USART2->BRR |= (SystemCoreClock / 2 / (16 * options->baud) << USART_BRR_DIV_Mantissa_Pos) | (SystemCoreClock / 2 / options->baud) % 16; // Sets a baud rate divider of 325.5 (9600 baud)
-    
-        USART2->CR1 |= USART_CR1_RE | USART_CR1_TE | USART_CR1_UE; // Enables RX, TX, and USART
-
-
-        if(clock)
+        if(USARTx == USART2)
         {
-            GPIOA->MODER &= ~(0b11 << (GPIO_PIN_4_Pos * 2)); // Sets pin 4 to alternative mode
-            GPIOA->MODER |= (0b10 << (GPIO_PIN_4_Pos * 2));
+            enable_peripheral(GPIOA_EN); // Enables the clock clock to the GPIOA peripheral to enable it
+            enable_peripheral(USART2_EN); // Enables USART2
 
-            GPIOA->OSPEEDR |= (0b11 << (GPIO_PIN_4_Pos * 2)); // Sets pin 4 to high speed and alternate function 7
-            GPIOA->AFR[0] |= (AF7 << (GPIO_PIN_4_Pos * 4));
+            GPIOA->MODER &= ~((0b11 << (GPIO_PIN_3_Pos * 2)) | (0b11 << (GPIO_PIN_2_Pos * 2))); // Resets Pins 2 and 3 to Input
+            GPIOA->MODER |= (0b10 << (GPIO_PIN_3_Pos * 2)) | (0b10 << (GPIO_PIN_2_Pos * 2)); // Sets Pins 2 and 3 to Alternate Function
 
-            USART2->CR2 |= USART_CR2_CLKEN; // Enables the clock signal
+            GPIOA->OSPEEDR |= (0b11 << (GPIO_PIN_3_Pos * 2)) | (0b11 << (GPIO_PIN_2_Pos * 2)); // Sets pins 2 and 3 to high speed
+            GPIOA->AFR[0] |= (AF7 << (GPIO_PIN_3_Pos * 4)) | (AF7 << (GPIO_PIN_2_Pos * 4)); // Enables USART2 Alternate Function for pins 2 and 3
+
+            if(clock)
+            {
+                GPIOA->MODER &= ~(0b11 << (GPIO_PIN_4_Pos * 2)); // Sets pin 4 to alternative mode
+                GPIOA->MODER |= (0b10 << (GPIO_PIN_4_Pos * 2));
+
+                GPIOA->OSPEEDR |= (0b11 << (GPIO_PIN_4_Pos * 2)); // Sets pin 4 to high speed and alternate function 7
+                GPIOA->AFR[0] |= (AF7 << (GPIO_PIN_4_Pos * 4));
+            }
+
+            if(ints) NVIC_EnableIRQ(USART2_IRQn); // Enables interrupts
         }
 
+        USARTx->BRR |= (APB1_Clock / (ovrsmp * baud) << USART_BRR_DIV_Mantissa_Pos) | (APB1_Clock / baud) % ovrsmp; // Sets a baud rate divider of 325.5 (9600 baud)
+        
+        if(dir & RX_Only) USARTx->CR1 |= USART_CR1_RE; 
+        if(dir & TX_Only) USARTx->CR1 |= USART_CR1_TE;
+        
+        if(clock) USARTx->CR2 |= USART_CR2_CLKEN; // Enables the clock signal
 
-        if(ints)
+        if(data_w) USARTx->CR1 |= USART_CR1_M; // Sets the data width to 9 bits
+
+        USARTx->CR2 |= ((s_bits & 0x03) << USART_CR2_STOP_Pos);
+
+        if(parity)
         {
-            enable_interrupt(port, ints);
-            NVIC_EnableIRQ(USART2_IRQn); // Enables interrupts
+            USARTx->CR1 |= USART_CR1_PCE;
+            if(parity & Odd_Parity) USARTx->CR1 |= USART_CR1_PS;
         }
-
-
-        while(!(USART2->SR & USART_SR_TC)); // Clear TC Flag
+        
+        enable_interrupt(USARTx, ints); // Enables Any Interrupts Set
+        USARTx->CR1 |= USART_CR1_UE; // Enables USART
+        
+        while(!(USARTx->SR & USART_SR_TC)); // Clear TC Flag
     }
 }
 

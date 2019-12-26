@@ -1,3 +1,5 @@
+#include <string.h>
+#include <stdio.h>
 #include "system.h"
 #include "ADC.h"
 #include "EXTI.h"
@@ -5,20 +7,13 @@
 #include "I2C.h"
 #include "RingBuffer.h"
 #include "flash.h"
-#include <string.h>
-#include <stdio.h>
-
-// PLL constant definitions
-#define PLL_P 2
-#define PLL_N 200
-#define PLL_M 16
+#include "PWM.h"
 
 volatile uint8_t write_flag = 0;
 volatile uint8_t adc_ready = 0;
 //volatile uint32_t* const val = (volatile uint32_t*) 0x0800C000; // Sets address of variable to a a spot in the Flash
 
 void serial_uart_init(uint32_t baud);
-void pwm_init(uint8_t duty);
 void delay(volatile uint32_t s);
 void reset(void);
 
@@ -66,7 +61,6 @@ int main(void)
     system_clock_init();
     flash_init();
     RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN | RCC_AHB1ENR_GPIOBEN | RCC_AHB1ENR_GPIOCEN; // Enables GPIO Ports A, B, and C
-    RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN | RCC_APB2ENR_EXTITEN; // Enables the System Configuration Capability and the External Interrupt/Event Controller
     serial_uart_init(115200); // Initializes USART2
     pwm_init(10); // Outputs a PWM on A0
     //i2c_init();
@@ -105,7 +99,7 @@ int main(void)
         {
             count++;
             write_flag = 0;
-            //uart_write("RESET\n");
+            usart_write_string(USART2, "RESET\n");
             reset();
             //i2c_write(0x00,mess);
         }
@@ -120,37 +114,17 @@ int main(void)
 void serial_uart_init(uint32_t baud)
 {
     USART_options_t USART_serial = {
-		.port       =   USART2, // declares the port
-        .baud	    =	baud, // passes along the baud rate
-		.clock      =   FALSE, // No clock signal
-		.interrupts =	RXNE_IF // Enables  an interrupt for Received Bytes
+		.port           =   USART2, // declares the port
+        .baud	        =	baud, // passes along the baud rate
+		.clock          =   No_Clock, // No clock signal
+		.interrupts     =	RXNE_IF, // Enables  an interrupt for Received Bytes
+        .direction      =   RX_TX, // Enables Both RX and TX
+        .data_width     =   Eight_Data_Bits, // Data is Eight Bits
+        .stop_bits      =   Stop_Bits_1_0, // 1 full stop bit
+        .parity         =   No_Parity, // No Parity Control
+        .oversampling   =   Over_Sampling_16 // Input Clock over sampled by 16
 	};
     usart_init(&USART_serial);
-}
-
-void pwm_init(uint8_t duty)
-{
-    // Enables a PWM waveform on pin A0
-    RCC->APB1ENR |= RCC_APB1ENR_TIM5EN; // Enables Timer Counter 5
-
-    GPIOA->MODER &= ~(0b11 << 10); // Resets Pin 5 to Input (User LED)
-    GPIOA->MODER |=  (0b01 << 10); // Sets Pin 5 to Output
-
-    GPIOA->MODER &= ~(0b11 << 0); // Resets Pin 0 to Input (PWM)
-    GPIOA->MODER |=  (0b10 << 0); // Sets Pin 0 to Alternate Function
-
-    GPIOA->AFR[0] |= (2 << 0); // Sets Pin 0 to alternative function mode
-
-    TIM5->PSC = 199; // Prescaler that results in a 500 kHz timer clock
-    TIM5->ARR = 10000; // Automatic Reset value of timer, set to change at 50 Hz (a typical servo pwm frequency)
-    TIM5->CCR1 = (TIM5->ARR * duty) / 100; // Sets the capture point
-
-    TIM5->CCMR1 |= (0b110 << 4); // Sets the Timer to PWM mode
-    TIM5->CCER |= TIM_CCER_CC1E; // Enable Compare and Capture 1
-
-    TIM5->DIER |= TIM_DIER_UIE; // Sets Timer update flag
-    //NVIC_EnableIRQ(TIM5_IRQn); // Attaches interrupt
-    TIM5->CR1 |= TIM_CR1_CEN; // Enables the timer clock
 }
 
 void delay(volatile uint32_t s)
