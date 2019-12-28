@@ -8,14 +8,15 @@ import serial
 import string
 
 class groundStation:
-    def __init__(self, name):
+    def __init__(self, title):#, graphs=None):
+        #self.graphs = []
         self.app = QtGui.QApplication([])
         self.window = QtGui.QMainWindow()
         self.area = DockArea()
         self.window.setCentralWidget(self.area)
         self.window.resize(1600, 1200)
-        self.window.setWindowTitle(name)
-
+        self.window.setWindowTitle(title.title())
+        """
         self.alt_dock   = Dock("Altitude")
         self.pres_dock  = Dock("Pressure")
         self.temp_dock  = Dock("Temperature")
@@ -53,15 +54,37 @@ class groundStation:
         self.gps_dock.addWidget(    self.gps.plot)
         self.airsp_dock.addWidget(  self.airsp.plot)
         self.part_dock.addWidget(   self.part.plot)
+        
+        self.window.show()
+        self.app.exec_()
+        """
 
+    def widgets(self, names, units):
+        for i,dock in enumerate(names):
+            self.dock_name = Dock(dock.title())
+            self.area.addDock(self.dock_name)
+            self.dock_plot = realplot.RTP(name = dock.title() + " ("+ units[i] + ")")
+            #self.dock = str(names[dock]).lower()
+            self.dock_name.addWidget(self.dock_plot, i, 1, 1, 1)
+
+    def execute(self):
         self.window.show()
         self.app.exec_()
 
+    #def serial(self, baud):
         # self.serial = serial.Serial()
         # self.serial.timeout = 0.02
         # self.serial.baudrate = 115200
         # self.serial.port = port
         # self.serial.open()
 
+def testclass(title, names, units):
+    #groundStation(title)
+    gs = groundStation(title)
+    gs.widgets(names, units)
+    gs.execute()
+
 if __name__ == "__main__":
-    groundStation("ragnarok")
+    names = ["altitude", "pressure"]
+    units = ["m", "Pa"]
+    testclass("ragnarok", names, units)

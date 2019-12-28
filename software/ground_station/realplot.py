@@ -1,10 +1,12 @@
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtGui, QtCore
+from pyqtgraph.widgets.PlotWidget import PlotWidget
 import random
 import time
 
-class RTP:
+class RTP(PlotWidget):
     def __init__(self, name, x_val=None, y_val=None):
+        PlotWidget.__init__(self)
         self.x_val = []
         self.y_val = []
         if x_val is not None: self.x_val = x_val
