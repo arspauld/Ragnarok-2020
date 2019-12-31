@@ -1,6 +1,12 @@
 #include "USART.h"
 #include <string.h>
 
+/* TO-DO
+ * - Implement USART1 and USART6
+ * - Implement a way to select pins for USART (USART1 has 3 possible RXs and TXs each)
+ * - Error Handling
+ */
+
 void usart_init(USART_options_t* options)
 {
     USART_TypeDef*  USARTx  =   options->port; // USART port name
@@ -12,10 +18,33 @@ void usart_init(USART_options_t* options)
     uint8_t         s_bits  =   options->stop_bits; // Stop Bit Options
     uint8_t         parity  =   options->parity; // Parity Control
     uint8_t         ovrsmp  =   options->oversampling; // Oversampling Selection
+    uint8_t         pins    =   options->pin_set;
 
     if(IS_UART_INSTANCE(USARTx))
     {
-        if(USARTx == USART2)
+        if(USARTx == USART1)
+        {
+            enable_peripheral(USART1_EN); // Enables USART1
+            enable_peripheral(GPIOA_EN); // Enables the clock clock to the GPIOA peripheral to enable it
+                
+            GPIOA->MODER &= ~((0b11 << (GPIO_PIN_3_Pos * 2)) | (0b11 << (GPIO_PIN_2_Pos * 2))); // Resets Pins 2 and 3 to Input
+            GPIOA->MODER |= (0b10 << (GPIO_PIN_3_Pos * 2)) | (0b10 << (GPIO_PIN_2_Pos * 2)); // Sets Pins 2 and 3 to Alternate Function
+            
+            GPIOA->OSPEEDR |= (0b11 << (GPIO_PIN_3_Pos * 2)) | (0b11 << (GPIO_PIN_2_Pos * 2)); // Sets pins 2 and 3 to high speed
+            GPIOA->AFR[0] |= (AF7 << (GPIO_PIN_3_Pos * 4)) | (AF7 << (GPIO_PIN_2_Pos * 4)); // Enables USART2 Alternate Function for pins 2 and 3
+
+            if(clock)
+            {
+                GPIOA->MODER &= ~(0b11 << (GPIO_PIN_4_Pos * 2)); // Sets pin 4 to alternative mode
+                GPIOA->MODER |= (0b10 << (GPIO_PIN_4_Pos * 2));
+
+                GPIOA->OSPEEDR |= (0b11 << (GPIO_PIN_4_Pos * 2)); // Sets pin 4 to high speed and alternate function 7
+                GPIOA->AFR[0] |= (AF7 << (GPIO_PIN_4_Pos * 4));
+            }
+
+            if(ints) NVIC_EnableIRQ(USART2_IRQn); // Enables interrupts
+        }
+        else if(USARTx == USART2)
         {
             enable_peripheral(GPIOA_EN); // Enables the clock clock to the GPIOA peripheral to enable it
             enable_peripheral(USART2_EN); // Enables USART2

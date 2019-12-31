@@ -3,9 +3,19 @@
 
 #include "system.h"
 
-// Initialization Options
+/* USART.h is the header for a file that allows for the initialization of USART functions without RTS or CTS features
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ */
 
-// CLock Polarity
+
+// Initialization Options
+// Clock Polarity
 #define     No_Clock            (0U)
 #define     Clock_Steady_Low    (1U << 0)
 #define     Clock_Steady_High   (1U << 1)
@@ -59,6 +69,7 @@ typedef struct USART_options
     uint8_t         stop_bits;
     uint8_t         parity;
     uint8_t         oversampling;
+    uint8_t         pin_set;
 } USART_options_t;
 
 
