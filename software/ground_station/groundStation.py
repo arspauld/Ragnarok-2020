@@ -67,7 +67,7 @@ class groundStation:
         #self.area = DockArea()
         #self.window.setCentralWidget(self.area)
         for i,dock in enumerate(plots):
-            self.dock_name = Dock(dock.upper())
+            self.dock_name = Dock(dock.title())
             if i == 0:
                 self.area.addDock(self.dock_name)
             else:
