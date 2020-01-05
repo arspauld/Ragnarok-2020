@@ -3,16 +3,16 @@ import pyqtgraph as pg
 from pyqtgraph.Qt import QtGui, QtCore
 from pyqtgraph import console
 from pyqtgraph.dockarea import *
-from realplot import RealTimePlot, update
+#from realplot import RealTimePlot, update
 import serial
 import string
 
 #  Open the serial port
-ser = serial.Serial()
-ser.timeout = 0.02
-ser.baudrate = 115200
-ser.port = 'COM3'
-ser.open()
+#ser = serial.Serial()
+#ser.timeout = 0.02
+#ser.baudrate = 115200
+#ser.port = 'COM3'
+#ser.open()
 
 #comment
 
@@ -63,24 +63,24 @@ wid = QtGui.QWidget()                           # Creates an empty Widget to hol
 lay = QtGui.QGridLayout()                       # Creates a layout to orgonaize the plots
 wid.setLayout(lay)                              # Adds the layout to the container widget
 
-altitude  = RealTimePlot(name="Altitude (m)")       # Check realplot.py for documentation
-pressure  = RealTimePlot(name="Pressure (Pa)")       # Creates plotting elements for each telemetry section
-temp      = RealTimePlot(name="Temp (°C)")
-voltage   = RealTimePlot(name="Voltage (V)")
-pitch     = RealTimePlot(name="Pitch (°)")
-roll      = RealTimePlot(name="Roll (°)")
-spin      = RealTimePlot(name="Blade Spin Rate (rpm)")
-direction = RealTimePlot(name="Bonus Direction (°)")
-gps       = RealTimePlot(name="GPS (°)")
-altituded.addWidget(altitude.plot)          # Adds the widgets to the layout
-pressured.addWidget(pressure.plot)
-tempd.addWidget(temp.plot)
-voltaged.addWidget(voltage.plot)
-pitchd.addWidget(pitch.plot) 
-rolld.addWidget(roll.plot)
-gpsd.addWidget(gps.plot)
-spind.addWidget(spin.plot)
-directiond.addWidget(direction.plot)
+#altitude  = RealTimePlot(name="Altitude (m)")       # Check realplot.py for documentation
+#pressure  = RealTimePlot(name="Pressure (Pa)")       # Creates plotting elements for each telemetry section
+#temp      = RealTimePlot(name="Temp (°C)")
+#voltage   = RealTimePlot(name="Voltage (V)")
+#pitch     = RealTimePlot(name="Pitch (°)")
+#roll      = RealTimePlot(name="Roll (°)")
+#spin      = RealTimePlot(name="Blade Spin Rate (rpm)")
+#direction = RealTimePlot(name="Bonus Direction (°)")
+#gps       = RealTimePlot(name="GPS (°)")
+#altituded.addWidget(altitude.plot)          # Adds the widgets to the layout
+#pressured.addWidget(pressure.plot)
+#tempd.addWidget(temp.plot)
+#voltaged.addWidget(voltage.plot)
+#pitchd.addWidget(pitch.plot) 
+#rolld.addWidget(roll.plot)
+#gpsd.addWidget(gps.plot)
+#spind.addWidget(spin.plot)
+#directiond.addWidget(direction.plot)
 
 
 # Buttons
@@ -398,4 +398,4 @@ servo_close_btn.clicked.connect(servo_close)
 app.exec_()
 
 #Close the serial port
-ser.close()
+#ser.close()

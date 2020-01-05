@@ -6,15 +6,16 @@ from pyqtgraph import console
 from pyqtgraph.dockarea import *
 import serial
 import string
+from PyQt5 import QtWidgets
 
 class groundStation:
-    def __init__(self, title):#, graphs=None):
+    def __init__(self, title, width, height):#, graphs=None):
         #self.graphs = []
         self.app = QtGui.QApplication([])
         self.window = QtGui.QMainWindow()
         self.area = DockArea()
         self.window.setCentralWidget(self.area)
-        self.window.resize(1600, 1200)
+        self.window.resize(width, height)
         self.window.setWindowTitle(title.title())
         """
         self.alt_dock   = Dock("Altitude")
@@ -59,18 +60,46 @@ class groundStation:
         self.app.exec_()
         """
 
-    def widgets(self, names, units):
-        for i,dock in enumerate(names):
-            self.dock_name = Dock(dock.title())
-            self.area.addDock(self.dock_name)
+    def plotWidgets(self, plots, units):
+        self.widget = QtGui.QWidget()
+        self.layout = QtGui.QGridLayout()
+        self.widget.setLayout(self.layout)
+        #self.area = DockArea()
+        #self.window.setCentralWidget(self.area)
+        for i,dock in enumerate(plots):
+            self.dock_name = Dock(dock.upper())
+            if i == 0:
+                self.area.addDock(self.dock_name)
+            else:
+                self.area.addDock(self.dock_name, 'left', self.previous)
             self.dock_plot = realplot.RTP(name = dock.title() + " ("+ units[i] + ")")
             #self.dock = str(names[dock]).lower()
-            self.dock_name.addWidget(self.dock_plot, i, 1, 1, 1)
+            self.dock_name.addWidget(self.dock_plot, i, 0, 1, 1)
+            self.previous = self.dock_name
+
+    def messageWidgets(self):
+        self.dock = Dock('Messsages')
+        self.area.addDock(self.dock)
+        return self.dock
+
+    def buttonWidgets(self, buttons, dock):
+        self.widget = QtGui.QWidget() #will hold all other buttons in one widget
+        self.layout = QtGui.QGridLayout() #layout for that widget
+        dock.addWidget(self.widget)
+        for i,button in enumerate(buttons):
+            #print('error')
+            self.button_name = QtGui.QPushButton(button.title())
+            self.button_name.setCheckable(True)
+            self.layout.addWidget(self.button_name, i, 2, 1, 2)
+            #print('error2')
+        self.widget.setLayout(self.layout)
 
     def execute(self):
         self.window.show()
         self.app.exec_()
 
+
+    ## These functions will be worked on later
     #def serial(self, baud):
         # self.serial = serial.Serial()
         # self.serial.timeout = 0.02
@@ -78,13 +107,26 @@ class groundStation:
         # self.serial.port = port
         # self.serial.open()
 
-def testclass(title, names, units):
-    #groundStation(title)
-    gs = groundStation(title)
-    gs.widgets(names, units)
+    #def graph(self, plot, data):
+    #    plot.addpoint()
+
+    #def parseSerial(self, serial):
+    #    binary = serial.readline()
+    #    data = str(binary, encoding='ascii')
+    #    data.strip().split(',')
+
+
+def testclass(title, names, units, buttons, width, height):
+    gs = groundStation(title, width, height)
+    messages = gs.messageWidgets()
+    gs.plotWidgets(names, units)
+    gs.buttonWidgets(buttons, messages)
     gs.execute()
 
 if __name__ == "__main__":
-    names = ["altitude", "pressure"]
-    units = ["m", "Pa"]
-    testclass("ragnarok", names, units)
+    plots = ["altitude", "pressure", "voltage", "airspeed"]
+    units = ["m", "Pa", "V", "m/s"]
+    buttons = ["reset", "calibrate", "packet"]
+    width = 1600
+    height = 1200
+    testclass("ragnarok", plots, units, buttons, width, height)
