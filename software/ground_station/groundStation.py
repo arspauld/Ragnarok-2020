@@ -9,8 +9,8 @@ import string
 from PyQt5 import QtWidgets
 
 class groundStation:
-    def __init__(self, title, width, height):#, graphs=None):
-        #self.graphs = []
+    def __init__(self, title, width, height):
+        # Initializes the application with a centralized dock area containing all plots, buttons, lists, labels, and texts
         self.app = QtGui.QApplication([])
         self.window = QtGui.QMainWindow()
         self.area = DockArea()
@@ -61,11 +61,12 @@ class groundStation:
         """
 
     def plotWidgets(self, plots, units):
+        # Creates a plot for each field and unit desired as defined in lists passed into function
+        # Indicies of field and units are assumed to be equal
+        # Placement needs to be worked on
         self.widget = QtGui.QWidget()
         self.layout = QtGui.QGridLayout()
         self.widget.setLayout(self.layout)
-        #self.area = DockArea()
-        #self.window.setCentralWidget(self.area)
         for i,dock in enumerate(plots):
             self.dock_name = Dock(dock.title())
             if i == 0:
@@ -73,16 +74,19 @@ class groundStation:
             else:
                 self.area.addDock(self.dock_name, 'left', self.previous)
             self.dock_plot = realplot.RTP(name = dock.title() + " ("+ units[i] + ")")
-            #self.dock = str(names[dock]).lower()
             self.dock_name.addWidget(self.dock_plot, i, 0, 1, 1)
             self.previous = self.dock_name
 
     def messageWidgets(self):
+        # Creates the messages dock to contain all widgets that are not plots
+        # Returns the name of this dock to be passed into other functions so that widgets may be directly added to it
         self.dock = Dock('Messsages')
         self.area.addDock(self.dock)
         return self.dock
 
     def buttonWidgets(self, buttons, dock):
+        # Creates a button for each value in the list passed through function
+        # Placement needs to be worked on
         self.widget = QtGui.QWidget() #will hold all other buttons in one widget
         self.layout = QtGui.QGridLayout() #layout for that widget
         dock.addWidget(self.widget)
@@ -95,6 +99,7 @@ class groundStation:
         self.widget.setLayout(self.layout)
 
     def execute(self):
+        # Executes the application
         self.window.show()
         self.app.exec_()
 
@@ -117,6 +122,7 @@ class groundStation:
 
 
 def testclass(title, names, units, buttons, width, height):
+    # Test for the groundStation class, development purposes only
     gs = groundStation(title, width, height)
     messages = gs.messageWidgets()
     gs.plotWidgets(names, units)
