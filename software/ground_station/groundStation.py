@@ -79,7 +79,7 @@ class groundStation:
             self.dock_name.addWidget(self.dock_plot, i, 0, 1, 1)
             self.previous = self.dock_name
 
-    def messageWidgets(self):
+    def messageDock(self):
         # Creates the messages dock to contain all widgets that are not plots
         # Returns the name of this dock to be passed into other functions so that widgets may be directly added to it
         self.dock = Dock('Messsages')
@@ -126,7 +126,7 @@ class groundStation:
 def testClass(title, names, units, buttons, width, height):
     # Test for the groundStation class, development purposes only
     gs = groundStation(title, width, height)
-    messages = gs.messageWidgets()
+    messages = gs.messageDock()
     gs.plotWidgets(names, units)
     gs.buttonWidgets(buttons, messages)
     gs.execute()
