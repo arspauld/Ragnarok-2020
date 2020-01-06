@@ -24,7 +24,7 @@ class RTP(PlotWidget):
         self.x_val = []
         self.y_val = []
 
-def testclass():
+def testClass():
     app = QtGui.QApplication([])
     window = QtGui.QWidget()
     layout = QtGui.QGridLayout()
@@ -45,4 +45,4 @@ def testclass():
     app.exec_()
 
 if __name__ == "__main__":
-    testclass()
+    testClass()

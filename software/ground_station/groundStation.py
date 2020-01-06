@@ -71,8 +71,10 @@ class groundStation:
             self.dock_name = Dock(dock.title())
             if i == 0:
                 self.area.addDock(self.dock_name)
-            else:
-                self.area.addDock(self.dock_name, 'left', self.previous)
+            elif i % 2 > 0:
+                self.area.addDock(self.dock_name, 'right', self.previous)
+            elif i % 2 == 0:
+                self.area.addDock(self.dock_name, 'below', self.previous)
             self.dock_plot = realplot.RTP(name = dock.title() + " ("+ units[i] + ")")
             self.dock_name.addWidget(self.dock_plot, i, 0, 1, 1)
             self.previous = self.dock_name
@@ -121,7 +123,7 @@ class groundStation:
     #    data.strip().split(',')
 
 
-def testclass(title, names, units, buttons, width, height):
+def testClass(title, names, units, buttons, width, height):
     # Test for the groundStation class, development purposes only
     gs = groundStation(title, width, height)
     messages = gs.messageWidgets()
@@ -135,4 +137,4 @@ if __name__ == "__main__":
     buttons = ["reset", "calibrate", "packet"]
     width = 1600
     height = 1200
-    testclass("ragnarok", plots, units, buttons, width, height)
+    testClass("ragnarok", plots, units, buttons, width, height)
