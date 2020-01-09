@@ -14,12 +14,12 @@ Clock - Changing Clock Sources and Frequencies
 Timer - Timed Interrupts and PWM
 GPIO - External Interrupts and General Interactions
 UART/USART - Blocking and Non-Blocking Reading and Writing with Interrupts
+ADC - Background conversions using read flags and interrupts
+Self-Reset - Built-in function
+Non-Volatile Memory - Made a function to erase sectors and write values, Can make better
 
 
 TO-DO:
 -------------------------------------------------------------------
 SPI - Develop
-I2C - Test
-Self-Reset - Investigate
-Non-Volatile Memory - Investigate
-ADC - Investigate
+I2C - Test and Verify
