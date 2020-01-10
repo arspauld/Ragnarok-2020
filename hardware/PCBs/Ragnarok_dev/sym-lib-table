@@ -1,3 +1,4 @@
 (sym_lib_table
   (lib (name BMP388)(type Legacy)(uri ${KIPRJMOD}/ragnarok_custom_libs/BMP-388/BMP388.lib)(options "")(descr ""))
+  (lib (name AB0815)(type Legacy)(uri ${KIPRJMOD}/ragnarok_custom_libs/AB0815/AB0815.lib)(options "")(descr ""))
 )
