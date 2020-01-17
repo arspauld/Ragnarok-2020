@@ -1,5 +1,5 @@
 g = 9.805; % Gravity (m/s^2)
-rho = 0.9075 * 1.225; % Density (kg/m^3) @ 1000 m ASL
+rho = 0.9075 * 1.225; % Density (kg/m^3) @ ~2500 ft ASL
 
 %% Container
 m = .6; % Mass (kg)
@@ -15,7 +15,7 @@ plot(A_p,V_c)
 
 m = .15; % Mass (kg)
 CDp = 1.0; % Coefficient of Drag of Parachute
-A_p = linspace(0,.1); % Area of Parachute (m^2) (0.02 yields 9.3816)
+A_p = linspace(0,.1); % Area of Parachute (m^2) (0.02 yields 10.1116)
 CDc = 0.82; % Coefficient of Drag of Container
 A_c = pi * (.125)^2 / 4; % Area of Bottom of Container
 
@@ -108,7 +108,7 @@ grid on
 %% Final Descent
 m = .45; % Mass (kg)
 CDp = 1.0; % Coefficient of Drag of Parachute
-A_p = linspace(0,1); % Area of Parachute (m^2) (0.1 yields 8.9095)
+A_p = linspace(0,1); % Area of Parachute (m^2) (0.1 yields 9.6028)
 V = sqrt((2 *m*g / rho) ./ (CDp * A_p)); % Calculates Terminal Velocity (m/s)
 figure(6)
 plot(A_p,V)

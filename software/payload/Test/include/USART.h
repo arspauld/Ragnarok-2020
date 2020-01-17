@@ -36,21 +36,6 @@
 #define     TX_Only             (1U << 1)
 #define     RX_TX               (RX_Only | TX_Only)
 
-// Data Width Selections
-#define     Eight_Data_Bits     (0U)
-#define     Nine_Data_Bits      (1U)
-
-// Stop Bits
-#define     Stop_Bits_0_5       (1U)
-#define     Stop_Bits_1_0       (0U)
-#define     Stop_Bits_1_5       (3U)
-#define     Stop_Bits_2_0       (2U)
-
-// Parity Control
-#define     No_Parity           (0U)
-#define     Even_Parity         (1U << 0)
-#define     Odd_Parity          (1U << 1)
-
 // Oversampling
 #define     Over_Sampling_8     (8U)
 #define     Over_Sampling_16    (16U)
@@ -65,11 +50,10 @@ typedef struct USART_options
     uint8_t         clock;
     uint8_t         interrupts;
     uint8_t         direction;
-    uint8_t         data_width;
-    uint8_t         stop_bits;
-    uint8_t         parity;
     uint8_t         oversampling;
-    uint8_t         pin_set;
+    uint8_t         tx_pin;
+    uint8_t         rx_pin;
+    uint8_t         clk_pin;
 } USART_options_t;
 
 
