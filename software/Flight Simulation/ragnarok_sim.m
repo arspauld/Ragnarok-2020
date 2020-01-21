@@ -94,8 +94,8 @@ ylabel '^L/_D'
 grid on
 
 figure(4)
-plot(V,V_z)
-xlabel 'Airspeed (m/s)'
+plot(L_D,V_z)
+xlabel '^L/_D'
 ylabel 'Sink Rate (m/s)'
 grid on
 
