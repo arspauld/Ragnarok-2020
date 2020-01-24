@@ -1,4 +1,4 @@
-14922257973478243
+14925416367309926
 BMP-388
 PQFN50P200X200X80-10N
 
@@ -47585,6 +47585,13 @@ LED_SideEmitter_Rectangular Rectangular SideEmitter  Rectangular size 4.5x1.6mm^
 0
 2
 2
+LP2985
+SOT23-5
+
+
+0
+5
+5
 Module
 A20_OLINUXINO_LIME2
 A20 Olinuxino LIME2, 1.2GHz, 512-1024MB RAM, Micro-SD, NAND or eMMC, 1000Mbit Ethernet
@@ -61872,6 +61879,13 @@ rotary encoder
 0
 5
 4
+SDP32-125PA-TR-250PCS
+XDCR_SDP32-125PA-TR-250PCS
+
+
+0
+18
+18
 Sensor_Audio
 ST_HLGA-6_3.76x4.72mm_P1.65mm
 http://www.st.com/content/ccc/resource/technical/document/datasheet/group3/27/62/48/98/44/54/4d/36/DM00303211/files/DM00303211.pdf/jcr:content/translations/en.DM00303211.pdf

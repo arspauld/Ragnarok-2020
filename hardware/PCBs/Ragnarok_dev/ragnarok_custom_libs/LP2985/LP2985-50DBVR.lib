@@ -1,0 +1,27 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#(c) SnapEDA 2016 (snapeda.com)
+#This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA) with Design Exception 1.0
+#
+# LP2985-50DBVR
+#
+DEF LP2985-50DBVR U 0 40 Y Y 1 L N
+F0 "U" -500 -600 50 H V L BNN
+F1 "LP2985-50DBVR" -501 -701 50 H V L BNN
+F2 "SOT23-5" 0 0 50 H I L BNN
+DRAW
+P 2 0 0 10 -400 400 -400 -400 N
+P 2 0 0 10 -400 -400 400 -400 N
+P 2 0 0 10 400 -400 400 400 N
+P 2 0 0 10 400 400 100 400 N
+P 2 0 0 10 -100 400 -400 400 N
+A 0 400 100 1799 3600 0 0 10 N 100 400 -100 400
+X VIN 1 -600 200 200 R 40 40 0 0 I 
+X GND 2 -600 0 200 R 40 40 0 0 P 
+X ON/OFF 3 -600 -200 200 R 40 40 0 0 I 
+X BP 4 600 -200 200 L 40 40 0 0 O 
+X VOUT 5 600 200 200 L 40 40 0 0 O 
+ENDDRAW
+ENDDEF
+#
+# End Library
