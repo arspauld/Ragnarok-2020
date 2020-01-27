@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 4 4
+Sheet 4 5
 Title ""
 Date ""
 Rev ""
@@ -25,33 +25,12 @@ F 3 "https://ae-bst.resource.bosch.com/media/_tech/media/datasheets/BST_BNO055_D
 	1    0    0    -1  
 $EndComp
 $Comp
-L Connector:Conn_01x05_Female J2
-U 1 1 5E20A41B
-P 4850 7050
-F 0 "J2" H 4750 7500 50  0000 L CNN
-F 1 "SPS30" H 4650 7400 50  0000 L CNN
-F 2 "" H 4850 7050 50  0001 C CNN
-F 3 "~" H 4850 7050 50  0001 C CNN
-	1    4850 7050
-	1    0    0    -1  
-$EndComp
-Text Notes 4850 6850 0    50   ~ 0
-VDD\n
-Text Notes 4850 6950 0    50   ~ 0
-SDA
-Text Notes 4850 7050 0    50   ~ 0
-SCL
-Text Notes 4850 7150 0    50   ~ 0
-SEL\n
-Text Notes 4850 7250 0    50   ~ 0
-GND
-$Comp
 L SDP32-125PA-TR-250PCS:SDP32-125PA-TR-250PCS U10
 U 1 1 5E20C00D
 P 5250 5300
 F 0 "U10" H 5250 5967 50  0000 C CNN
 F 1 "SDP32" H 5250 5876 50  0000 C CNN
-F 2 "XDCR_SDP32-125PA-TR-250PCS" H 5250 5300 50  0001 L BNN
+F 2 "SDP32-125PA-TR-250PCS:XDCR_SDP32-125PA-TR-250PCS" H 5250 5300 50  0001 L BNN
 F 3 "4.4mm" H 5250 5300 50  0001 L BNN
 F 4 "SENSIRION" H 5250 5300 50  0001 L BNN "Field4"
 F 5 "1" H 5250 5300 50  0001 L BNN "Field5"
@@ -136,13 +115,7 @@ GNDIO
 Wire Wire Line
 	4250 3050 4250 5400
 Wire Wire Line
-	4250 5400 4250 6950
-Connection ~ 4250 5400
-Wire Wire Line
 	4150 3150 4150 5300
-Connection ~ 4150 5300
-Wire Wire Line
-	4150 5300 4150 7050
 $Comp
 L Device:C_Small C33
 U 1 1 5E25189A
@@ -300,47 +273,6 @@ Wire Wire Line
 	6100 6050 6100 5700
 Wire Wire Line
 	6100 5700 6000 5700
-Wire Wire Line
-	4250 6950 4650 6950
-Wire Wire Line
-	4150 7050 4650 7050
-Wire Wire Line
-	4650 7150 4550 7150
-Wire Wire Line
-	4550 7150 4550 7250
-Wire Wire Line
-	4550 7250 4650 7250
-$Comp
-L power:GND #PWR0123
-U 1 1 5E338AEB
-P 4550 7350
-F 0 "#PWR0123" H 4550 7100 50  0001 C CNN
-F 1 "GND" H 4555 7177 50  0000 C CNN
-F 2 "" H 4550 7350 50  0001 C CNN
-F 3 "" H 4550 7350 50  0001 C CNN
-	1    4550 7350
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	4550 7250 4550 7350
-Connection ~ 4550 7250
-$Comp
-L power:+3.3V #PWR0124
-U 1 1 5E33A2C4
-P 4550 6750
-F 0 "#PWR0124" H 4550 6600 50  0001 C CNN
-F 1 "+3.3V" H 4565 6923 50  0000 C CNN
-F 2 "" H 4550 6750 50  0001 C CNN
-F 3 "" H 4550 6750 50  0001 C CNN
-	1    4550 6750
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	4550 6750 4550 6850
-Wire Wire Line
-	4550 6850 4650 6850
-Text Notes 5100 7250 0    50   ~ 0
-Addr: 0x69\n
 Wire Wire Line
 	4650 3350 4550 3350
 Connection ~ 4550 3350

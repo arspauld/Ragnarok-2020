@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 1 4
+Sheet 1 5
 Title "Ragnarok Development Board"
 Date "2019-12-18"
 Rev "v0.1"
@@ -22,17 +22,6 @@ F 1 "STM32F427VITx" H 5650 1000 50  0000 C CNN
 F 2 "Package_QFP:LQFP-100_14x14mm_P0.5mm" H 5550 1150 50  0001 R CNN
 F 3 "http://www.st.com/st-web-ui/static/active/en/resource/technical/document/datasheet/DM00071990.pdf" H 6250 3750 50  0001 C CNN
 	1    6250 3750
-	1    0    0    -1  
-$EndComp
-$Comp
-L RF_GPS:ublox_SAM-M8Q U2
-U 1 1 5DFB6E35
-P 10400 3450
-F 0 "U2" H 10400 2861 50  0000 C CNN
-F 1 "ublox_SAM-M8Q" H 10400 2770 50  0000 C CNN
-F 2 "RF_Module:ublox_SAM-M8Q" H 10950 3000 50  0001 C CNN
-F 3 "https://www.u-blox.com/sites/default/files/SAM-M8Q_DataSheet_%28UBX-16012619%29.pdf" H 10400 3450 50  0001 C CNN
-	1    10400 3450
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
@@ -161,8 +150,6 @@ Wire Wire Line
 Wire Wire Line
 	6650 850  6650 1050
 Wire Wire Line
-	4800 1050 4800 1750
-Wire Wire Line
 	4800 1750 5350 1750
 Wire Wire Line
 	4800 1750 4800 1850
@@ -241,7 +228,7 @@ F 3 "" H 3100 4500 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Interface_USB:FT232RL U3
+L Ragnarok_dev-rescue:FT232RL-Interface_USB U3
 U 1 1 5DFAFF77
 P 2900 3300
 F 0 "U3" H 2650 4300 50  0000 C CNN
@@ -484,33 +471,16 @@ Text Label 3700 2600 0    50   ~ 0
 USB_RX
 Text Label 3700 2700 0    50   ~ 0
 USB_TX
-$Comp
-L Device:C_Small C?
-U 1 1 5E1881CB
-P 10400 2750
-F 0 "C?" H 10500 2850 50  0000 C CNN
-F 1 "0.1uF" H 10600 2750 50  0000 C CNN
-F 2 "" H 10400 2750 50  0001 C CNN
-F 3 "~" H 10400 2750 50  0001 C CNN
-	1    10400 2750
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:C_Small C?
-U 1 1 5E19130F
-P 10250 2750
-F 0 "C?" H 10350 2850 50  0000 C CNN
-F 1 "0.1uF" H 10450 2750 50  0000 C CNN
-F 2 "" H 10250 2750 50  0001 C CNN
-F 3 "~" H 10250 2750 50  0001 C CNN
-	1    10250 2750
-	-1   0    0    -1  
-$EndComp
 $Sheet
 S 8250 950  1100 550 
 U 5E1A0CB7
 F0 "SPI Sensors" 50
 F1 "SPI.sch" 50
+F2 "SCLK" I L 8250 1000 50 
+F3 "MOSI" I L 8250 1200 50 
+F4 "MISO" O L 8250 1100 50 
+F5 "CSB0" I L 8250 1350 50 
+F6 "CSB1" I L 8250 1450 50 
 $EndSheet
 $Sheet
 S 8250 1850 1050 600 
@@ -519,10 +489,10 @@ F0 "I2C Sensors" 50
 F1 "i2c_sensors.sch" 50
 $EndSheet
 $Comp
-L power:GND #PWR?
+L power:GND #PWR0113
 U 1 1 5E317D31
 P 1000 2200
-F 0 "#PWR?" H 1000 1950 50  0001 C CNN
+F 0 "#PWR0113" H 1000 1950 50  0001 C CNN
 F 1 "GND" H 1100 2050 50  0000 R CNN
 F 2 "" H 1000 2200 50  0001 C CNN
 F 3 "" H 1000 2200 50  0001 C CNN
@@ -541,27 +511,150 @@ F 3 "~" H 1150 1750 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Connector:TestPoint_Probe TP?
+L Connector:TestPoint_Probe TP1
 U 1 1 5E36A119
-P 2900 5300
-F 0 "TP?" H 3053 5401 50  0000 L CNN
-F 1 "TestPoint_Probe" H 3053 5310 50  0000 L CNN
-F 2 "" H 3100 5300 50  0001 C CNN
-F 3 "~" H 3100 5300 50  0001 C CNN
-	1    2900 5300
+P 600 6650
+F 0 "TP1" H 753 6751 50  0000 L CNN
+F 1 "TestPoint_Probe" H 753 6660 50  0000 L CNN
+F 2 "" H 800 6650 50  0001 C CNN
+F 3 "~" H 800 6650 50  0001 C CNN
+	1    600  6650
 	1    0    0    -1  
 $EndComp
 $Comp
-L RF_ZigBee:XBee_SMT U?
-U 1 1 5E2813EE
-P 9150 5150
-F 0 "U?" H 9150 6331 50  0000 C CNN
-F 1 "XBee_SMT" H 9150 6240 50  0000 C CNN
-F 2 "RF_Module:Digi_XBee_SMT" H 9990 4090 50  0001 C CNN
-F 3 "http://www.digi.com/resources/documentation/digidocs/pdfs/90002126.pdf" H 9150 4750 50  0001 C CNN
-	1    9150 5150
+L Device:C_Small C22
+U 1 1 5E2B31D3
+P 4400 1450
+F 0 "C22" H 4550 1350 50  0000 C CNN
+F 1 "0.1uF" H 4600 1450 50  0000 C CNN
+F 2 "" H 4400 1450 50  0001 C CNN
+F 3 "~" H 4400 1450 50  0001 C CNN
+	1    4400 1450
 	1    0    0    -1  
 $EndComp
-Text Notes 10200 6100 0    50   ~ 0
-GET BETTER SYMBOL\n
+Wire Wire Line
+	4800 1050 4800 1750
+$Comp
+L Switch:SW_Push SW2
+U 1 1 5E2B9C0C
+P 4200 1550
+F 0 "SW2" V 4150 1800 50  0000 R CNN
+F 1 "SW_Push" V 4250 1950 50  0000 R CNN
+F 2 "" H 4200 1750 50  0001 C CNN
+F 3 "~" H 4200 1750 50  0001 C CNN
+	1    4200 1550
+	0    -1   1    0   
+$EndComp
+$Comp
+L power:GND #PWR0123
+U 1 1 5E2BF907
+P 4200 1850
+F 0 "#PWR0123" H 4200 1600 50  0001 C CNN
+F 1 "GND" H 4250 1700 50  0000 R CNN
+F 2 "" H 4200 1850 50  0001 C CNN
+F 3 "" H 4200 1850 50  0001 C CNN
+	1    4200 1850
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5350 1350 4400 1350
+Connection ~ 4400 1350
+Wire Wire Line
+	4400 1350 4200 1350
+Wire Wire Line
+	4400 1550 4400 1800
+Wire Wire Line
+	4400 1800 4200 1800
+Wire Wire Line
+	4200 1800 4200 1850
+Wire Wire Line
+	4200 1750 4200 1800
+Connection ~ 4200 1800
+Text Notes 2700 7050 0    50   ~ 0
+Still Need:\n-Openlog\n-Servos\n-Motor Driver\n-Status LEDs\n-Thermistor\n-Voltage Divider\n-Camera\n-Prove points\n-Backup batteries\n-Hookup GPS (sparkfun breakout)\n-3V3 Level Shifting (FTDI)\n-Finish pin assignments\n-Photoresistor/IRLED
+Text Label 7150 3650 0    50   ~ 0
+USB_TX
+Text Label 7150 3750 0    50   ~ 0
+USB_RX
+Text Label 7150 2150 0    50   ~ 0
+Servo1
+Text Label 7150 2250 0    50   ~ 0
+Servo2
+Text Label 7150 2350 0    50   ~ 0
+Servo3
+Text Label 7150 2450 0    50   ~ 0
+Servo4
+Text Label 7150 5150 0    50   ~ 0
+BMP_CSB
+Text Label 7150 5250 0    50   ~ 0
+ABO_CSB
+Wire Wire Line
+	7150 1850 7500 1850
+Wire Wire Line
+	7500 1850 7500 1000
+Wire Wire Line
+	7500 1000 8250 1000
+Wire Wire Line
+	7150 1950 7600 1950
+Wire Wire Line
+	7600 1950 7600 1100
+Wire Wire Line
+	7600 1100 8250 1100
+Wire Wire Line
+	7150 2050 7700 2050
+Wire Wire Line
+	7700 2050 7700 1200
+Wire Wire Line
+	7700 1200 8250 1200
+Text Label 8250 1350 2    50   ~ 0
+BMP_CSB
+Text Label 8250 1450 2    50   ~ 0
+ABO_CSB
+Text Notes 8950 3450 0    50   ~ 0
+SCL
+Text Notes 8950 3550 0    50   ~ 0
+SEL\n
+$Comp
+L Connector:Conn_01x05_Female J?
+U 1 1 5E2EABEB
+P 8950 3500
+AR Path="/5E201923/5E2EABEB" Ref="J?"  Part="1" 
+AR Path="/5E2EABEB" Ref="J2"  Part="1" 
+F 0 "J2" H 8850 3950 50  0000 L CNN
+F 1 "SPS30" H 8750 3850 50  0000 L CNN
+F 2 "" H 8950 3500 50  0001 C CNN
+F 3 "~" H 8950 3500 50  0001 C CNN
+	1    8950 3500
+	1    0    0    -1  
+$EndComp
+NoConn ~ 8750 3600
+$Sheet
+S 9550 1600 1350 1000
+U 5E2F29D1
+F0 "UART" 50
+F1 "UART.sch" 50
+F2 "SPS_TX" I L 9550 1700 50 
+F3 "SPS_RX" O L 9550 1800 50 
+F4 "XB_TX" I L 9550 2000 50 
+F5 "XB_RX" O L 9550 2100 50 
+F6 "GPS_TX" I L 9550 2300 50 
+F7 "GPS_RX" O L 9550 2400 50 
+$EndSheet
+$Comp
+L CSS-95B30-SMT:CSS-95B30-SMT LS1
+U 1 1 5E3AF99A
+P 9050 4950
+F 0 "LS1" H 9154 4996 50  0000 L CNN
+F 1 "CSS-95B30-SMT" H 9154 4905 50  0000 L CNN
+F 2 "CUI_CSS-95B30-SMT" H 9050 4950 50  0001 L BNN
+F 3 "CSS-95B30-SMT-TR" H 9050 4950 50  0001 L BNN
+F 4 "CUI" H 9050 4950 50  0001 L BNN "Field4"
+F 5 "Unavailable" H 9050 4950 50  0001 L BNN "Field5"
+F 6 "Audio Buzzer Magnetic 4Vo-p 7Vo-p 80mA 5Vo-p 92dBA Solder Pad Surface Mount T/R" H 9050 4950 50  0001 L BNN "Field6"
+F 7 "CUI Inc." H 9050 4950 50  0001 L BNN "Field7"
+F 8 "None" H 9050 4950 50  0001 L BNN "Field8"
+F 9 "https://www.cui.com/product/audio/buzzers/audio-transducers/magnetic/css-95b30-smt?utm_source=snapeda.com&utm_medium=referral&utm_campaign=snapedaBOM" H 9050 4950 50  0001 L BNN "Field9"
+	1    9050 4950
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC

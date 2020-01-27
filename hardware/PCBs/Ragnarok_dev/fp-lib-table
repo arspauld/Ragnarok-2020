@@ -2,4 +2,5 @@
   (lib (name BMP-388)(type KiCad)(uri ${KIPRJMOD}/ragnarok_custom_libs/BMP-388)(options "")(descr ""))
   (lib (name SDP32-125PA-TR-250PCS)(type KiCad)(uri ${KIPRJMOD}/ragnarok_custom_libs/SDP32/SDP32-125PA-TR-250PCS)(options "")(descr ""))
   (lib (name LP2985)(type KiCad)(uri ${KIPRJMOD}/ragnarok_custom_libs/LP2985)(options "")(descr ""))
+  (lib (name xbee)(type KiCad)(uri ${KIPRJMOD}/ragnarok_custom_libs/xbee)(options "")(descr ""))
 )

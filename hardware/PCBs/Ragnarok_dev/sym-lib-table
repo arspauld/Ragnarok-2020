@@ -3,4 +3,7 @@
   (lib (name AB0815)(type Legacy)(uri ${KIPRJMOD}/ragnarok_custom_libs/AB0815/AB0815.lib)(options "")(descr ""))
   (lib (name SDP32-125PA-TR-250PCS)(type Legacy)(uri ${KIPRJMOD}/ragnarok_custom_libs/SDP32/SDP32-125PA-TR-250PCS/SDP32-125PA-TR-250PCS.lib)(options "")(descr ""))
   (lib (name LP2985-50DBVR)(type Legacy)(uri ${KIPRJMOD}/ragnarok_custom_libs/LP2985/LP2985-50DBVR.lib)(options "")(descr ""))
+  (lib (name Ragnarok_dev-rescue)(type Legacy)(uri ${KIPRJMOD}/Ragnarok_dev-rescue.lib)(options "")(descr ""))
+  (lib (name XBP9B-DMST-002)(type Legacy)(uri ${KIPRJMOD}/ragnarok_custom_libs/xbee/XBP9B-DMST-002.lib)(options "")(descr ""))
+  (lib (name CSS-95B30-SMT)(type Legacy)(uri ${KIPRJMOD}/ragnarok_custom_libs/css_buzzer/CSS-95B30-SMT.lib)(options "")(descr ""))
 )
