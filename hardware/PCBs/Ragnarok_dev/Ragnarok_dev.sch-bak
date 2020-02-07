@@ -610,24 +610,6 @@ Text Label 8250 1350 2    50   ~ 0
 BMP_CSB
 Text Label 8250 1450 2    50   ~ 0
 ABO_CSB
-Text Notes 8950 3450 0    50   ~ 0
-SCL
-Text Notes 8950 3550 0    50   ~ 0
-SEL\n
-$Comp
-L Connector:Conn_01x05_Female J?
-U 1 1 5E2EABEB
-P 8950 3500
-AR Path="/5E201923/5E2EABEB" Ref="J?"  Part="1" 
-AR Path="/5E2EABEB" Ref="J2"  Part="1" 
-F 0 "J2" H 8850 3950 50  0000 L CNN
-F 1 "SPS30" H 8750 3850 50  0000 L CNN
-F 2 "" H 8950 3500 50  0001 C CNN
-F 3 "~" H 8950 3500 50  0001 C CNN
-	1    8950 3500
-	1    0    0    -1  
-$EndComp
-NoConn ~ 8750 3600
 $Sheet
 S 9550 1600 1350 1000
 U 5E2F29D1

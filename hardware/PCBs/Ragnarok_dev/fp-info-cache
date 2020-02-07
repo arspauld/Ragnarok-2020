@@ -1,4 +1,4 @@
-14926996473938346
+14928576745411569
 BMP-388
 PQFN50P200X200X80-10N
 
@@ -60136,6 +60136,13 @@ Shielding Cabinet
 0
 48
 1
+RT9
+SOT94P279X129-5N
+
+
+0
+5
+5
 Relay_SMD
 Relay_DPDT_AXICOM_IMSeries_JLeg
 http://www.te.com/commerce/DocumentDelivery/DDEController?Action=showdoc&DocId=Specification+Or+Standard%7F108-98001%7FW5%7Fpdf%7FEnglish%7FENG_SS_108-98001_W5.pdf
