@@ -119,10 +119,10 @@ void serial_uart_init(uint32_t baud)
 		.clock          =   No_Clock, // No clock signal
 		.interrupts     =	RXNE_IF, // Enables  an interrupt for Received Bytes
         .direction      =   RX_TX, // Enables Both RX and TX
-        .data_width     =   Eight_Data_Bits, // Data is Eight Bits
-        .stop_bits      =   Stop_Bits_1_0, // 1 full stop bit
-        .parity         =   No_Parity, // No Parity Control
-        .oversampling   =   Over_Sampling_16 // Input Clock over sampled by 16
+        .oversampling   =   Over_Sampling_16, // Input Clock over sampled by 16
+        .tx_pin         =   PIN_A2, // TX Pin of USART2 
+        .rx_pin         =   PIN_A3, // RX Pin of USART2
+        .clk_pin        =   PIN_A4 // CK PIN of USART2
 	};
     usart_init(&USART_serial);
 }

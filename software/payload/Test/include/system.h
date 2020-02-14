@@ -55,8 +55,67 @@ extern uint32_t APB2_Clock;
 #define SPI5_EN     ((uint8_t) 38U)
 
 
+void system_init(void);
 void system_clock_init(void);
 void enable_peripheral(uint8_t peripheral_flag);
+
+
+// Pin numbers on the board, used to give a unique value to each pin (values taken from )
+#define PIN_A0              (uint8_t) 14
+#define PIN_A1              (uint8_t) 15
+#define PIN_A2              (uint8_t) 16
+#define PIN_A3              (uint8_t) 17
+#define PIN_A4              (uint8_t) 20
+#define PIN_A5              (uint8_t) 21
+#define PIN_A6              (uint8_t) 22
+#define PIN_A7              (uint8_t) 23
+#define PIN_A8              (uint8_t) 41
+#define PIN_A9              (uint8_t) 42
+#define PIN_A10             (uint8_t) 43
+#define PIN_A11             (uint8_t) 44
+#define PIN_A12             (uint8_t) 45
+#define PIN_A13             (uint8_t) 46
+#define PIN_A14             (uint8_t) 49
+#define PIN_A15             (uint8_t) 50
+#define PIN_B0              (uint8_t) 26
+#define PIN_B1              (uint8_t) 27
+#define PIN_B2              (uint8_t) 28
+#define PIN_B3              (uint8_t) 55
+#define PIN_B4              (uint8_t) 56
+#define PIN_B5              (uint8_t) 57
+#define PIN_B6              (uint8_t) 58
+#define PIN_B7              (uint8_t) 59
+#define PIN_B8              (uint8_t) 61
+#define PIN_B9              (uint8_t) 62
+#define PIN_B10             (uint8_t) 29
+#define PIN_B11             (uint8_t) 54
+#define PIN_B12             (uint8_t) 33
+#define PIN_B13             (uint8_t) 34
+#define PIN_B14             (uint8_t) 35
+#define PIN_B15             (uint8_t) 36
+#define PIN_C0              (uint8_t) 8
+#define PIN_C1              (uint8_t) 9
+#define PIN_C2              (uint8_t) 10
+#define PIN_C3              (uint8_t) 11
+#define PIN_C4              (uint8_t) 24
+#define PIN_C5              (uint8_t) 25
+#define PIN_C6              (uint8_t) 37
+#define PIN_C7              (uint8_t) 38
+#define PIN_C8              (uint8_t) 39
+#define PIN_C9              (uint8_t) 40
+#define PIN_C10             (uint8_t) 51
+#define PIN_C11             (uint8_t) 52
+#define PIN_C12             (uint8_t) 53
+#define PIN_C13             (uint8_t) 2
+#define PIN_C14             (uint8_t) 3
+#define PIN_C15             (uint8_t) 4
+
+// Pin Modes
+#define GPIO_INPUT          (uint8_t) (0b00)     
+#define GPIO_OUTPUT         (uint8_t) (0b01)
+#define GPIO_ALT_FUNC       (uint8_t) (0b10)
+#define GPIO_ANALOG         (uint8_t) (0b11)
+
 
 #define GPIO_PIN_0_Pos              (0U)
 #define GPIO_PIN_0                  (1U << GPIO_PIN_0_Pos )  /* Pin 0  selected    */
@@ -91,6 +150,7 @@ void enable_peripheral(uint8_t peripheral_flag);
 #define GPIO_PIN_15_Pos             (15U)
 #define GPIO_PIN_15                 (1U << GPIO_PIN_15_Pos)  /* Pin 15 selected    */
 
+
 #define AF0                         0U  /* Alternate Function 0  */
 #define AF1                         1U  /* Alternate Function 1  */
 #define AF2                         2U  /* Alternate Function 2  */
@@ -108,7 +168,13 @@ void enable_peripheral(uint8_t peripheral_flag);
 #define AF14                        14U /* Alternate Function 14 */
 #define AF15                        15U /* Alternate Function 15 */
 
+// Sets a GPIO Pin to a certain mode
+void set_GPIO_pin_mode(uint8_t pin, uint8_t mode);
 
+// Returns a true or false value depending on whether the passed pin is a valid pin of the USART
+uint8_t is_USART_RX(USART_TypeDef* port, uint8_t pin);
+uint8_t is_USART_TX(USART_TypeDef* port, uint8_t pin);
+uint8_t is_USART_CLK(USART_TypeDef* port, uint8_t pin);
 
 
 #endif /* SYSTEM_H_ */

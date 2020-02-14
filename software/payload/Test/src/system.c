@@ -4,6 +4,11 @@ uint32_t AHB1_Clock = 16000000; // Default Clock Speed
 uint32_t APB1_Clock = 16000000; // Default Clock Speed
 uint32_t APB2_Clock = 16000000; // Default Clock Speed
 
+void system_init(void)
+{
+    
+}
+
 void system_clock_init(void)
 {
     RCC->CR |= RCC_CR_HSION; // Verifies that the High Speed Internal Clock is on
@@ -124,4 +129,231 @@ void enable_peripheral(uint8_t peripheral_flag)
             RCC->APB2ENR |= RCC_APB2ENR_SPI5EN;
             break;
     }
+}
+
+// Setting a GPIO pin to a output mode
+void set_GPIO_pin_mode(uint8_t pin, uint8_t mode)
+{
+    switch(pin)
+    {
+        case PIN_A0:
+            GPIOA->MODER &= ~((0b11) << (GPIO_PIN_0_Pos * 2)); // Resets to Input
+            GPIOA->MODER |= ((mode & 0b11) << (GPIO_PIN_0_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_A1:
+            GPIOA->MODER &= ~((0b11) << (GPIO_PIN_1_Pos * 2)); // Resets to Input
+            GPIOA->MODER |= ((mode & 0b11) << (GPIO_PIN_1_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_A2:
+            GPIOA->MODER &= ~((0b11) << (GPIO_PIN_2_Pos * 2)); // Resets to Input
+            GPIOA->MODER |= ((mode & 0b11) << (GPIO_PIN_2_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_A3:
+            GPIOA->MODER &= ~((0b11) << (GPIO_PIN_3_Pos * 2)); // Resets to Input
+            GPIOA->MODER |= ((mode & 0b11) << (GPIO_PIN_3_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_A4:
+            GPIOA->MODER &= ~((0b11) << (GPIO_PIN_4_Pos * 2)); // Resets to Input
+            GPIOA->MODER |= ((mode & 0b11) << (GPIO_PIN_4_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_A5:
+            GPIOA->MODER &= ~((0b11) << (GPIO_PIN_5_Pos * 2)); // Resets to Input
+            GPIOA->MODER |= ((mode & 0b11) << (GPIO_PIN_5_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_A6:
+            GPIOA->MODER &= ~((0b11) << (GPIO_PIN_6_Pos * 2)); // Resets to Input
+            GPIOA->MODER |= ((mode & 0b11) << (GPIO_PIN_6_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_A7:
+            GPIOA->MODER &= ~((0b11) << (GPIO_PIN_7_Pos * 2)); // Resets to Input
+            GPIOA->MODER |= ((mode & 0b11) << (GPIO_PIN_7_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_A8:
+            GPIOA->MODER &= ~((0b11) << (GPIO_PIN_8_Pos * 2)); // Resets to Input
+            GPIOA->MODER |= ((mode & 0b11) << (GPIO_PIN_8_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_A9:
+            GPIOA->MODER &= ~((0b11) << (GPIO_PIN_9_Pos * 2)); // Resets to Input
+            GPIOA->MODER |= ((mode & 0b11) << (GPIO_PIN_9_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_A10:
+            GPIOA->MODER &= ~((0b11) << (GPIO_PIN_10_Pos * 2)); // Resets to Input
+            GPIOA->MODER |= ((mode & 0b11) << (GPIO_PIN_10_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_A11:
+            GPIOA->MODER &= ~((0b11) << (GPIO_PIN_11_Pos * 2)); // Resets to Input
+            GPIOA->MODER |= ((mode & 0b11) << (GPIO_PIN_11_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_A12:
+            GPIOA->MODER &= ~((0b11) << (GPIO_PIN_12_Pos * 2)); // Resets to Input
+            GPIOA->MODER |= ((mode & 0b11) << (GPIO_PIN_12_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_A13:
+            GPIOA->MODER &= ~((0b11) << (GPIO_PIN_13_Pos * 2)); // Resets to Input
+            GPIOA->MODER |= ((mode & 0b11) << (GPIO_PIN_13_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_A14:
+            GPIOA->MODER &= ~((0b11) << (GPIO_PIN_14_Pos * 2)); // Resets to Input
+            GPIOA->MODER |= ((mode & 0b11) << (GPIO_PIN_14_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_A15:
+            GPIOA->MODER &= ~((0b11) << (GPIO_PIN_15_Pos * 2)); // Resets to Input
+            GPIOA->MODER |= ((mode & 0b11) << (GPIO_PIN_15_Pos * 2)); // Sets to Mode
+            break;
+
+
+        case PIN_B0:
+            GPIOB->MODER &= ~((0b11) << (GPIO_PIN_0_Pos * 2)); // Resets to Input
+            GPIOB->MODER |= ((mode & 0b11) << (GPIO_PIN_0_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_B1:
+            GPIOB->MODER &= ~((0b11) << (GPIO_PIN_1_Pos * 2)); // Resets to Input
+            GPIOB->MODER |= ((mode & 0b11) << (GPIO_PIN_1_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_B2:
+            GPIOB->MODER &= ~((0b11) << (GPIO_PIN_2_Pos * 2)); // Resets to Input
+            GPIOB->MODER |= ((mode & 0b11) << (GPIO_PIN_2_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_B3:
+            GPIOB->MODER &= ~((0b11) << (GPIO_PIN_3_Pos * 2)); // Resets to Input
+            GPIOB->MODER |= ((mode & 0b11) << (GPIO_PIN_3_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_B4:
+            GPIOB->MODER &= ~((0b11) << (GPIO_PIN_4_Pos * 2)); // Resets to Input
+            GPIOB->MODER |= ((mode & 0b11) << (GPIO_PIN_4_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_B5:
+            GPIOB->MODER &= ~((0b11) << (GPIO_PIN_5_Pos * 2)); // Resets to Input
+            GPIOB->MODER |= ((mode & 0b11) << (GPIO_PIN_5_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_B6:
+            GPIOB->MODER &= ~((0b11) << (GPIO_PIN_6_Pos * 2)); // Resets to Input
+            GPIOB->MODER |= ((mode & 0b11) << (GPIO_PIN_6_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_B7:
+            GPIOB->MODER &= ~((0b11) << (GPIO_PIN_7_Pos * 2)); // Resets to Input
+            GPIOB->MODER |= ((mode & 0b11) << (GPIO_PIN_7_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_B8:
+            GPIOB->MODER &= ~((0b11) << (GPIO_PIN_8_Pos * 2)); // Resets to Input
+            GPIOB->MODER |= ((mode & 0b11) << (GPIO_PIN_8_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_B9:
+            GPIOB->MODER &= ~((0b11) << (GPIO_PIN_9_Pos * 2)); // Resets to Input
+            GPIOB->MODER |= ((mode & 0b11) << (GPIO_PIN_9_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_B10:
+            GPIOB->MODER &= ~((0b11) << (GPIO_PIN_10_Pos * 2)); // Resets to Input
+            GPIOB->MODER |= ((mode & 0b11) << (GPIO_PIN_10_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_B11:
+            GPIOB->MODER &= ~((0b11) << (GPIO_PIN_11_Pos * 2)); // Resets to Input
+            GPIOB->MODER |= ((mode & 0b11) << (GPIO_PIN_11_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_B12:
+            GPIOB->MODER &= ~((0b11) << (GPIO_PIN_12_Pos * 2)); // Resets to Input
+            GPIOB->MODER |= ((mode & 0b11) << (GPIO_PIN_12_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_B13:
+            GPIOB->MODER &= ~((0b11) << (GPIO_PIN_13_Pos * 2)); // Resets to Input
+            GPIOB->MODER |= ((mode & 0b11) << (GPIO_PIN_13_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_B14:
+            GPIOB->MODER &= ~((0b11) << (GPIO_PIN_14_Pos * 2)); // Resets to Input
+            GPIOB->MODER |= ((mode & 0b11) << (GPIO_PIN_14_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_B15:
+            GPIOB->MODER &= ~((0b11) << (GPIO_PIN_15_Pos * 2)); // Resets to Input
+            GPIOB->MODER |= ((mode & 0b11) << (GPIO_PIN_15_Pos * 2)); // Sets to Mode
+            break;
+
+        
+        case PIN_C0:
+            GPIOC->MODER &= ~((0b11) << (GPIO_PIN_0_Pos * 2)); // Resets to Input
+            GPIOC->MODER |= ((mode & 0b11) << (GPIO_PIN_0_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_C1:
+            GPIOC->MODER &= ~((0b11) << (GPIO_PIN_1_Pos * 2)); // Resets to Input
+            GPIOC->MODER |= ((mode & 0b11) << (GPIO_PIN_1_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_C2:
+            GPIOC->MODER &= ~((0b11) << (GPIO_PIN_2_Pos * 2)); // Resets to Input
+            GPIOC->MODER |= ((mode & 0b11) << (GPIO_PIN_2_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_C3:
+            GPIOC->MODER &= ~((0b11) << (GPIO_PIN_3_Pos * 2)); // Resets to Input
+            GPIOC->MODER |= ((mode & 0b11) << (GPIO_PIN_3_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_C4:
+            GPIOC->MODER &= ~((0b11) << (GPIO_PIN_4_Pos * 2)); // Resets to Input
+            GPIOC->MODER |= ((mode & 0b11) << (GPIO_PIN_4_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_C5:
+            GPIOC->MODER &= ~((0b11) << (GPIO_PIN_5_Pos * 2)); // Resets to Input
+            GPIOC->MODER |= ((mode & 0b11) << (GPIO_PIN_5_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_C6:
+            GPIOC->MODER &= ~((0b11) << (GPIO_PIN_6_Pos * 2)); // Resets to Input
+            GPIOC->MODER |= ((mode & 0b11) << (GPIO_PIN_6_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_C7:
+            GPIOC->MODER &= ~((0b11) << (GPIO_PIN_7_Pos * 2)); // Resets to Input
+            GPIOC->MODER |= ((mode & 0b11) << (GPIO_PIN_7_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_C8:
+            GPIOC->MODER &= ~((0b11) << (GPIO_PIN_8_Pos * 2)); // Resets to Input
+            GPIOC->MODER |= ((mode & 0b11) << (GPIO_PIN_8_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_C9:
+            GPIOC->MODER &= ~((0b11) << (GPIO_PIN_9_Pos * 2)); // Resets to Input
+            GPIOC->MODER |= ((mode & 0b11) << (GPIO_PIN_9_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_C10:
+            GPIOC->MODER &= ~((0b11) << (GPIO_PIN_10_Pos * 2)); // Resets to Input
+            GPIOC->MODER |= ((mode & 0b11) << (GPIO_PIN_10_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_C11:
+            GPIOC->MODER &= ~((0b11) << (GPIO_PIN_11_Pos * 2)); // Resets to Input
+            GPIOC->MODER |= ((mode & 0b11) << (GPIO_PIN_11_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_C12:
+            GPIOC->MODER &= ~((0b11) << (GPIO_PIN_12_Pos * 2)); // Resets to Input
+            GPIOC->MODER |= ((mode & 0b11) << (GPIO_PIN_12_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_C13:
+            GPIOC->MODER &= ~((0b11) << (GPIO_PIN_13_Pos * 2)); // Resets to Input
+            GPIOC->MODER |= ((mode & 0b11) << (GPIO_PIN_13_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_C14:
+            GPIOC->MODER &= ~((0b11) << (GPIO_PIN_14_Pos * 2)); // Resets to Input
+            GPIOC->MODER |= ((mode & 0b11) << (GPIO_PIN_14_Pos * 2)); // Sets to Mode
+            break;
+        case PIN_C15:
+            GPIOC->MODER &= ~((0b11) << (GPIO_PIN_15_Pos * 2)); // Resets to Input
+            GPIOC->MODER |= ((mode & 0b11) << (GPIO_PIN_15_Pos * 2)); // Sets to Mode
+            break;
+    }
+}
+
+
+// USART logical checks 
+uint8_t is_USART_RX(USART_TypeDef* port, uint8_t pin)
+{
+    return (    ((port == USART1) && ((pin == PIN_A10) || (pin == PIN_B3) || (pin == PIN_B7))) ||       // USART1 RX pin options
+                ((port == USART2) && (pin == PIN_A3)) ||                                                // USART2 RX pin options
+                ((port == USART6) && ((pin == PIN_A12) || (pin == PIN_C7)))                         );  // USART6 RX pin options
+}
+
+uint8_t is_USART_TX(USART_TypeDef* port, uint8_t pin)
+{
+    return (    ((port == USART1) && ((pin == PIN_A9) || (pin == PIN_A15) || (pin == PIN_B6))) ||       // USART1 TX pin options
+                ((port == USART2) && (pin == PIN_A2)) ||                                                // USART2 TX pin options
+                ((port == USART6) && ((pin == PIN_A11) || (pin == PIN_C6)))                         );  // USART6 TX pin options
+}
+
+uint8_t is_USART_CLK(USART_TypeDef* port, uint8_t pin)
+{
+    return (    ((port == USART1) && (pin == PIN_A8)) ||        // USART1 CLK pin options
+                ((port == USART2) && (pin == PIN_A4)) ||        // USART2 CLK pin options
+                ((port == USART6) && (pin == PIN_C8))       );  // USART6 CLK pin options
 }
