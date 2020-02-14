@@ -472,21 +472,23 @@ USB_RX
 Text Label 3700 2700 0    50   ~ 0
 USB_TX
 $Sheet
-S 8250 950  1100 550 
+S 8600 950  1100 550 
 U 5E1A0CB7
 F0 "SPI Sensors" 50
 F1 "SPI.sch" 50
-F2 "SCLK" I L 8250 1000 50 
-F3 "MOSI" I L 8250 1200 50 
-F4 "MISO" O L 8250 1100 50 
-F5 "CSB0" I L 8250 1350 50 
-F6 "CSB1" I L 8250 1450 50 
+F2 "SCLK" I L 8600 1000 50 
+F3 "MOSI" I L 8600 1200 50 
+F4 "MISO" O L 8600 1100 50 
+F5 "CSB0" I L 8600 1350 50 
+F6 "CSB1" I L 8600 1450 50 
 $EndSheet
 $Sheet
-S 8250 1850 1050 600 
+S 8250 3900 1050 600 
 U 5E201923
 F0 "I2C Sensors" 50
 F1 "i2c_sensors.sch" 50
+F2 "SDA" B L 8250 4150 50 
+F3 "SCL" I L 8250 4050 50 
 $EndSheet
 $Comp
 L power:GND #PWR0113
@@ -570,8 +572,8 @@ Wire Wire Line
 Wire Wire Line
 	4200 1750 4200 1800
 Connection ~ 4200 1800
-Text Notes 2700 7050 0    50   ~ 0
-Still Need:\n-Openlog\n-Servos\n-Motor Driver\n-Status LEDs\n-Thermistor\n-Voltage Divider\n-Camera\n-Prove points\n-Backup batteries\n-Hookup GPS (sparkfun breakout)\n-3V3 Level Shifting (FTDI)\n-Finish pin assignments\n-Photoresistor/IRLED
+Text Notes 1650 7650 0    50   ~ 0
+Still Need:\n-Openlog\n-Servos\n-Motor Driver\n-Status LEDs\n-Thermistor\n-Voltage Divider\n-Camera\n-Probe points\n-Backup batteries\n-Hookup GPS (sparkfun breakout)\n-3V3 Level Shifting (FTDI)\n-Finish pin assignments\n-Photoresistor/IRLED
 Text Label 7150 3650 0    50   ~ 0
 USB_TX
 Text Label 7150 3750 0    50   ~ 0
@@ -589,54 +591,278 @@ BMP_CSB
 Text Label 7150 5250 0    50   ~ 0
 ABO_CSB
 Wire Wire Line
-	7150 1850 7500 1850
+	7850 1850 7850 1000
 Wire Wire Line
-	7500 1850 7500 1000
+	7850 1000 8600 1000
 Wire Wire Line
-	7500 1000 8250 1000
+	7950 1950 7950 1100
 Wire Wire Line
-	7150 1950 7600 1950
+	7950 1100 8600 1100
 Wire Wire Line
-	7600 1950 7600 1100
+	8050 2050 8050 1200
 Wire Wire Line
-	7600 1100 8250 1100
-Wire Wire Line
-	7150 2050 7700 2050
-Wire Wire Line
-	7700 2050 7700 1200
-Wire Wire Line
-	7700 1200 8250 1200
-Text Label 8250 1350 2    50   ~ 0
+	8050 1200 8600 1200
+Text Label 8600 1350 2    50   ~ 0
 BMP_CSB
-Text Label 8250 1450 2    50   ~ 0
+Text Label 8600 1450 2    50   ~ 0
 ABO_CSB
 $Sheet
-S 9550 1600 1350 1000
+S 8050 5350 1350 1000
 U 5E2F29D1
 F0 "UART" 50
 F1 "UART.sch" 50
-F2 "SPS_TX" I L 9550 1700 50 
-F3 "SPS_RX" O L 9550 1800 50 
-F4 "XB_TX" I L 9550 2000 50 
-F5 "XB_RX" O L 9550 2100 50 
-F6 "GPS_TX" I L 9550 2300 50 
-F7 "GPS_RX" O L 9550 2400 50 
+F2 "SPS_TX" I L 8050 5450 50 
+F3 "SPS_RX" O L 8050 5550 50 
+F4 "XB_TX" I L 8050 5750 50 
+F5 "XB_RX" O L 8050 5850 50 
+F6 "GPS_TX" I L 8050 6050 50 
+F7 "GPS_RX" O L 8050 6150 50 
 $EndSheet
 $Comp
 L CSS-95B30-SMT:CSS-95B30-SMT LS1
 U 1 1 5E3AF99A
-P 9050 4950
-F 0 "LS1" H 9154 4996 50  0000 L CNN
-F 1 "CSS-95B30-SMT" H 9154 4905 50  0000 L CNN
-F 2 "CUI_CSS-95B30-SMT" H 9050 4950 50  0001 L BNN
-F 3 "CSS-95B30-SMT-TR" H 9050 4950 50  0001 L BNN
-F 4 "CUI" H 9050 4950 50  0001 L BNN "Field4"
-F 5 "Unavailable" H 9050 4950 50  0001 L BNN "Field5"
-F 6 "Audio Buzzer Magnetic 4Vo-p 7Vo-p 80mA 5Vo-p 92dBA Solder Pad Surface Mount T/R" H 9050 4950 50  0001 L BNN "Field6"
-F 7 "CUI Inc." H 9050 4950 50  0001 L BNN "Field7"
-F 8 "None" H 9050 4950 50  0001 L BNN "Field8"
-F 9 "https://www.cui.com/product/audio/buzzers/audio-transducers/magnetic/css-95b30-smt?utm_source=snapeda.com&utm_medium=referral&utm_campaign=snapedaBOM" H 9050 4950 50  0001 L BNN "Field9"
-	1    9050 4950
+P 10750 4650
+F 0 "LS1" H 10854 4696 50  0000 L CNN
+F 1 "Buzzer" H 10854 4605 50  0000 L CNN
+F 2 "CUI_CSS-95B30-SMT" H 10750 4650 50  0001 L BNN
+F 3 "CSS-95B30-SMT-TR" H 10750 4650 50  0001 L BNN
+F 4 "CUI" H 10750 4650 50  0001 L BNN "Field4"
+F 5 "Unavailable" H 10750 4650 50  0001 L BNN "Field5"
+F 6 "Audio Buzzer Magnetic 4Vo-p 7Vo-p 80mA 5Vo-p 92dBA Solder Pad Surface Mount T/R" H 10750 4650 50  0001 L BNN "Field6"
+F 7 "CUI Inc." H 10750 4650 50  0001 L BNN "Field7"
+F 8 "None" H 10750 4650 50  0001 L BNN "Field8"
+F 9 "https://www.cui.com/product/audio/buzzers/audio-transducers/magnetic/css-95b30-smt?utm_source=snapeda.com&utm_medium=referral&utm_campaign=snapedaBOM" H 10750 4650 50  0001 L BNN "Field9"
+	1    10750 4650
 	1    0    0    -1  
 $EndComp
+$Comp
+L Connector:TestPoint_Probe TP7
+U 1 1 5E46606B
+P 600 6400
+F 0 "TP7" H 753 6501 50  0000 L CNN
+F 1 "TestPoint_Probe" H 753 6410 50  0000 L CNN
+F 2 "" H 800 6400 50  0001 C CNN
+F 3 "~" H 800 6400 50  0001 C CNN
+	1    600  6400
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:TestPoint_Probe TP6
+U 1 1 5E466255
+P 600 6200
+F 0 "TP6" H 753 6301 50  0000 L CNN
+F 1 "TestPoint_Probe" H 753 6210 50  0000 L CNN
+F 2 "" H 800 6200 50  0001 C CNN
+F 3 "~" H 800 6200 50  0001 C CNN
+	1    600  6200
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:TestPoint_Probe TP5
+U 1 1 5E4664E1
+P 600 5950
+F 0 "TP5" H 753 6051 50  0000 L CNN
+F 1 "TestPoint_Probe" H 753 5960 50  0000 L CNN
+F 2 "" H 800 5950 50  0001 C CNN
+F 3 "~" H 800 5950 50  0001 C CNN
+	1    600  5950
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:TestPoint_Probe TP4
+U 1 1 5E466803
+P 600 5750
+F 0 "TP4" H 753 5851 50  0000 L CNN
+F 1 "TestPoint_Probe" H 753 5760 50  0000 L CNN
+F 2 "" H 800 5750 50  0001 C CNN
+F 3 "~" H 800 5750 50  0001 C CNN
+	1    600  5750
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:TestPoint_Probe TP3
+U 1 1 5E466A11
+P 600 5550
+F 0 "TP3" H 753 5651 50  0000 L CNN
+F 1 "TestPoint_Probe" H 753 5560 50  0000 L CNN
+F 2 "" H 800 5550 50  0001 C CNN
+F 3 "~" H 800 5550 50  0001 C CNN
+	1    600  5550
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:TestPoint_Probe TP2
+U 1 1 5E466D24
+P 600 5350
+F 0 "TP2" H 753 5451 50  0000 L CNN
+F 1 "TestPoint_Probe" H 753 5360 50  0000 L CNN
+F 2 "" H 800 5350 50  0001 C CNN
+F 3 "~" H 800 5350 50  0001 C CNN
+	1    600  5350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R_Small R?
+U 1 1 5E472D44
+P 3400 6800
+F 0 "R?" H 3459 6846 50  0000 L CNN
+F 1 "31.6k" H 3459 6755 50  0000 L CNN
+F 2 "" H 3400 6800 50  0001 C CNN
+F 3 "~" H 3400 6800 50  0001 C CNN
+	1    3400 6800
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R_Small R?
+U 1 1 5E4730CB
+P 3400 7100
+F 0 "R?" H 3459 7146 50  0000 L CNN
+F 1 "12k" H 3459 7055 50  0000 L CNN
+F 2 "" H 3400 7100 50  0001 C CNN
+F 3 "~" H 3400 7100 50  0001 C CNN
+	1    3400 7100
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+6V #PWR?
+U 1 1 5E47B1D8
+P 3400 6600
+F 0 "#PWR?" H 3400 6450 50  0001 C CNN
+F 1 "+6V" H 3415 6773 50  0000 C CNN
+F 2 "" H 3400 6600 50  0001 C CNN
+F 3 "" H 3400 6600 50  0001 C CNN
+	1    3400 6600
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3400 6600 3400 6700
+Wire Wire Line
+	3400 6900 3400 6950
+Wire Wire Line
+	3400 7200 3400 7300
+$Comp
+L power:GND #PWR?
+U 1 1 5E483BC8
+P 3400 7300
+F 0 "#PWR?" H 3400 7050 50  0001 C CNN
+F 1 "GND" H 3405 7127 50  0000 C CNN
+F 2 "" H 3400 7300 50  0001 C CNN
+F 3 "" H 3400 7300 50  0001 C CNN
+	1    3400 7300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3400 6950 3650 6950
+Connection ~ 3400 6950
+Wire Wire Line
+	3400 6950 3400 7000
+Text Label 3650 6950 0    50   ~ 0
+voltage_div
+$Comp
+L Device:R_Small R?
+U 1 1 5E49938D
+P 4200 7150
+F 0 "R?" H 4259 7196 50  0000 L CNN
+F 1 "10k" H 4259 7105 50  0000 L CNN
+F 2 "" H 4200 7150 50  0001 C CNN
+F 3 "~" H 4200 7150 50  0001 C CNN
+	1    4200 7150
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:Thermistor TH?
+U 1 1 5E49A41E
+P 4200 6650
+F 0 "TH?" H 4305 6696 50  0000 L CNN
+F 1 "10k@25" H 4305 6605 50  0000 L CNN
+F 2 "" H 4200 6650 50  0001 C CNN
+F 3 "~" H 4200 6650 50  0001 C CNN
+	1    4200 6650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4200 6850 4200 6950
+$Comp
+L power:+3.3V #PWR?
+U 1 1 5E49E2BA
+P 4200 6350
+F 0 "#PWR?" H 4200 6200 50  0001 C CNN
+F 1 "+3.3V" H 4215 6523 50  0000 C CNN
+F 2 "" H 4200 6350 50  0001 C CNN
+F 3 "" H 4200 6350 50  0001 C CNN
+	1    4200 6350
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4200 6350 4200 6450
+$Comp
+L power:GND #PWR?
+U 1 1 5E4A2039
+P 4200 7350
+F 0 "#PWR?" H 4200 7100 50  0001 C CNN
+F 1 "GND" H 4205 7177 50  0000 C CNN
+F 2 "" H 4200 7350 50  0001 C CNN
+F 3 "" H 4200 7350 50  0001 C CNN
+	1    4200 7350
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4200 7250 4200 7350
+Wire Wire Line
+	4200 6950 4400 6950
+Connection ~ 4200 6950
+Wire Wire Line
+	4200 6950 4200 7050
+Text Label 4400 6950 0    50   ~ 0
+voltage_therm
+$Comp
+L Connector:Conn_01x10_Female J?
+U 1 1 5E46F957
+P 10100 3050
+F 0 "J?" H 10000 2300 50  0000 L CNN
+F 1 "Conn_01x10_Female" H 9700 2450 50  0000 L CNN
+F 2 "" H 10100 3050 50  0001 C CNN
+F 3 "~" H 10100 3050 50  0001 C CNN
+	1    10100 3050
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:Conn_01x10_Female J?
+U 1 1 5E47085A
+P 10450 3050
+F 0 "J?" H 10342 3635 50  0000 C CNN
+F 1 "Conn_01x10_Female" H 10342 3544 50  0000 C CNN
+F 2 "" H 10450 3050 50  0001 C CNN
+F 3 "~" H 10450 3050 50  0001 C CNN
+	1    10450 3050
+	-1   0    0    -1  
+$EndComp
+Text Label 7150 5450 0    50   ~ 0
+Servo5
+Wire Wire Line
+	7150 4050 8250 4050
+Wire Wire Line
+	7150 4150 8250 4150
+Text Label 7150 1450 0    50   ~ 0
+voltage_div
+Wire Wire Line
+	7150 1850 7850 1850
+Wire Wire Line
+	7150 1950 7950 1950
+Wire Wire Line
+	7150 2050 8050 2050
+Text Label 7150 1550 0    50   ~ 0
+voltage_therm
+Text Label 5350 5250 2    50   ~ 0
+GPS_TX
+Text Label 5350 5350 2    50   ~ 0
+GPS_RX
+Wire Wire Line
+	7150 5750 8050 5750
+Wire Wire Line
+	7150 5850 8050 5850
+Text Label 8050 6050 2    50   ~ 0
+GPS_TX
+Text Label 8050 6150 2    50   ~ 0
+GPS_RX
 $EndSCHEMATC

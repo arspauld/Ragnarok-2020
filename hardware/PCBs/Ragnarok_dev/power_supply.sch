@@ -423,17 +423,6 @@ F 3 "~" V 3300 2260 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:+BATT #PWR02
-U 1 1 5E0636A5
-P 3300 1800
-F 0 "#PWR02" H 3300 1650 50  0001 C CNN
-F 1 "+BATT" H 3315 1973 50  0000 C CNN
-F 2 "" H 3300 1800 50  0001 C CNN
-F 3 "" H 3300 1800 50  0001 C CNN
-	1    3300 1800
-	1    0    0    -1  
-$EndComp
-$Comp
 L Device:Q_PMOS_GDS Q2
 U 1 1 5E07ECD2
 P 5100 1200
@@ -464,12 +453,7 @@ Prevents against reverse voltage
 Text Notes 5450 1000 0    50   ~ 0
 Disconnects the USB power if a battery is connected
 Wire Wire Line
-	3300 1800 3300 1900
-Wire Wire Line
-	3300 1900 4250 1900
-Wire Wire Line
 	3300 2000 3300 1900
-Connection ~ 3300 1900
 $Comp
 L power:GND #PWR0101
 U 1 1 5E0AA9AA
@@ -943,4 +927,46 @@ Wire Wire Line
 	8700 4900 8700 5050
 Wire Wire Line
 	8700 5050 9350 5050
+$Comp
+L power:VDD #PWR?
+U 1 1 5E473C09
+P 6150 2500
+F 0 "#PWR?" H 6150 2350 50  0001 C CNN
+F 1 "VDD" V 6167 2628 50  0000 L CNN
+F 2 "" H 6150 2500 50  0001 C CNN
+F 3 "" H 6150 2500 50  0001 C CNN
+	1    6150 2500
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:+6V #PWR?
+U 1 1 5E4741CD
+P 6400 2500
+F 0 "#PWR?" H 6400 2350 50  0001 C CNN
+F 1 "+6V" V 6415 2628 50  0000 L CNN
+F 2 "" H 6400 2500 50  0001 C CNN
+F 3 "" H 6400 2500 50  0001 C CNN
+	1    6400 2500
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	6150 2500 6400 2500
+Text Notes 3400 1350 0    50   ~ 0
+This needs to be fixed , currently floats\n
+Wire Wire Line
+	3300 1900 4250 1900
+Wire Wire Line
+	3300 1800 3300 1900
+Connection ~ 3300 1900
+$Comp
+L power:+BATT #PWR02
+U 1 1 5E0636A5
+P 3300 1800
+F 0 "#PWR02" H 3300 1650 50  0001 C CNN
+F 1 "+BATT" H 3315 1973 50  0000 C CNN
+F 2 "" H 3300 1800 50  0001 C CNN
+F 3 "" H 3300 1800 50  0001 C CNN
+	1    3300 1800
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
