@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 5 5
+Sheet 5 6
 Title ""
 Date ""
 Rev ""
@@ -13,25 +13,6 @@ Comment2 ""
 Comment3 ""
 Comment4 ""
 $EndDescr
-Text Notes 5200 1000 0    50   ~ 0
-RX
-Text Notes 5200 1200 0    50   ~ 0
-TX\n\n
-$Comp
-L Connector:Conn_01x05_Female J?
-U 1 1 5E2FBB26
-P 5200 1100
-AR Path="/5E201923/5E2FBB26" Ref="J?"  Part="1" 
-AR Path="/5E2FBB26" Ref="J?"  Part="1" 
-AR Path="/5E2F29D1/5E2FBB26" Ref="J3"  Part="1" 
-F 0 "J3" H 5100 1550 50  0000 L CNN
-F 1 "SPS30" H 5000 1450 50  0000 L CNN
-F 2 "" H 5200 1100 50  0001 C CNN
-F 3 "~" H 5200 1100 50  0001 C CNN
-	1    5200 1100
-	1    0    0    -1  
-$EndComp
-NoConn ~ 5000 1200
 $Comp
 L Ragnarok_dev-rescue:ublox_SAM-M8Q-RF_GPS U?
 U 1 1 5E2FE35E
@@ -57,47 +38,6 @@ F 2 "" H 5750 4550 50  0001 C CNN
 F 3 "~" H 5750 4550 50  0001 C CNN
 	1    5750 4550
 	0    -1   -1   0   
-$EndComp
-$Comp
-L power:GND #PWR0124
-U 1 1 5E300D95
-P 4900 1400
-F 0 "#PWR0124" H 4900 1150 50  0001 C CNN
-F 1 "GND" H 4905 1227 50  0000 C CNN
-F 2 "" H 4900 1400 50  0001 C CNN
-F 3 "" H 4900 1400 50  0001 C CNN
-	1    4900 1400
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	5000 1300 4900 1300
-Wire Wire Line
-	4900 1300 4900 1400
-$Comp
-L power:+5V #PWR0128
-U 1 1 5E30193C
-P 4900 800
-F 0 "#PWR0128" H 4900 650 50  0001 C CNN
-F 1 "+5V" H 4915 973 50  0000 C CNN
-F 2 "" H 4900 800 50  0001 C CNN
-F 3 "" H 4900 800 50  0001 C CNN
-	1    4900 800 
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	4900 800  4900 900 
-Wire Wire Line
-	4900 900  5000 900 
-$Comp
-L XBP9B-DMST-002:XBP9B-DMST-002 U2
-U 1 1 5E3927AC
-P 6100 2900
-F 0 "U2" H 6100 3967 50  0000 C CNN
-F 1 "XBP9B-DMST-002" H 6100 3876 50  0000 C CNN
-F 2 "xbee:DIP2200W51P200L3294H279Q20P" H 6100 2900 50  0001 L BNN
-F 3 "Digi International" H 6100 2900 50  0001 L BNN
-	1    6100 2900
-	1    0    0    -1  
 $EndComp
 $Comp
 L Device:C_Small C?
@@ -242,62 +182,52 @@ Wire Wire Line
 $Comp
 L power:+3.3V #PWR0133
 U 1 1 5E3C0E92
-P 7300 2000
-F 0 "#PWR0133" H 7300 1850 50  0001 C CNN
-F 1 "+3.3V" H 7315 2173 50  0000 C CNN
-F 2 "" H 7300 2000 50  0001 C CNN
-F 3 "" H 7300 2000 50  0001 C CNN
-	1    7300 2000
+P 6800 2000
+F 0 "#PWR0133" H 6800 1850 50  0001 C CNN
+F 1 "+3.3V" H 6815 2173 50  0000 C CNN
+F 2 "" H 6800 2000 50  0001 C CNN
+F 3 "" H 6800 2000 50  0001 C CNN
+	1    6800 2000
 	-1   0    0    -1  
 $EndComp
 $Comp
 L power:GND #PWR0134
 U 1 1 5E3C20EC
-P 7300 3800
-F 0 "#PWR0134" H 7300 3550 50  0001 C CNN
-F 1 "GND" H 7305 3627 50  0000 C CNN
-F 2 "" H 7300 3800 50  0001 C CNN
-F 3 "" H 7300 3800 50  0001 C CNN
-	1    7300 3800
+P 6800 3800
+F 0 "#PWR0134" H 6800 3550 50  0001 C CNN
+F 1 "GND" H 6805 3627 50  0000 C CNN
+F 2 "" H 6800 3800 50  0001 C CNN
+F 3 "" H 6800 3800 50  0001 C CNN
+	1    6800 3800
 	-1   0    0    -1  
 $EndComp
 Wire Wire Line
-	7200 3700 7300 3700
+	6700 3700 6800 3700
 Wire Wire Line
-	7300 3700 7300 3800
+	6800 3700 6800 3800
 Wire Wire Line
-	7300 2000 7300 2100
+	6800 2000 6800 2100
 Wire Wire Line
-	7300 2100 7200 2100
-Text Label 5000 2600 2    50   ~ 0
+	6800 2100 6700 2100
+Text Label 4500 2600 2    50   ~ 0
 XBEE_TX
-Text Label 5000 2500 2    50   ~ 0
+Text Label 4500 2500 2    50   ~ 0
 XBEE_RX
-NoConn ~ 7200 3200
-NoConn ~ 5000 3700
-NoConn ~ 5000 3600
-NoConn ~ 5000 3500
-NoConn ~ 5000 3400
-NoConn ~ 5000 3300
-NoConn ~ 5000 3200
-NoConn ~ 5000 3100
-NoConn ~ 5000 3000
-NoConn ~ 5000 2900
-NoConn ~ 5000 2800
-NoConn ~ 5000 2700
-NoConn ~ 5000 2300
-NoConn ~ 5000 2200
-NoConn ~ 5000 2100
-Text Label 5000 1000 2    50   ~ 0
-DUST_TX
-Text Label 5000 1100 2    50   ~ 0
-DUST_RX
-Text Notes 5550 1250 0    50   ~ 0
-ADD jumper for dust sensor
-Text HLabel 1050 1100 0    50   Input ~ 0
-SPS_TX
-Text HLabel 1050 1200 0    50   Output ~ 0
-SPS_RX
+NoConn ~ 6700 3200
+NoConn ~ 4500 3700
+NoConn ~ 4500 3600
+NoConn ~ 4500 3500
+NoConn ~ 4500 3400
+NoConn ~ 4500 3300
+NoConn ~ 4500 3200
+NoConn ~ 4500 3100
+NoConn ~ 4500 3000
+NoConn ~ 4500 2900
+NoConn ~ 4500 2800
+NoConn ~ 4500 2700
+NoConn ~ 4500 2300
+NoConn ~ 4500 2200
+NoConn ~ 4500 2100
 Text HLabel 1050 1350 0    50   Input ~ 0
 XB_TX
 Text HLabel 1050 1450 0    50   Output ~ 0
@@ -306,10 +236,6 @@ Text HLabel 1050 1600 0    50   Input ~ 0
 GPS_TX
 Text HLabel 1050 1700 0    50   Output ~ 0
 GPS_RX
-Text Label 1050 1100 0    50   ~ 0
-DUST_TX
-Text Label 1050 1200 0    50   ~ 0
-DUST_RX
 Text Label 1050 1350 0    50   ~ 0
 XBEE_TX
 Text Label 1050 1450 0    50   ~ 0
@@ -318,4 +244,142 @@ Text Label 1050 1600 0    50   ~ 0
 TX_SAM
 Text Label 1050 1700 0    50   ~ 0
 RX_SAM
+$Comp
+L CUSTOM_COMPONENTS:Openlog U?
+U 1 1 5E5E716D
+P 5500 7150
+AR Path="/5E5E716D" Ref="U?"  Part="1" 
+AR Path="/5E2F29D1/5E5E716D" Ref="U?"  Part="1" 
+F 0 "U?" H 5442 6285 50  0000 C CNN
+F 1 "Openlog" H 5442 6376 50  0000 C CNN
+F 2 "" H 5500 7150 50  0001 C CNN
+F 3 "" H 5500 7150 50  0001 C CNN
+	1    5500 7150
+	1    0    0    1   
+$EndComp
+NoConn ~ 5200 6500
+$Comp
+L power:GND #PWR?
+U 1 1 5E5E7174
+P 5100 7100
+AR Path="/5E5E7174" Ref="#PWR?"  Part="1" 
+AR Path="/5E2F29D1/5E5E7174" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 5100 6850 50  0001 C CNN
+F 1 "GND" H 5105 6927 50  0000 C CNN
+F 2 "" H 5100 7100 50  0001 C CNN
+F 3 "" H 5100 7100 50  0001 C CNN
+	1    5100 7100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5200 7000 5100 7000
+Wire Wire Line
+	5100 7000 5100 7100
+Wire Wire Line
+	5200 6900 5100 6900
+Wire Wire Line
+	5100 6900 5100 7000
+Connection ~ 5100 7000
+$Comp
+L power:+3.3V #PWR?
+U 1 1 5E5E717F
+P 5100 6400
+AR Path="/5E5E717F" Ref="#PWR?"  Part="1" 
+AR Path="/5E2F29D1/5E5E717F" Ref="#PWR?"  Part="1" 
+F 0 "#PWR?" H 5100 6250 50  0001 C CNN
+F 1 "+3.3V" H 5115 6573 50  0000 C CNN
+F 2 "" H 5100 6400 50  0001 C CNN
+F 3 "" H 5100 6400 50  0001 C CNN
+	1    5100 6400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5100 6400 5100 6800
+Wire Wire Line
+	5100 6800 5200 6800
+Text HLabel 1050 1850 0    50   Input ~ 0
+LOG_TX
+Text HLabel 1050 1950 0    50   Output ~ 0
+LOG_RX
+Text Label 1050 1850 0    50   ~ 0
+LOG_TX
+Text Label 1050 1950 0    50   ~ 0
+LOG_RX
+Text Label 4800 6600 2    50   ~ 0
+LOG_TX
+Wire Wire Line
+	4800 6600 5200 6600
+Text Label 4800 6700 2    50   ~ 0
+LOG_RX
+Wire Wire Line
+	4800 6700 5200 6700
+Text Notes 5500 1000 0    50   ~ 0
+RX
+Text Notes 5500 1200 0    50   ~ 0
+TX\n\n
+$Comp
+L Connector:Conn_01x05_Female J?
+U 1 1 5E78F04D
+P 5500 1100
+AR Path="/5E201923/5E78F04D" Ref="J?"  Part="1" 
+AR Path="/5E78F04D" Ref="J?"  Part="1" 
+AR Path="/5E2F29D1/5E78F04D" Ref="J?"  Part="1" 
+AR Path="/5E60BD71/5E78F04D" Ref="J?"  Part="1" 
+F 0 "J?" H 5400 1550 50  0000 L CNN
+F 1 "SPS30" H 5300 1450 50  0000 L CNN
+F 2 "" H 5500 1100 50  0001 C CNN
+F 3 "~" H 5500 1100 50  0001 C CNN
+	1    5500 1100
+	1    0    0    -1  
+$EndComp
+NoConn ~ 5300 1200
+Wire Wire Line
+	5300 1300 5200 1300
+Wire Wire Line
+	5200 1300 5200 1400
+Wire Wire Line
+	5200 800  5200 900 
+Wire Wire Line
+	5200 900  5300 900 
+Wire Wire Line
+	5200 1000 5300 1000
+Wire Wire Line
+	5200 1100 5300 1100
+$Comp
+L power:+5V #PWR?
+U 1 1 5E78F85F
+P 5200 800
+F 0 "#PWR?" H 5200 650 50  0001 C CNN
+F 1 "+5V" H 5215 973 50  0000 C CNN
+F 2 "" H 5200 800 50  0001 C CNN
+F 3 "" H 5200 800 50  0001 C CNN
+	1    5200 800 
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5E78FCB7
+P 5200 1400
+F 0 "#PWR?" H 5200 1150 50  0001 C CNN
+F 1 "GND" H 5205 1227 50  0000 C CNN
+F 2 "" H 5200 1400 50  0001 C CNN
+F 3 "" H 5200 1400 50  0001 C CNN
+	1    5200 1400
+	1    0    0    -1  
+$EndComp
+Text HLabel 5200 1000 0    50   Input ~ 0
+SPS_TX
+Text HLabel 5200 1100 0    50   Input ~ 0
+SPS_RX
+$Comp
+L XBP9B-DMST-002:XBP9B-DMST-002 U2
+U 1 1 5E3927AC
+P 5600 2900
+F 0 "U2" H 5600 3967 50  0000 C CNN
+F 1 "XBP9B-DMST-002" H 5600 3876 50  0000 C CNN
+F 2 "xbee:DIP2200W51P200L3294H279Q20P" H 5600 2900 50  0001 L BNN
+F 3 "Digi International" H 5600 2900 50  0001 L BNN
+	1    5600 2900
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC

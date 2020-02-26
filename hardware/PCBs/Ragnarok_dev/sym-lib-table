@@ -5,6 +5,6 @@
   (lib (name LP2985-50DBVR)(type Legacy)(uri ${KIPRJMOD}/ragnarok_custom_libs/LP2985/LP2985-50DBVR.lib)(options "")(descr ""))
   (lib (name Ragnarok_dev-rescue)(type Legacy)(uri ${KIPRJMOD}/Ragnarok_dev-rescue.lib)(options "")(descr ""))
   (lib (name XBP9B-DMST-002)(type Legacy)(uri ${KIPRJMOD}/ragnarok_custom_libs/xbee/XBP9B-DMST-002.lib)(options "")(descr ""))
-  (lib (name CSS-95B30-SMT)(type Legacy)(uri ${KIPRJMOD}/ragnarok_custom_libs/css_buzzer/CSS-95B30-SMT.lib)(options "")(descr ""))
   (lib (name CUSTOM_COMPONENTS)(type Legacy)(uri ${KIPRJMOD}/ragnarok_custom_libs/CUSTOM_COMPONENTS.lib)(options "")(descr ""))
+  (lib (name CMT-8540S-SMT)(type Legacy)(uri ${KIPRJMOD}/ragnarok_custom_libs/cmt-buzzer/CMT-8540S-SMT.lib)(options "")(descr ""))
 )

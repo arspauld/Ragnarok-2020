@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 2 5
+Sheet 2 6
 Title "Ragnarok Development Board"
 Date "2019-12-18"
 Rev "v0.1"
@@ -969,4 +969,6 @@ F 3 "" H 3300 1800 50  0001 C CNN
 	1    3300 1800
 	1    0    0    -1  
 $EndComp
+Text Notes 1300 900  0    50   ~ 0
+Really need to look into the feasibility of this
 $EndSCHEMATC
