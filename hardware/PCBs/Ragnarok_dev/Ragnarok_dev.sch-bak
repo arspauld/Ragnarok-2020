@@ -573,7 +573,7 @@ Wire Wire Line
 	4200 1750 4200 1800
 Connection ~ 4200 1800
 Text Notes 1950 9450 0    50   ~ 0
-Still Need:\n-SPS\n-Motor Driver\n-Camera\n-Probe points\n-Backup batteries\n-3V3 Level Shifting (FTDI)\n-Finish pin assignments
+Still Need:\n-SPS\n-Motor Driver\n-Camera\n-Probe points\n-Backup batteries\n-3V3 Level Shifting (FTDI)\n-Fix jumper\n-JTAG
 Text Label 7150 3650 0    50   ~ 0
 USB_TX
 Text Label 7150 3750 0    50   ~ 0
@@ -982,12 +982,12 @@ F1 "Breakout.sch" 50
 F2 "+6" I L 9250 2450 50 
 F3 "+5" I L 9250 2550 50 
 F4 "GND" O L 9250 3550 50 
-F7 "Servo1" I L 9250 2700 50 
-F8 "Servo2" I L 9250 2800 50 
-F9 "Servo3" I L 9250 2900 50 
-F10 "Servo4" I L 9250 3000 50 
-F11 "Servo5" I L 9250 3100 50 
-F12 "Cam" I L 9250 3400 50 
+F5 "Servo1" I L 9250 2700 50 
+F6 "Servo2" I L 9250 2800 50 
+F7 "Servo3" I L 9250 2900 50 
+F8 "Servo4" I L 9250 3000 50 
+F9 "Servo5" I L 9250 3100 50 
+F10 "Cam" I L 9250 3400 50 
 $EndSheet
 Wire Wire Line
 	7150 2150 8050 2150
@@ -1577,4 +1577,58 @@ F 3 "~" H 4200 5760 50  0001 C CNN
 	1    4200 5850
 	1    0    0    -1  
 $EndComp
+$Comp
+L Device:Q_NMOS_GSD Q?
+U 1 1 5E5EED42
+P 4300 5450
+F 0 "Q?" H 4505 5496 50  0000 L CNN
+F 1 "NFET" H 4505 5405 50  0000 L CNN
+F 2 "" H 4500 5550 50  0001 C CNN
+F 3 "~" H 4300 5450 50  0001 C CNN
+	1    4300 5450
+	-1   0    0    -1  
+$EndComp
+Text Label 4500 5450 0    50   ~ 0
+motor_driver
+Text Notes 4450 5650 0    50   ~ 0
+needs_assigment
+$Comp
+L power:GND #PWR?
+U 1 1 5E5F21BC
+P 4200 6250
+F 0 "#PWR?" H 4200 6000 50  0001 C CNN
+F 1 "GND" H 4205 6077 50  0000 C CNN
+F 2 "" H 4200 6250 50  0001 C CNN
+F 3 "" H 4200 6250 50  0001 C CNN
+	1    4200 6250
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	4200 6150 4200 6250
+$Comp
+L power:+6V #PWR?
+U 1 1 5E5FF7E9
+P 4200 4850
+F 0 "#PWR?" H 4200 4700 50  0001 C CNN
+F 1 "+6V" H 4215 5023 50  0000 C CNN
+F 2 "" H 4200 4850 50  0001 C CNN
+F 3 "" H 4200 4850 50  0001 C CNN
+	1    4200 4850
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:D_Small D?
+U 1 1 5E608838
+P 4200 5050
+F 0 "D?" V 4246 4982 50  0000 R CNN
+F 1 "D_Small" V 4155 4982 50  0000 R CNN
+F 2 "" V 4200 5050 50  0001 C CNN
+F 3 "~" V 4200 5050 50  0001 C CNN
+	1    4200 5050
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	4200 4850 4200 4950
+Wire Wire Line
+	4200 5150 4200 5250
 $EndSCHEMATC
