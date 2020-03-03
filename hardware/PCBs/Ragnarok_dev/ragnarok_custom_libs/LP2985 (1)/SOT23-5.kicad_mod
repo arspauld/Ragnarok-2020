@@ -1,0 +1,58 @@
+
+(module SOT23-5 (layer F.Cu) (tedit 5E213694)
+  (descr "")
+  (fp_text reference REF** (at 1.398705 -3.687505 0) (layer F.SilkS)
+    (effects (font (size 1.00122047244 1.00122047244) (thickness 0.015)))
+  )
+  (fp_text value SOT23-5 (at 2.667025 2.413005 0) (layer F.Fab)
+    (effects (font (size 1.00000787402 1.00000787402) (thickness 0.015)))
+  )
+  (fp_line (start -1.544 -0.713) (end 1.544 -0.713) (layer F.Fab) (width 0.1524))
+  (fp_line (start 1.544 0.712) (end -1.544 0.712) (layer F.Fab) (width 0.1524))
+  (fp_poly
+    (pts
+      (xy -1.18773 -1.5439)
+      (xy -0.7125 -1.5439)
+      (xy -0.7125 -0.712739)
+      (xy -1.18773 -0.712739)
+    ) (layer F.Fab) (width 0.01)
+  )
+  (fp_poly
+    (pts
+      (xy 0.713473 -1.5439)
+      (xy 1.1875 -1.5439)
+      (xy 1.1875 -0.713573)
+      (xy 0.713473 -0.713573)
+    ) (layer F.Fab) (width 0.01)
+  )
+  (fp_poly
+    (pts
+      (xy -1.18886 0.7124)
+      (xy -0.7125 0.7124)
+      (xy -0.7125 1.54546)
+      (xy -1.18886 1.54546)
+    ) (layer F.Fab) (width 0.01)
+  )
+  (fp_poly
+    (pts
+      (xy -0.237537 0.7124)
+      (xy 0.2375 0.7124)
+      (xy 0.2375 1.54394)
+      (xy -0.237537 1.54394)
+    ) (layer F.Fab) (width 0.01)
+  )
+  (fp_poly
+    (pts
+      (xy 0.713232 0.7124)
+      (xy 1.1875 0.7124)
+      (xy 1.1875 1.54529)
+      (xy 0.713232 1.54529)
+    ) (layer F.Fab) (width 0.01)
+  )
+  (fp_circle (center -1.27 -1.905) (end -1.143 -1.905) (layer F.SilkS) (width 0.127))
+  (pad 5 smd rect (at 1.306 -0.95) (size 1.2 0.6) (layers F.Cu F.Mask F.Paste))
+  (pad 4 smd rect (at 1.306 0.95) (size 1.2 0.6) (layers F.Cu F.Mask F.Paste))
+  (pad 1 smd rect (at -1.306 -0.95) (size 1.2 0.6) (layers F.Cu F.Mask F.Paste))
+  (pad 2 smd rect (at -1.306 0.0) (size 1.2 0.6) (layers F.Cu F.Mask F.Paste))
+  (pad 3 smd rect (at -1.306 0.95) (size 1.2 0.6) (layers F.Cu F.Mask F.Paste))
+)
