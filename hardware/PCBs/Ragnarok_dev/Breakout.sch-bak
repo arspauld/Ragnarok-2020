@@ -13,139 +13,154 @@ Comment2 ""
 Comment3 ""
 Comment4 ""
 $EndDescr
-Text HLabel 1050 1300 0    50   Input ~ 0
+Text HLabel 1250 2550 0    50   Input ~ 0
 +6
-Text HLabel 1050 1400 0    50   Input ~ 0
+Text HLabel 1250 2650 0    50   Input ~ 0
 +5
-Text HLabel 1050 1500 0    50   Output ~ 0
+Text HLabel 1250 2750 0    50   Output ~ 0
 GND
-Text HLabel 3450 650  0    50   Input ~ 0
+Text HLabel 3650 1900 0    50   Input ~ 0
 Servo1
-Text HLabel 3450 1050 0    50   Input ~ 0
+Text HLabel 3650 2300 0    50   Input ~ 0
 Servo2
-Text HLabel 3450 1450 0    50   Input ~ 0
+Text HLabel 3650 2700 0    50   Input ~ 0
 Servo3
-Text HLabel 3450 1850 0    50   Input ~ 0
+Text HLabel 3650 3100 0    50   Input ~ 0
 Servo4
-Text HLabel 3450 2250 0    50   Input ~ 0
+Text HLabel 3650 3500 0    50   Input ~ 0
 Servo5
-Text HLabel 1150 3550 0    50   Input ~ 0
+Text HLabel 3750 4950 0    50   Input ~ 0
 Cam
 $Comp
-L Motor:Motor_Servo M?
+L Motor:Motor_Servo M2
 U 1 1 5E713CD9
-P 4050 750
-F 0 "M?" H 4382 815 50  0000 L CNN
-F 1 "Motor_Servo" H 4382 724 50  0000 L CNN
-F 2 "" H 4050 560 50  0001 C CNN
-F 3 "http://forums.parallax.com/uploads/attachments/46831/74481.png" H 4050 560 50  0001 C CNN
-	1    4050 750 
+P 4250 2000
+F 0 "M2" H 4582 2065 50  0000 L CNN
+F 1 "Motor_Servo" H 4582 1974 50  0000 L CNN
+F 2 "Connector_JST:JST_ZE_S03B-ZESK-2D_1x03_P1.50mm_Horizontal" H 4250 1810 50  0001 C CNN
+F 3 "http://forums.parallax.com/uploads/attachments/46831/74481.png" H 4250 1810 50  0001 C CNN
+	1    4250 2000
 	1    0    0    -1  
 $EndComp
-Text Label 1050 1500 0    50   ~ 0
+Text Label 1250 2750 0    50   ~ 0
 GND
-Text Label 1050 1300 0    50   ~ 0
+Text Label 1250 2550 0    50   ~ 0
 +6
-Text Label 1050 1400 0    50   ~ 0
+Text Label 1250 2650 0    50   ~ 0
 +5
 $Comp
-L Motor:Motor_Servo M?
+L Motor:Motor_Servo M3
 U 1 1 5E728EC0
-P 4050 1150
-F 0 "M?" H 4382 1215 50  0000 L CNN
-F 1 "Motor_Servo" H 4382 1124 50  0000 L CNN
-F 2 "" H 4050 960 50  0001 C CNN
-F 3 "http://forums.parallax.com/uploads/attachments/46831/74481.png" H 4050 960 50  0001 C CNN
-	1    4050 1150
+P 4250 2400
+F 0 "M3" H 4582 2465 50  0000 L CNN
+F 1 "Motor_Servo" H 4582 2374 50  0000 L CNN
+F 2 "Connector_JST:JST_ZE_S03B-ZESK-2D_1x03_P1.50mm_Horizontal" H 4250 2210 50  0001 C CNN
+F 3 "http://forums.parallax.com/uploads/attachments/46831/74481.png" H 4250 2210 50  0001 C CNN
+	1    4250 2400
 	1    0    0    -1  
 $EndComp
 $Comp
-L Motor:Motor_Servo M?
+L Motor:Motor_Servo M4
 U 1 1 5E72987E
-P 4050 1550
-F 0 "M?" H 4382 1615 50  0000 L CNN
-F 1 "Motor_Servo" H 4382 1524 50  0000 L CNN
-F 2 "" H 4050 1360 50  0001 C CNN
-F 3 "http://forums.parallax.com/uploads/attachments/46831/74481.png" H 4050 1360 50  0001 C CNN
-	1    4050 1550
+P 4250 2800
+F 0 "M4" H 4582 2865 50  0000 L CNN
+F 1 "Motor_Servo" H 4582 2774 50  0000 L CNN
+F 2 "Connector_JST:JST_ZE_S03B-ZESK-2D_1x03_P1.50mm_Horizontal" H 4250 2610 50  0001 C CNN
+F 3 "http://forums.parallax.com/uploads/attachments/46831/74481.png" H 4250 2610 50  0001 C CNN
+	1    4250 2800
 	1    0    0    -1  
 $EndComp
 $Comp
-L Motor:Motor_Servo M?
+L Motor:Motor_Servo M5
 U 1 1 5E72A2AC
-P 4050 1950
-F 0 "M?" H 4382 2015 50  0000 L CNN
-F 1 "Motor_Servo" H 4382 1924 50  0000 L CNN
-F 2 "" H 4050 1760 50  0001 C CNN
-F 3 "http://forums.parallax.com/uploads/attachments/46831/74481.png" H 4050 1760 50  0001 C CNN
-	1    4050 1950
+P 4250 3200
+F 0 "M5" H 4582 3265 50  0000 L CNN
+F 1 "Motor_Servo" H 4582 3174 50  0000 L CNN
+F 2 "Connector_JST:JST_ZE_S03B-ZESK-2D_1x03_P1.50mm_Horizontal" H 4250 3010 50  0001 C CNN
+F 3 "http://forums.parallax.com/uploads/attachments/46831/74481.png" H 4250 3010 50  0001 C CNN
+	1    4250 3200
 	1    0    0    -1  
 $EndComp
 $Comp
-L Motor:Motor_Servo M?
+L Motor:Motor_Servo M6
 U 1 1 5E72B04D
-P 4050 2350
-F 0 "M?" H 4382 2415 50  0000 L CNN
-F 1 "Motor_Servo" H 4382 2324 50  0000 L CNN
-F 2 "" H 4050 2160 50  0001 C CNN
-F 3 "http://forums.parallax.com/uploads/attachments/46831/74481.png" H 4050 2160 50  0001 C CNN
-	1    4050 2350
+P 4250 3600
+F 0 "M6" H 4582 3665 50  0000 L CNN
+F 1 "Motor_Servo" H 4582 3574 50  0000 L CNN
+F 2 "Connector_JST:JST_ZE_S03B-ZESK-2D_1x03_P1.50mm_Horizontal" H 4250 3410 50  0001 C CNN
+F 3 "http://forums.parallax.com/uploads/attachments/46831/74481.png" H 4250 3410 50  0001 C CNN
+	1    4250 3600
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	3550 750  3550 1150
+	3750 2000 3750 2400
 Wire Wire Line
-	3550 750  3750 750 
+	3750 2000 3950 2000
 Wire Wire Line
-	3550 2350 3750 2350
+	3750 3600 3950 3600
 Wire Wire Line
-	3550 1150 3750 1150
-Connection ~ 3550 1150
+	3750 2400 3950 2400
+Connection ~ 3750 2400
 Wire Wire Line
-	3550 1150 3550 1550
+	3750 2400 3750 2800
 Wire Wire Line
-	3550 1550 3750 1550
-Connection ~ 3550 1550
+	3750 2800 3950 2800
+Connection ~ 3750 2800
 Wire Wire Line
-	3550 1550 3550 1950
+	3750 2800 3750 3200
 Wire Wire Line
-	3550 1950 3750 1950
-Connection ~ 3550 1950
+	3750 3200 3950 3200
+Connection ~ 3750 3200
 Wire Wire Line
-	3550 1950 3550 2350
+	3750 3200 3750 3600
 Wire Wire Line
-	3750 850  3650 850 
+	3950 2100 3850 2100
 Wire Wire Line
-	3650 850  3650 1250
+	3850 2100 3850 2500
 Wire Wire Line
-	3650 1250 3750 1250
+	3850 2500 3950 2500
 Wire Wire Line
-	3650 1250 3650 1650
+	3850 2500 3850 2900
 Wire Wire Line
-	3650 1650 3750 1650
-Connection ~ 3650 1250
+	3850 2900 3950 2900
+Connection ~ 3850 2500
 Wire Wire Line
-	3650 1650 3650 2050
+	3850 2900 3850 3300
 Wire Wire Line
-	3650 2050 3750 2050
-Connection ~ 3650 1650
+	3850 3300 3950 3300
+Connection ~ 3850 2900
 Wire Wire Line
-	3650 2050 3650 2450
+	3850 3300 3850 3700
 Wire Wire Line
-	3650 2450 3750 2450
-Connection ~ 3650 2050
-Text Label 3550 2350 2    50   ~ 0
+	3850 3700 3950 3700
+Connection ~ 3850 3300
+Text Label 3750 3600 2    50   ~ 0
 +6
-Text Label 3650 2450 2    50   ~ 0
+Text Label 3850 3700 2    50   ~ 0
 GND
 Wire Wire Line
-	3450 650  3750 650 
+	3650 1900 3950 1900
 Wire Wire Line
-	3450 2250 3750 2250
+	3650 3500 3950 3500
 Wire Wire Line
-	3450 1850 3750 1850
+	3650 3100 3950 3100
 Wire Wire Line
-	3450 1450 3750 1450
+	3650 2700 3950 2700
 Wire Wire Line
-	3450 1050 3750 1050
+	3650 2300 3950 2300
+$Comp
+L CUSTOM_COMPONENTS:MiniSpy U12
+U 1 1 5E6883E5
+P 3950 4600
+F 0 "U12" H 4328 4401 50  0000 L CNN
+F 1 "MiniSpy" H 4328 4310 50  0000 L CNN
+F 2 "" H 3950 4600 50  0001 C CNN
+F 3 "" H 3950 4600 50  0001 C CNN
+	1    3950 4600
+	1    0    0    -1  
+$EndComp
+Text Label 3750 4850 2    50   ~ 0
+GND
+Text Label 3750 4750 2    50   ~ 0
++5
 $EndSCHEMATC

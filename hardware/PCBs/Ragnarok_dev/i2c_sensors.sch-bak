@@ -42,9 +42,9 @@ Text HLabel 900  1250 0    50   BiDi ~ 0
 SDA
 Text HLabel 900  1350 0    50   Input ~ 0
 SCL
-Text Label 1350 1250 0    50   ~ 0
+Text Label 1800 1250 0    50   ~ 0
 SDA
-Text Label 1350 1350 0    50   ~ 0
+Text Label 1800 1350 0    50   ~ 0
 SCL
 $Comp
 L Device:R_Small R4
@@ -52,7 +52,7 @@ U 1 1 5E20E227
 P 1100 1050
 F 0 "R4" H 950 1100 50  0000 L CNN
 F 1 "10k" H 900 1000 50  0000 L CNN
-F 2 "" H 1100 1050 50  0001 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 1100 1050 50  0001 C CNN
 F 3 "~" H 1100 1050 50  0001 C CNN
 	1    1100 1050
 	1    0    0    -1  
@@ -63,7 +63,7 @@ U 1 1 5E20E4B4
 P 1200 1050
 F 0 "R5" H 1259 1096 50  0000 L CNN
 F 1 "10k" H 1259 1005 50  0000 L CNN
-F 2 "" H 1200 1050 50  0001 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 1200 1050 50  0001 C CNN
 F 3 "~" H 1200 1050 50  0001 C CNN
 	1    1200 1050
 	1    0    0    -1  
@@ -122,7 +122,7 @@ U 1 1 5E25189A
 P 6000 5400
 F 0 "C33" H 6092 5446 50  0000 L CNN
 F 1 "0.1uF" H 6092 5355 50  0000 L CNN
-F 2 "" H 6000 5400 50  0001 C CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 6000 5400 50  0001 C CNN
 F 3 "~" H 6000 5400 50  0001 C CNN
 	1    6000 5400
 	1    0    0    -1  
@@ -157,7 +157,7 @@ U 1 1 5E31B2DA
 P 5050 1950
 F 0 "C30" V 4821 1950 50  0000 C CNN
 F 1 "0.1uF" V 4912 1950 50  0000 C CNN
-F 2 "" H 5050 1950 50  0001 C CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 5050 1950 50  0001 C CNN
 F 3 "~" H 5050 1950 50  0001 C CNN
 	1    5050 1950
 	0    1    1    0   
@@ -168,7 +168,7 @@ U 1 1 5E31B350
 P 6100 3350
 F 0 "C34" V 5871 3350 50  0000 C CNN
 F 1 "0.1uF" V 5962 3350 50  0000 C CNN
-F 2 "" H 6100 3350 50  0001 C CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 6100 3350 50  0001 C CNN
 F 3 "~" H 6100 3350 50  0001 C CNN
 	1    6100 3350
 	0    1    -1   0   
@@ -232,7 +232,7 @@ U 1 1 5E321246
 P 5450 1950
 F 0 "C32" V 5250 1950 50  0000 C CNN
 F 1 "6.8nF" V 5350 1950 50  0000 C CNN
-F 2 "" H 5450 1950 50  0001 C CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 5450 1950 50  0001 C CNN
 F 3 "~" H 5450 1950 50  0001 C CNN
 	1    5450 1950
 	0    1    1    0   
@@ -243,7 +243,7 @@ U 1 1 5E321629
 P 5450 1600
 F 0 "C31" V 5221 1600 50  0000 C CNN
 F 1 "120nF" V 5312 1600 50  0000 C CNN
-F 2 "" H 5450 1600 50  0001 C CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 5450 1600 50  0001 C CNN
 F 3 "~" H 5450 1600 50  0001 C CNN
 	1    5450 1600
 	0    1    1    0   
@@ -342,4 +342,36 @@ Wire Wire Line
 Connection ~ 5650 1950
 Text Notes 4700 5950 0    50   ~ 0
 Addr: 0x21\n
+$Comp
+L Connector:TestPoint_Probe TP?
+U 1 1 5E845BF0
+P 1350 1350
+AR Path="/5E845BF0" Ref="TP?"  Part="1" 
+AR Path="/5E201923/5E845BF0" Ref="TP7"  Part="1" 
+F 0 "TP7" H 1503 1451 50  0000 L CNN
+F 1 "TP_SCL" H 1503 1360 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_1.0x1.0mm" H 1550 1350 50  0001 C CNN
+F 3 "~" H 1550 1350 50  0001 C CNN
+	1    1350 1350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:TestPoint_Probe TP?
+U 1 1 5E845BF6
+P 1350 1250
+AR Path="/5E845BF6" Ref="TP?"  Part="1" 
+AR Path="/5E201923/5E845BF6" Ref="TP6"  Part="1" 
+F 0 "TP6" H 1503 1351 50  0000 L CNN
+F 1 "TP_SDA" H 1503 1260 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_1.0x1.0mm" H 1550 1250 50  0001 C CNN
+F 3 "~" H 1550 1250 50  0001 C CNN
+	1    1350 1250
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1350 1250 1800 1250
+Connection ~ 1350 1250
+Wire Wire Line
+	1350 1350 1800 1350
+Connection ~ 1350 1350
 $EndSCHEMATC
