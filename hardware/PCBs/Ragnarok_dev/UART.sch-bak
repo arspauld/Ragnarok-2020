@@ -252,7 +252,7 @@ AR Path="/5E5E716D" Ref="U?"  Part="1"
 AR Path="/5E2F29D1/5E5E716D" Ref="U11"  Part="1" 
 F 0 "U11" H 5442 6285 50  0000 C CNN
 F 1 "Openlog" H 5442 6376 50  0000 C CNN
-F 2 "" H 5500 7150 50  0001 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical" H 5500 7150 50  0001 C CNN
 F 3 "" H 5500 7150 50  0001 C CNN
 	1    5500 7150
 	1    0    0    1   

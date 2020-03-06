@@ -370,7 +370,7 @@
   )
 
   (module BMP-388:PQFN50P200X200X80-10N (layer F.Cu) (tedit 5DFAFD99) (tstamp 5DFB53C7)
-    (at 106.910001 42.495001)
+    (at 119.38 85.09)
     (path /5DFB015B)
     (fp_text reference U1 (at -0.284383 -1.605376) (layer F.SilkS)
       (effects (font (size 0.320434 0.320434) (thickness 0.015)))
@@ -419,7 +419,7 @@
   )
 
   (module Package_SO:SSOP-28_5.3x10.2mm_P0.65mm (layer F.Cu) (tedit 5A02F25C) (tstamp 5DFB53F8)
-    (at 109.985001 34.735001)
+    (at 78.74 95.25)
     (descr "28-Lead Plastic Shrink Small Outline (SS)-5.30 mm Body [SSOP] (see Microchip Packaging Specification 00000049BS.pdf)")
     (tags "SSOP 0.65")
     (path /5DFAFF77)
@@ -511,7 +511,7 @@
   )
 
   (module Package_QFP:LQFP-100_14x14mm_P0.5mm (layer F.Cu) (tedit 5A02F146) (tstamp 5DFB5473)
-    (at 95.285001 38.135001)
+    (at 102.87 93.98)
     (descr "LQFP100: plastic low profile quad flat package; 100 leads; body 14 x 14 x 1.4 mm (see NXP sot407-1_po.pdf and sot407-1_fr.pdf)")
     (tags "QFP 0.5")
     (path /5DFAFDA0)
@@ -750,9 +750,9 @@
     )
   )
 
-  (gr_line (start 120 160) (end 200 160) (layer Edge.Cuts) (width 0.12) (tstamp 5E463E4D))
-  (gr_line (start 120 100) (end 120 160) (layer Edge.Cuts) (width 0.12))
-  (gr_line (start 120 100) (end 200 100) (layer Edge.Cuts) (width 0.12))
-  (gr_line (start 200 100) (end 200 160) (layer Edge.Cuts) (width 0.12))
+  (gr_line (start 62.85 124.44) (end 142.85 124.44) (layer Edge.Cuts) (width 0.12) (tstamp 5E463E4D))
+  (gr_line (start 62.85 64.44) (end 62.85 124.44) (layer Edge.Cuts) (width 0.12))
+  (gr_line (start 62.85 64.44) (end 142.85 64.44) (layer Edge.Cuts) (width 0.12))
+  (gr_line (start 142.85 64.44) (end 142.85 124.44) (layer Edge.Cuts) (width 0.12))
 
 )
