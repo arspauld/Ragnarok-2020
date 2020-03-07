@@ -1543,7 +1543,7 @@ U 1 1 5E70DE98
 P 8600 2950
 F 0 "J2" H 8450 2250 50  0000 L CNN
 F 1 "BOARD_CONN" H 8400 2150 50  0000 L CNN
-F 2 "Connector_PinHeader_1.27mm:PinHeader_1x12_P1.27mm_Vertical_SMD_Pin1Left" H 8600 2950 50  0001 C CNN
+F 2 "Connector_PinHeader_1.27mm:PinHeader_1x12_P1.27mm_Vertical" H 8600 2950 50  0001 C CNN
 F 3 "~" H 8600 2950 50  0001 C CNN
 	1    8600 2950
 	1    0    0    -1  
@@ -1554,7 +1554,7 @@ U 1 1 5E7127DC
 P 8650 2950
 F 0 "J3" H 8700 3700 50  0000 L CNN
 F 1 "BREAK_CONN" H 8400 3600 50  0000 L CNN
-F 2 "Connector_PinHeader_1.27mm:PinHeader_1x12_P1.27mm_Vertical_SMD_Pin1Right" H 8650 2950 50  0001 C CNN
+F 2 "Connector_PinHeader_1.27mm:PinHeader_1x12_P1.27mm_Vertical" H 8650 2950 50  0001 C CNN
 F 3 "~" H 8650 2950 50  0001 C CNN
 	1    8650 2950
 	-1   0    0    -1  
@@ -1602,4 +1602,48 @@ Wire Wire Line
 	4000 2700 4000 2800
 Wire Wire Line
 	4000 2800 4100 2800
+$Comp
+L Mechanical:MountingHole H5
+U 1 1 5E8F0613
+P 650 5400
+F 0 "H5" H 750 5446 50  0000 L CNN
+F 1 "MountingHole" H 750 5355 50  0000 L CNN
+F 2 "MountingHole:MountingHole_2.2mm_M2" H 650 5400 50  0001 C CNN
+F 3 "~" H 650 5400 50  0001 C CNN
+	1    650  5400
+	1    0    0    -1  
+$EndComp
+$Comp
+L Mechanical:MountingHole H6
+U 1 1 5E8F0619
+P 650 5650
+F 0 "H6" H 750 5696 50  0000 L CNN
+F 1 "MountingHole" H 750 5605 50  0000 L CNN
+F 2 "MountingHole:MountingHole_2.2mm_M2" H 650 5650 50  0001 C CNN
+F 3 "~" H 650 5650 50  0001 C CNN
+	1    650  5650
+	1    0    0    -1  
+$EndComp
+$Comp
+L Mechanical:MountingHole H7
+U 1 1 5E8F061F
+P 650 5900
+F 0 "H7" H 750 5946 50  0000 L CNN
+F 1 "MountingHole" H 750 5855 50  0000 L CNN
+F 2 "MountingHole:MountingHole_2.2mm_M2" H 650 5900 50  0001 C CNN
+F 3 "~" H 650 5900 50  0001 C CNN
+	1    650  5900
+	1    0    0    -1  
+$EndComp
+$Comp
+L Mechanical:MountingHole H8
+U 1 1 5E8F0625
+P 650 6150
+F 0 "H8" H 750 6196 50  0000 L CNN
+F 1 "MountingHole" H 750 6105 50  0000 L CNN
+F 2 "MountingHole:MountingHole_2.2mm_M2" H 650 6150 50  0001 C CNN
+F 3 "~" H 650 6150 50  0001 C CNN
+	1    650  6150
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
