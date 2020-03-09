@@ -104,9 +104,9 @@ Wire Wire Line
 	1200 1350 1350 1350
 Text Notes 6300 6050 0    50   ~ 0
 Can be connected to GND\n through different resistors\n for different addresses
-Text Notes 4150 3050 0    50   ~ 0
+Text Notes 3950 3050 0    50   ~ 0
 SDA
-Text Notes 4150 3150 0    50   ~ 0
+Text Notes 3800 3150 0    50   ~ 0
 SCL\n
 Text Notes 3800 3350 0    50   ~ 0
 ADDR_SELECT\n
@@ -374,4 +374,8 @@ Connection ~ 1350 1250
 Wire Wire Line
 	1350 1350 1800 1350
 Connection ~ 1350 1350
+Text Label 4250 3050 2    50   ~ 0
+SDA
+Text Label 4150 3150 2    50   ~ 0
+SCL
 $EndSCHEMATC

@@ -1543,7 +1543,7 @@ U 1 1 5E70DE98
 P 8600 2950
 F 0 "J2" H 8450 2250 50  0000 L CNN
 F 1 "BOARD_CONN" H 8400 2150 50  0000 L CNN
-F 2 "Connector_PinHeader_1.27mm:PinHeader_1x12_P1.27mm_Vertical" H 8600 2950 50  0001 C CNN
+F 2 "ragnarok_custom_libs:Board_Jumper" H 8600 2950 50  0001 C CNN
 F 3 "~" H 8600 2950 50  0001 C CNN
 	1    8600 2950
 	1    0    0    -1  
@@ -1551,13 +1551,13 @@ $EndComp
 $Comp
 L Connector:Conn_01x12_Female J3
 U 1 1 5E7127DC
-P 8650 2950
-F 0 "J3" H 8700 3700 50  0000 L CNN
-F 1 "BREAK_CONN" H 8400 3600 50  0000 L CNN
-F 2 "Connector_PinHeader_1.27mm:PinHeader_1x12_P1.27mm_Vertical" H 8650 2950 50  0001 C CNN
-F 3 "~" H 8650 2950 50  0001 C CNN
-	1    8650 2950
-	-1   0    0    -1  
+P 8650 3050
+F 0 "J3" H 8550 2250 50  0000 L CNN
+F 1 "BREAK_CONN" H 8250 2300 50  0000 L CNN
+F 2 "ragnarok_custom_libs:Board_Jumper" H 8650 3050 50  0001 C CNN
+F 3 "~" H 8650 3050 50  0001 C CNN
+	1    8650 3050
+	-1   0    0    1   
 $EndComp
 Text Label 7150 3950 0    50   ~ 0
 motor_driver

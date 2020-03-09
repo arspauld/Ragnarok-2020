@@ -396,8 +396,6 @@ Wire Wire Line
 Wire Wire Line
 	5500 3200 5500 3100
 Connection ~ 5500 3100
-Wire Wire Line
-	5500 3100 5700 3100
 $Comp
 L power:VDD #PWR0108
 U 1 1 5E0DFAB4
@@ -487,20 +485,7 @@ $EndComp
 Wire Wire Line
 	6000 3500 6100 3500
 Wire Wire Line
-	6000 3700 6400 3700
-Wire Wire Line
 	6400 3700 6400 3500
-$Comp
-L Regulator_Switching:TPS62142 U5
-U 1 1 5E0D9FD0
-P 5600 3700
-F 0 "U5" H 5800 4250 50  0000 C CNN
-F 1 "TPS62142" H 5900 4150 50  0000 C CNN
-F 2 "Package_DFN_QFN:QFN-16-1EP_3x3mm_P0.5mm_EP1.8x1.8mm" H 5750 3250 50  0001 L CNN
-F 3 "http://www.ti.com/lit/ds/symlink/TPS62140.pdf" H 5600 3700 50  0001 C CNN
-	1    5600 3700
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	5200 3700 5100 3700
 Wire Wire Line
@@ -524,8 +509,6 @@ F 3 "~" H 6500 3650 50  0001 C CNN
 	1    6500 3650
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	6000 3800 6500 3800
 Wire Wire Line
 	6500 3800 6500 3750
 Wire Wire Line
@@ -1057,4 +1040,21 @@ F 3 "~" H 4800 1200 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	4650 1400 4800 1400
+Wire Wire Line
+	6000 3800 6500 3800
+Wire Wire Line
+	6000 3700 6400 3700
+Wire Wire Line
+	5500 3100 5700 3100
+$Comp
+L Regulator_Switching:TPS62142 U5
+U 1 1 5E0D9FD0
+P 5600 3700
+F 0 "U5" H 5800 4250 50  0000 C CNN
+F 1 "TPS62142" H 5900 4150 50  0000 C CNN
+F 2 "Package_DFN_QFN:QFN-16-1EP_3x3mm_P0.5mm_EP1.8x1.8mm" H 5750 3250 50  0001 L CNN
+F 3 "http://www.ti.com/lit/ds/symlink/TPS62140.pdf" H 5600 3700 50  0001 C CNN
+	1    5600 3700
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC

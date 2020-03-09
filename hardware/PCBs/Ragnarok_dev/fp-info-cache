@@ -1,4 +1,4 @@
-16947391225717179
+16950558576638667
 BMP-388
 PQFN50P200X200X80-10N
 
@@ -2218,6 +2218,13 @@ SMD 8540
 0
 4
 4
+CS12 Switch
+CS12ANW03
+
+
+0
+3
+3
 Calibration_Scale
 Gauge_10mm_Type1_CopperTop
 Gauge, Massstab, 10mm, CopperTop, Type 1,
@@ -75291,6 +75298,13 @@ CUI_CMT-8540S-SMT
 0
 4
 4
+ragnarok_custom_libs
+Board_Jumper
+
+
+0
+15
+15
 xbee
 DIP2200W51P200L3294H279Q20P
 

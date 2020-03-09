@@ -307,12 +307,8 @@ Text Label 1050 1950 0    50   ~ 0
 LOG_RX
 Text Label 4800 6600 2    50   ~ 0
 LOG_TX
-Wire Wire Line
-	4800 6600 5200 6600
 Text Label 4800 6700 2    50   ~ 0
 LOG_RX
-Wire Wire Line
-	4800 6700 5200 6700
 Text Notes 5500 1000 0    50   ~ 0
 RX
 Text Notes 5500 1200 0    50   ~ 0
@@ -382,4 +378,40 @@ F 3 "Digi International" H 5600 2900 50  0001 L BNN
 	1    5600 2900
 	1    0    0    -1  
 $EndComp
+Wire Wire Line
+	1050 1350 3500 1350
+Wire Wire Line
+	3500 1350 3500 2600
+Wire Wire Line
+	3500 2600 4500 2600
+Wire Wire Line
+	4500 2500 3400 2500
+Wire Wire Line
+	3400 2500 3400 1450
+Wire Wire Line
+	3400 1450 1050 1450
+Wire Wire Line
+	1050 1600 3250 1600
+Wire Wire Line
+	3250 1600 3250 4950
+Wire Wire Line
+	3250 4950 5050 4950
+Wire Wire Line
+	5050 5050 3150 5050
+Wire Wire Line
+	3150 5050 3150 1700
+Wire Wire Line
+	3150 1700 1050 1700
+Wire Wire Line
+	1050 1850 2850 1850
+Wire Wire Line
+	2850 1850 2850 6600
+Wire Wire Line
+	2850 6600 5200 6600
+Wire Wire Line
+	2750 6700 2750 1950
+Wire Wire Line
+	2750 1950 1050 1950
+Wire Wire Line
+	2750 6700 5200 6700
 $EndSCHEMATC

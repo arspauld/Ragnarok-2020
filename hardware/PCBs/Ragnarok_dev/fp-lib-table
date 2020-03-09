@@ -6,4 +6,5 @@
   (lib (name RT9)(type KiCad)(uri ${KIPRJMOD}/ragnarok_custom_libs/RT9)(options "")(descr ""))
   (lib (name cmt-buzzer)(type KiCad)(uri ${KIPRJMOD}/ragnarok_custom_libs/cmt-buzzer)(options "")(descr ""))
   (lib (name "CS12 Switch")(type KiCad)(uri "${KIPRJMOD}/ragnarok_custom_libs/CS12 Switch")(options "")(descr ""))
+  (lib (name ragnarok_custom_libs)(type KiCad)(uri ${KIPRJMOD}/ragnarok_custom_libs)(options "")(descr ""))
 )
