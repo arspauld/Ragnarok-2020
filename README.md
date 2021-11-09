@@ -17,7 +17,7 @@ Software team:
 For more information about software development contact __PATS INFO HERE__
 
 ### Electrical
-Electrical development is completed using [KiCad](http://www.kicad-pcb.org).
+Electrical development is completed using [KiCad](http://www.kicad.org).
 
 #### Documentation
 The directory `/hardware/documentation/` contains important datasheets and application notes for the microcontrollers and components to be used within this project. These documents contain application specific information, and they should contain answers to any questions that may be had about these components.
@@ -26,7 +26,7 @@ The directory `/hardware/documentation/` contains important datasheets and appli
 The directory `/hardware/trade-studies/` contains datasheets for each of the sensors considered in this project. Detailed trade-studies have been completed and are hosted outside of this repository.
 
 #### Libraries
-The directory `/hardware/libraries/` contains the part libraries to be used within each of the PCBs. These libraries will include schematic symbols and physical footprints for each component. Libraries are first drawn from the [KiCad](http://kicad-pcb.org/libraries/download/) standard library and [Digikey-KiCad](https://www.digikey.com/en/resources/design-tools/kicad) standard library. If a symbol or footprint is missing from this library, [SnapEDA](https://www.snapeda.com) will be the next resource used. If the component cannot be found in any of the previous sources, a custom footprint/symbol will be created and housed within a `ragnarok_custom_components` library.
+The directory `/hardware/libraries/` contains the part libraries to be used within each of the PCBs. These libraries will include schematic symbols and physical footprints for each component. Libraries are first drawn from the [KiCad](http://kicad.org/libraries/download/) standard library and [Digikey-KiCad](https://www.digikey.com/en/resources/design-tools/kicad) standard library. If a symbol or footprint is missing from this library, [SnapEDA](https://www.snapeda.com) will be the next resource used. If the component cannot be found in any of the previous sources, a custom footprint/symbol will be created and housed within a `ragnarok_custom_components` library.
 
 Electrical team:
 - Alex Spaulding (lead)
